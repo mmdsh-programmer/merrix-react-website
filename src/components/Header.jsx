@@ -421,7 +421,11 @@ export default function Header(props) {
                   >
                     مشاهده سبد خرید
                   </Button>
-                  <Button fullWidth variant="outlined">
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => history.push(`/checkout`)}
+                  >
                     تسویه حساب
                   </Button>
                 </ButtonGroup>

@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
+import { useHistory } from "react-router-dom";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -12,21 +13,21 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { CartContext } from "helpers/CartContext";
 import Avatar from "@material-ui/core/Avatar";
-import { Badge } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import Button from "@material-ui/core/Button";
-import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
+import Button from "components/Button";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { useForm } from "react-hook-form";
+import coupon from "services/crud/coupons";
+import { toast } from "react-toastify";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
   },
 }))(TableCell);
 
@@ -46,6 +47,26 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(13),
     marginBottom: theme.spacing(5),
   },
+  large: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    borderRadius: "0",
+  },
+  coupon: {
+    marginRight: theme.spacing(4),
+  },
+  couponButton: {
+    height: "2.8em",
+  },
+  goToCheckout: {
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    width: theme.spacing(30),
+    margin: "auto",
+  },
+  dFlex: {
+    display: "flex",
+  },
 }));
 
 export default function Cart(props) {
@@ -57,6 +78,9 @@ export default function Cart(props) {
     decrease,
     removeProduct,
   } = React.useContext(CartContext);
+  const history = useHistory();
+  const { register, handleSubmit, errors: fieldsErrors } = useForm();
+  const [loading, setLoading] = React.useState(false);
 
   const isInCart = (product) => {
     return !!cartItems.find((item) => item.id === product.id);
@@ -64,6 +88,24 @@ export default function Cart(props) {
 
   const selectedCartItem = (id) => {
     return cartItems.filter((e) => e.id === id);
+  };
+
+  const onSubmit = (data, e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log(data);
+    coupon
+      .read(`/wc/v3/coupons?code=${data.coupon}`)
+      .then((res) => {
+        setLoading(false);
+        res.data.length > 0
+          ? toast.success("کد تخفیف اعمال شد")
+          : toast.error("کد تخفیف صحیح نیست");
+      })
+      .catch((error) => {
+        loading(false);
+        toast.error(error.message);
+      });
   };
 
   return (
@@ -74,67 +116,112 @@ export default function Cart(props) {
           سبد خرید
         </Typography>
         {cartItems.length > 0 ? (
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="left">تصویر محصول</StyledTableCell>
-                  <StyledTableCell align="left">محصول</StyledTableCell>
-                  <StyledTableCell align="left">تعداد</StyledTableCell>
-                  <StyledTableCell align="left"></StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {cartItems.map((row) => (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell component="th" scope="row">
-                      <Avatar
-                        alt={row.title}
-                        src={row.image}
-                        className={classes.large}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.title}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row.quantity}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      <ButtonGroup>
-                        <Button
-                          aria-label="increase"
-                          onClick={() => {
-                            increase(row);
-                          }}
-                        >
-                          <AddIcon fontSize="small" />
-                        </Button>
-                        {isInCart(row) && (
+          <React.Fragment>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="left">تصویر محصول</StyledTableCell>
+                    <StyledTableCell align="left">محصول</StyledTableCell>
+                    <StyledTableCell align="left">تعداد</StyledTableCell>
+                    <StyledTableCell align="left"></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {cartItems.map((row) => (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell component="th" scope="row">
+                        <Avatar
+                          alt={row.title}
+                          src={row.image}
+                          className={classes.large}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.title}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.quantity}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <ButtonGroup>
                           <Button
-                            aria-label="reduce"
+                            aria-label="increase"
                             onClick={() => {
-                              selectedCartItem(row.id)[0].quantity === 1
-                                ? removeProduct(row)
-                                : decrease(row);
+                              increase(row);
                             }}
                           >
-                            <RemoveIcon fontSize="small" />
+                            <AddIcon fontSize="small" />
                           </Button>
-                        )}
-                        <Button
-                          aria-label="remove"
-                          onClick={() => {
-                            removeProduct(row);
-                          }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </Button>
-                      </ButtonGroup>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                          {isInCart(row) && (
+                            <Button
+                              aria-label="reduce"
+                              onClick={() => {
+                                selectedCartItem(row.id)[0].quantity === 1
+                                  ? removeProduct(row)
+                                  : decrease(row);
+                              }}
+                            >
+                              <RemoveIcon fontSize="small" />
+                            </Button>
+                          )}
+                          <Button
+                            aria-label="remove"
+                            onClick={() => {
+                              removeProduct(row);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </Button>
+                        </ButtonGroup>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+                <caption>
+                  <form
+                    className={classes.root}
+                    noValidate
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
+                    <TextField
+                      id="coupon"
+                      name="coupon"
+                      label="افزودن کد تخفیف"
+                      variant="outlined"
+                      size="small"
+                      className={classes.coupon}
+                      inputRef={register({ required: true })}
+                      helperText={
+                        fieldsErrors.coupon ? "کد تخفیف را وارد کنید" : null
+                      }
+                      error={fieldsErrors.coupon}
+                      required
+                    />
+                    <Button
+                      variant="outlined"
+                      type="submit"
+                      className={classes.couponButton}
+                      loading={loading}
+                    >
+                      اعمال
+                    </Button>
+                  </form>
+                </caption>
+              </Table>
+            </TableContainer>
+            <Grid container spacing={3} className={classes.dFlex}>
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  onClick={() => history.push(`/checkout`)}
+                  className={classes.goToCheckout}
+                >
+                  تسویه حساب
+                </Button>
+              </Grid>
+            </Grid>
+          </React.Fragment>
         ) : (
           <Typography variant="body1" component="p" align="center">
             سبد خرید خالی است

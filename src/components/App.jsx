@@ -17,6 +17,7 @@ import AuthContextProvider from "helpers/AuthContext";
 import CartContextProvider from "helpers/CartContext";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "../styles/App.css";
+import Checkout from "pages/Checkout";
 
 const shabnam = {
   fontFamily: "Shabnam",
@@ -46,6 +47,7 @@ export default function App(props) {
                 <Route exact path="/signin" component={Signin} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/cart" component={Cart} />
+                <Route exact path="/checkout" component={Checkout} />
                 <Route exact path={["/", "/home"]} component={Main} />
                 <Route path="/categories/:key" component={Categories} />
                 <Route component={() => <NotFound />} />
