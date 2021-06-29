@@ -7,7 +7,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, Controller } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -19,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddressForm() {
+export default function AddressForm(props) {
   const classes = useStyles();
   const [age, setAge] = React.useState("");
   const methods = useFormContext();
   const {
     register,
     handleSubmit,
+    control,
     errors: fieldsErrors,
     formState: { isSubmitting, isDirty, isValid },
   } = useForm({ mode: "onChange" });
@@ -33,6 +34,11 @@ export default function AddressForm() {
   const handleChange = (event) => {
     setAge(event.target.value);
   };
+
+  React.useEffect(() => {
+    console.log(props);
+  }, []);
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -81,21 +87,28 @@ export default function AddressForm() {
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControl variant="outlined" fullWidth required>
+          <FormControl
+            variant="outlined"
+            fullWidth
+            required
+            inputRef={methods.register}
+          >
             <InputLabel id="demo-simple-select-outlined-label">
               وصول مطالبات
             </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              value={age}
-              onChange={handleChange}
-              label="وصول مطالبات"
-            >
-              <MenuItem value="چکی">چکی</MenuItem>
-              <MenuItem value="نقدی">نقدی</MenuItem>
-              <MenuItem value="اعتباری">اعتباری</MenuItem>
-            </Select>
+            <Controller
+              control={control}
+              as={
+                <Select>
+                  <MenuItem value="چکی">چکی</MenuItem>
+                  <MenuItem value="نقدی">نقدی</MenuItem>
+                  <MenuItem value="اعتباری">اعتباری</MenuItem>
+                </Select>
+              }
+              rules={{ required: true }}
+              name="platform"
+              inputRef={methods.register}
+            />
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>

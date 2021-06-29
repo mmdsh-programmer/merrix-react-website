@@ -28,11 +28,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review() {
+export default function Review(props) {
   const classes = useStyles();
   const { cartItems } = React.useContext(CartContext);
   const { register } = useFormContext();
-  console.log(register);
+
+  React.useEffect(() => {
+    console.log(props.data);
+  }, []);
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

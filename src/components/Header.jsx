@@ -305,7 +305,6 @@ export default function Header(props) {
       .catch((error) => {
         console.log(error.message);
       });
-    console.log(cartItems);
 
     const setResponsiveness = () => {
       return window.innerWidth < 768
