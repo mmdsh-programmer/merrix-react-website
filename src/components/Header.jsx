@@ -111,13 +111,7 @@ export default function Header(props) {
   const [categories, setCategories] = React.useState([]);
   const { mobileView } = state;
   const categoriesId = [168, 211, 171, 179];
-  const {
-    cartItems,
-    increase,
-    addProduct,
-    decrease,
-    removeProduct,
-  } = React.useContext(CartContext);
+  const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -194,7 +188,7 @@ export default function Header(props) {
               aria-label="add to shopping cart"
               onClick={toggleDrawer(["right"], true)}
             >
-              <Badge badgeContent={cartItems.length} color="secondary">
+              <Badge badgeContent={itemCount} color="secondary">
                 <LocalMallOutlinedIcon />
               </Badge>
             </IconButton>
@@ -268,7 +262,7 @@ export default function Header(props) {
               aria-label="add to shopping cart"
               onClick={toggleDrawer(["right"], true)}
             >
-              <Badge badgeContent={cartItems.length} color="secondary">
+              <Badge badgeContent={itemCount} color="secondary">
                 <LocalMallOutlinedIcon />
               </Badge>
             </IconButton>

@@ -45,7 +45,6 @@ export default function Categories(props) {
   const [buttonLoading, setButtonLoading] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const { key } = props.match.params;
-  const { cart, setCart } = React.useContext(CartContext);
 
   const loadMore = (endpoint) => {
     product
@@ -65,6 +64,7 @@ export default function Categories(props) {
     product
       .read(`/wc/v3/products?category=${key}`)
       .then((res) => {
+        console.log(res.data);
         setProducts(res.data);
         setLoading(false);
       })
@@ -90,7 +90,11 @@ export default function Categories(props) {
                 className={classes.dFlex}
               >
                 <ProductCard
-                  image={pr.images[0].src}
+                  image={
+                    typeof pr.images !== "undefined"
+                      ? pr.images[0].src
+                      : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
+                  }
                   title={pr.name}
                   key={pr.id}
                   id={pr.id}

@@ -44,10 +44,10 @@ export default function ProductCard(props) {
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
+          alt={props.title}
           height="300"
           image={props.image}
-          title="Contemplative Reptile"
+          title={props.title}
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">

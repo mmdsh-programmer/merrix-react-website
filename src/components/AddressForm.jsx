@@ -87,28 +87,27 @@ export default function AddressForm(props) {
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControl
-            variant="outlined"
-            fullWidth
-            required
-            inputRef={methods.register}
-          >
+          <FormControl variant="outlined" fullWidth required>
             <InputLabel id="demo-simple-select-outlined-label">
               وصول مطالبات
             </InputLabel>
-            <Controller
-              control={control}
-              as={
-                <Select>
-                  <MenuItem value="چکی">چکی</MenuItem>
-                  <MenuItem value="نقدی">نقدی</MenuItem>
-                  <MenuItem value="اعتباری">اعتباری</MenuItem>
-                </Select>
-              }
-              rules={{ required: true }}
-              name="platform"
-              inputRef={methods.register}
-            />
+            <Select
+              labelId="receivables"
+              label="وصول مطالبات"
+              inputProps={{
+                inputRef: (ref) => {
+                  if (!ref) return;
+                  methods.register({
+                    name: "receivables",
+                    value: ref.value,
+                  });
+                },
+              }}
+            >
+              <MenuItem value="چکی">چکی</MenuItem>
+              <MenuItem value="نقدی">نقدی</MenuItem>
+              <MenuItem value="اعتباری">اعتباری</MenuItem>
+            </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
