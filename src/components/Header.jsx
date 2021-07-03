@@ -28,10 +28,23 @@ import { CartContext } from "helpers/CartContext";
 import { Badge } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import TextField from "@material-ui/core/TextField";
+import { Autocomplete } from "@material-ui/lab";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    "&$selected": {
+      backgroundColor: "red",
+      "&:hover": {
+        backgroundColor: "yellow",
+      },
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -94,6 +107,9 @@ const useStyles = makeStyles((theme) => ({
   styledButton: {
     margin: "10px",
   },
+  active: {
+    backgroundColor: "red",
+  },
 }));
 
 export default function Header(props) {
@@ -109,9 +125,14 @@ export default function Header(props) {
   const open = Boolean(anchorEl);
   const [openModal, setOpenModal] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
+  const [selectedIndex, setSelectedIndex] = React.useState();
   const { mobileView } = state;
   const categoriesId = [168, 211, 171, 179];
   const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -228,10 +249,12 @@ export default function Header(props) {
               <ListItem
                 button
                 key={text}
-                className={classes.navItem}
-                onClick={() =>
-                  history.push(`/categories/${categoriesId[index]}`)
-                }
+                className={[classes.navItem, { selected: classes.active }]}
+                selected={selectedIndex === index}
+                onClick={(event) => {
+                  history.push(`/categories/${categoriesId[index]}/${text}`);
+                  handleListItemClick(event, index);
+                }}
               >
                 <ListItemText primary={text} />
               </ListItem>
@@ -317,27 +340,31 @@ export default function Header(props) {
   return (
     <div className={classes.bottomMargin}>
       <div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
+        <Dialog
           open={openModal}
           onClose={handleCloseModal}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
+          aria-labelledby="form-dialog-title"
         >
-          <Fade in={openModal}>
-            <div className={classes.paper}>
-              <h2 id="transition-modal-title">Transition modal</h2>
-              <p id="transition-modal-description">
-                react-transition-group animates me.
-              </p>
-            </div>
-          </Fade>
-        </Modal>
+          <DialogTitle id="form-dialog-title">جست و جو</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              جست و جوی محصولات بر اساس نام...
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="نام محصول"
+              type="search"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              بستن
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
       <AppBar position="fixed">
         {mobileView ? displayMobile() : displayDesktop()}
@@ -437,9 +464,11 @@ export default function Header(props) {
                 <ListItem
                   button
                   key={text}
-                  onClick={() =>
-                    history.push(`/categories/${categoriesId[index]}`)
-                  }
+                  selected={selectedIndex === index}
+                  onClick={(event) => {
+                    history.push(`/categories/${categoriesId[index]}/${text}`);
+                    handleListItemClick(event, index);
+                  }}
                 >
                   <ListItemText primary={text} />
                 </ListItem>

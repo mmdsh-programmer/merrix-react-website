@@ -44,7 +44,7 @@ export default function Main() {
   React.useEffect(() => {
     setLoading(true);
     product
-      .read("/wc/v3/products?orderby=popularity")
+      .read("/wc/v3/products?orderby=popularity&stock_status=instock")
       .then((res) => {
         setProducts(res.data);
         console.log(res.data);
@@ -74,7 +74,7 @@ export default function Main() {
               >
                 <ProductCard
                   image={
-                    typeof pr.images !== "undefined"
+                    typeof pr.images[0] !== "undefined"
                       ? pr.images[0].src
                       : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
                   }

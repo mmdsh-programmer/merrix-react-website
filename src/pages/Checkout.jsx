@@ -111,7 +111,6 @@ export default function Checkout() {
         address_1: data.address,
         address_2: "",
         city: data.city,
-        receivables: data.receivables,
         state: finalProvince,
         postcode: "",
         country: "IR",

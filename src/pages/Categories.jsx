@@ -45,6 +45,7 @@ export default function Categories(props) {
   const [buttonLoading, setButtonLoading] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const { key } = props.match.params;
+  const { slug } = props.match.params;
 
   const loadMore = (endpoint) => {
     product
@@ -61,10 +62,11 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
+    console.log("slug", slug);
     product
       .read(`/wc/v3/products?category=${key}`)
       .then((res) => {
-        console.log(res.data);
+        console.log("products", res.data);
         setProducts(res.data);
         setLoading(false);
       })
@@ -77,7 +79,7 @@ export default function Categories(props) {
     return (
       <div>
         <Typography variant="h5" component="h1" className={classes.title}>
-          پرفروش ترین محصولات
+          {slug}
         </Typography>
         <Grid container className={classes.container} spacing={2}>
           {products.map((pr) => {
@@ -91,7 +93,7 @@ export default function Categories(props) {
               >
                 <ProductCard
                   image={
-                    typeof pr.images !== "undefined"
+                    typeof pr.images[0] !== "undefined"
                       ? pr.images[0].src
                       : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
                   }
