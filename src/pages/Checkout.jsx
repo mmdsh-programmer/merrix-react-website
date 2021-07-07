@@ -21,6 +21,7 @@ import citiesImport from "services/citiesImport";
 import provinceImport from "services/provinceImport";
 import { CartContext } from "helpers/CartContext";
 import order from "services/crud/order";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   stepper: {
-    padding: theme.spacing(3, 0, 5),
+    padding: theme.spacing(3, 0, 1),
   },
   buttons: {
     display: "flex",
@@ -64,6 +65,13 @@ const useStyles = makeStyles((theme) => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  alert: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  form: {
+    marginTop: theme.spacing(3),
   },
 }));
 
@@ -84,6 +92,8 @@ export default function Checkout() {
   const [finalProvince, setFinalProvince] = React.useState("");
   const [finalCities, setFinalCities] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [hasAlert, setHasAlert] = React.useState(false);
+  const [outOfStockProducts, setOutOfStockProducts] = React.useState([]);
 
   const selectedProvId = (value) => {
     setFinalProvince(value);
@@ -98,28 +108,33 @@ export default function Checkout() {
     e.preventDefault();
     setLoading(true);
     const products = [];
+    const hasError = false;
     cartItems.map((item) => {
-      products.push({ product_id: item.id, quantity: item.quantity });
+      item.stock < item.quantity
+        ? setOutOfStockProducts((prev) => [...prev, item])
+        : products.push({ product_id: item.id, quantity: item.quantity });
     });
     const finalData = {
-      payment_method: "dbt",
+      payment_method: "درگاه بانکی",
       payment_method_title: "انتقال مستقیم بانکی",
       set_paid: true,
       billing: {
         first_name: data.firstName,
         last_name: data.lastName,
         address_1: data.address,
+        billing_company: data.shopName,
         address_2: "",
         city: data.city,
         state: finalProvince,
         postcode: "",
+        receivables: data.receivables,
         country: "IR",
         phone: data.phone.toString(),
       },
       shipping: {
         first_name: data.firstName,
         last_name: data.lastName,
-        company: data.shopName,
+        billing_company: data.shopName,
         address_1: data.address,
         address_2: "",
         city: data.city,
@@ -129,21 +144,25 @@ export default function Checkout() {
       },
       line_items: products,
     };
-
-    order
-      .create(finalData, "/wc/v3/orders")
-      .then((res) => {
-        toast.success("سفارش با موفقیت ثبت شد");
-        handleCheckout();
-        reset();
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("مشکلی در ثبت سفارش رخ داد");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    console.log(outOfStockProducts.length);
+    if (outOfStockProducts.length <= 0) {
+      order
+        .create(finalData, "/wc/v3/orders?status=processing")
+        .then((res) => {
+          toast.success("سفارش با موفقیت ثبت شد");
+          handleCheckout();
+          reset();
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("مشکلی در ثبت سفارش رخ داد");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
   };
 
   return (
@@ -163,6 +182,14 @@ export default function Checkout() {
                 </Step>
               ))}
             </Stepper>
+            {outOfStockProducts.length > 0
+              ? outOfStockProducts.map((item) => (
+                  <Alert severity="error" className={classes.alert}>
+                    موجودی انبار محصول {item.title} کمتر از تعداد انتخاب شده
+                    میباشد
+                  </Alert>
+                ))
+              : null}
             <React.Fragment>
               {activeStep === steps.length ? (
                 <React.Fragment>
@@ -177,7 +204,11 @@ export default function Checkout() {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    noValidate
+                    className={classes.form}
+                  >
                     <Grid container spacing={3}>
                       <Grid item xs={12} sm={6}>
                         <TextField

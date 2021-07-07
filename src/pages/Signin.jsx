@@ -98,13 +98,6 @@ export default function Signin(props) {
                         >
                             ورود
                         </Button>
-                        <Grid container>
-                            <Grid item>
-                                <Link to="/signup" variant="body2">
-                                    {"ثبت نام"}
-                                </Link>
-                            </Grid>
-                        </Grid>
                     </form>
                 </Paper>
             </Zoom>

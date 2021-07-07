@@ -64,7 +64,7 @@ export default function Categories(props) {
     setLoading(true);
     console.log("slug", slug);
     product
-      .read(`/wc/v3/products?category=${key}`)
+      .read(`/wc/v3/products?category=${key}&stock_status=instock`)
       .then((res) => {
         console.log("products", res.data);
         setProducts(res.data);
@@ -100,6 +100,7 @@ export default function Categories(props) {
                   title={pr.name}
                   key={pr.id}
                   id={pr.id}
+                  stock={pr.stock_quantity}
                 />
               </Grid>
             );
@@ -108,10 +109,13 @@ export default function Categories(props) {
         <Button
           className={classes.loadMore}
           loading={buttonLoading}
+          variant="outlined"
           onClick={() => {
             setButtonLoading(true);
             setOffset(offset + 10);
-            loadMore(`/wc/v3/products?category=${key}&offset=${offset}`);
+            loadMore(
+              `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock`
+            );
           }}
         >
           محصولات بیشتر

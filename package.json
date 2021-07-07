@@ -9,6 +9,7 @@
     "@woocommerce/woocommerce-rest-api": "^1.0.1",
     "axios": "^0.21.1",
     "crypto-js": "^4.0.0",
+    "debounce": "^1.2.1",
     "faker": "^5.1.0",
     "jalali-react-datepicker": "^1.2.1",
     "jquery": "^3.6.0",

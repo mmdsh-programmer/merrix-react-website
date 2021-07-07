@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -14,9 +14,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
 import category from "services/crud/categories";
 import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "@material-ui/core/Drawer";
@@ -29,12 +26,36 @@ import { Badge } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import TextField from "@material-ui/core/TextField";
-import { Autocomplete } from "@material-ui/lab";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import { useForm, Controller } from "react-hook-form";
+import searchresult from "services/crud/search";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import debounce from "debounce";
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,6 +131,12 @@ const useStyles = makeStyles((theme) => ({
   active: {
     backgroundColor: "red",
   },
+  dialogAppBar: {
+    position: "relative",
+  },
+  searchField: {
+    marginTop: theme.spacing(5),
+  },
 }));
 
 export default function Header(props) {
@@ -126,9 +153,18 @@ export default function Header(props) {
   const [openModal, setOpenModal] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
   const [selectedIndex, setSelectedIndex] = React.useState();
+  const [searchLoading, setSearchLoading] = React.useState("first time");
+  const [searchResult, setSearchResult] = React.useState([]);
   const { mobileView } = state;
   const categoriesId = [168, 211, 171, 179];
-  const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
+  const {
+    cartItems,
+    itemCount,
+    removeProduct,
+    increase,
+    addProduct,
+  } = React.useContext(CartContext);
+  const { control, errors: fieldsErrors, trigger, register } = useForm();
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -168,6 +204,30 @@ export default function Header(props) {
 
   const handleDrawerClose = () => {
     setState((prevState) => ({ ...prevState, mainMenuOpen: false }));
+  };
+
+  const isInCart = (product) => {
+    return !!cartItems.find((item) => item.id === product.id);
+  };
+
+  const selectedCartItem = (id) => {
+    return cartItems.filter((e) => e.id === id);
+  };
+
+  const handleSearchChange = (data) => {
+    setSearchLoading(true);
+    searchresult
+      .read(`/wc/v3/products?search=${data}&stock_status=instock`)
+      .then((res) => {
+        setSearchResult(typeof res.data != "undefined" && res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setSearchLoading(false);
+      });
   };
 
   const displayMobile = () => {
@@ -339,33 +399,101 @@ export default function Header(props) {
 
   return (
     <div className={classes.bottomMargin}>
-      <div>
-        <Dialog
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">جست و جو</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              جست و جوی محصولات بر اساس نام...
-            </DialogContentText>
+      <Dialog fullScreen open={openModal} onClose={handleCloseModal}>
+        <AppBar className={classes.dialogAppBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleCloseModal}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              جست و جو
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth="md">
+          <Grid container className={classes.container} spacing={2}>
             <TextField
               autoFocus
               margin="dense"
-              id="name"
+              id="search"
+              name="search"
               label="نام محصول"
               type="search"
+              variant="outlined"
               fullWidth
+              className={classes.searchField}
+              inputRef={register({ required: "Required" })}
+              onChange={(e) => {
+                e.target.value.length > 0
+                  ? handleSearchChange(e.target.value)
+                  : setSearchResult([]);
+              }}
             />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseModal} color="primary">
-              بستن
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+            {searchResult.length > 0 ? (
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="left">
+                        تصویر محصول
+                      </StyledTableCell>
+                      <StyledTableCell align="left">محصول</StyledTableCell>
+                      <StyledTableCell align="left"></StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {searchResult.map((row) => (
+                      <StyledTableRow key={row.id}>
+                        <StyledTableCell component="th" scope="row">
+                          <Avatar
+                            alt={row.images[0].alt}
+                            src={row.images[0].src}
+                            className={classes.large}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row.name}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          <ButtonGroup>
+                            <Button
+                              aria-label="increase"
+                              onClick={() => {
+                                const product = {
+                                  id: row.id,
+                                  title: row.name,
+                                  image: row.images[0].src,
+                                  stock: row.stock_quantity,
+                                };
+                                isInCart(product)
+                                  ? increase(product)
+                                  : addProduct(product);
+                              }}
+                            >
+                              <AddIcon fontSize="small" />
+                            </Button>
+                          </ButtonGroup>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <Typography variant="h6" className={classes.title}>
+                {searchLoading == "first time" && searchResult.length == 0
+                  ? "جستجو کنید..."
+                  : "موردی یافت نشد"}
+              </Typography>
+            )}
+          </Grid>
+        </Container>
+      </Dialog>
       <AppBar position="fixed">
         {mobileView ? displayMobile() : displayDesktop()}
       </AppBar>
