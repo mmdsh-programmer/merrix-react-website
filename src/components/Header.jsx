@@ -138,6 +138,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(5),
     marginBottom: theme.spacing(3),
   },
+  large: {
+    width: theme.spacing(9),
+    height: theme.spacing(9),
+    borderRadius: "0",
+  },
 }));
 
 export default function Header(props) {
@@ -589,6 +594,16 @@ export default function Header(props) {
           onClose={handleDrawerClose}
         >
           <List className={classes.list}>
+            <ListItem
+              button
+              selected={selectedIndex === 4}
+              onClick={(event) => {
+                history.push(`/`);
+                handleListItemClick(event, 4);
+              }}
+            >
+              <ListItemText primary="صفحه اصلی" />
+            </ListItem>
             {["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
               (text, index) => (
                 <ListItem

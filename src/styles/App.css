@@ -5,6 +5,7 @@
 
 body {
   font-family: "shabnam";
+  overflow-x: hidden;
 }
 
 .Toastify__toast-body {
