@@ -107,13 +107,29 @@ export default function Checkout() {
   const onSubmit = (data, e) => {
     e.preventDefault();
     setLoading(true);
+    setOutOfStockProducts([]);
     const products = [];
     const hasError = false;
+    let errorCount = 0;
     cartItems.map((item) => {
-      item.stock < item.quantity
-        ? setOutOfStockProducts((prev) => [...prev, item])
-        : products.push({ product_id: item.id, quantity: item.quantity });
+      if (item.stock < item.quantity) {
+        setOutOfStockProducts((prev) => [...prev, item]);
+        errorCount++;
+      } else {
+        products.push({ product_id: item.id, quantity: item.quantity });
+      }
     });
+
+    if (errorCount === 0) {
+      console.log(data);
+      sendData(data, products);
+    } else {
+      setLoading(false);
+      toast.error("لطفا ابتدا سبد خرید خود را اصلاح کنید.");
+    }
+  };
+
+  const sendData = (data, products) => {
     const finalData = {
       payment_method: "درگاه بانکی",
       payment_method_title: "انتقال مستقیم بانکی",
@@ -125,9 +141,9 @@ export default function Checkout() {
         billing_company: data.shopName,
         address_2: "",
         city: data.city,
+        company: data.shopName,
         state: finalProvince,
         postcode: "",
-        receivables: data.receivables,
         country: "IR",
         phone: data.phone.toString(),
       },
@@ -139,30 +155,33 @@ export default function Checkout() {
         address_2: "",
         city: data.city,
         state: finalProvince,
+        company: data.shopName,
         postcode: "",
         country: "IR",
       },
+      meta_data: [
+        {
+          key: "receivables",
+          value: data.receivables,
+        },
+      ],
       line_items: products,
     };
     console.log(outOfStockProducts.length);
-    if (outOfStockProducts.length <= 0) {
-      order
-        .create(finalData, "/wc/v3/orders?status=processing")
-        .then((res) => {
-          toast.success("سفارش با موفقیت ثبت شد");
-          handleCheckout();
-          reset();
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("مشکلی در ثبت سفارش رخ داد");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+    order
+      .create(finalData, "/wc/v3/orders?status=processing")
+      .then((res) => {
+        toast.success("سفارش با موفقیت ثبت شد");
+        handleCheckout();
+        reset();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("مشکلی در ثبت سفارش رخ داد");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

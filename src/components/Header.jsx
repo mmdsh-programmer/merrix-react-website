@@ -136,6 +136,7 @@ const useStyles = makeStyles((theme) => ({
   },
   searchField: {
     marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -220,7 +221,6 @@ export default function Header(props) {
       .read(`/wc/v3/products?search=${data}&stock_status=instock`)
       .then((res) => {
         setSearchResult(typeof res.data != "undefined" && res.data);
-        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -309,7 +309,9 @@ export default function Header(props) {
               <ListItem
                 button
                 key={text}
-                className={[classes.navItem, { selected: classes.active }]}
+                className={[classes.navItem, { selected: classes.active }].join(
+                  " "
+                )}
                 selected={selectedIndex === index}
                 onClick={(event) => {
                   history.push(`/categories/${categoriesId[index]}/${text}`);

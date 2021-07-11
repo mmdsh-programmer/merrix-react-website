@@ -43,7 +43,7 @@ export default function Categories(props) {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
-  const [offset, setOffset] = React.useState(0);
+  const [offset, setOffset] = React.useState(10);
   const { key } = props.match.params;
   const { slug } = props.match.params;
 
@@ -62,11 +62,9 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    console.log("slug", slug);
     product
       .read(`/wc/v3/products?category=${key}&stock_status=instock`)
       .then((res) => {
-        console.log("products", res.data);
         setProducts(res.data);
         setLoading(false);
       })
@@ -84,13 +82,7 @@ export default function Categories(props) {
         <Grid container className={classes.container} spacing={2}>
           {products.map((pr) => {
             return (
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                justify="center"
-                className={classes.dFlex}
-              >
+              <Grid item xs={12} sm={3} key={pr.id} className={classes.dFlex}>
                 <ProductCard
                   image={
                     typeof pr.images[0] !== "undefined"

@@ -7,7 +7,6 @@ import ProductCard from "components/ProductCard";
 import Header from "components/Header";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { CartContext } from "helpers/CartContext";
 import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +46,6 @@ export default function Main() {
       .read("/wc/v3/products?orderby=popularity&stock_status=instock")
       .then((res) => {
         setProducts(res.data);
-        console.log(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -69,7 +67,7 @@ export default function Main() {
                 item
                 xs={12}
                 sm={3}
-                justify="center"
+                key={pr.id}
                 className={classes.dFlex}
               >
                 <ProductCard

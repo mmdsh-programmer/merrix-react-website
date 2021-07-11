@@ -3,6 +3,11 @@
   src: url(../fonts/Shabnam.ttf);
 }
 
-body{
-    font-family: 'shabnam';
+body {
+  font-family: "shabnam";
+}
+
+.Toastify__toast-body {
+  font-family: "shabnam";
+  direction: rtl;
 }
