@@ -40,7 +40,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
-import debounce from "debounce";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import Collapse from "@material-ui/core/Collapse";
+import StarBorder from "@material-ui/icons/StarBorder";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -143,6 +146,9 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(9),
     borderRadius: "0",
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 export default function Header(props) {
@@ -170,6 +176,9 @@ export default function Header(props) {
     increase,
     addProduct,
   } = React.useContext(CartContext);
+  const [branch, setBranch] = React.useState([]);
+  const [subBranch, setSubBranch] = React.useState([]);
+  const [openSubBranch, setOpenSubBranch] = React.useState({});
   const { control, errors: fieldsErrors, trigger, register } = useForm();
 
   const handleListItemClick = (event, index) => {
@@ -218,6 +227,18 @@ export default function Header(props) {
 
   const selectedCartItem = (id) => {
     return cartItems.filter((e) => e.id === id);
+  };
+
+  const filterCategories = (array, id) => {
+    return array.filter((e) => e.parent === id);
+  };
+
+  const handleExpand = (name) => {
+    setOpenSubBranch({ [name]: !openSubBranch[name] });
+  };
+
+  const filterSubBranch = (array, index) => {
+    return array[index];
   };
 
   const handleSearchChange = (data) => {
@@ -274,7 +295,7 @@ export default function Header(props) {
               aria-label="add to shopping cart"
               onClick={toggleDrawer(["right"], true)}
             >
-              <Badge badgeContent={itemCount} color="secondary">
+              <Badge badgeContent={itemCount} max={2000} color="secondary">
                 <LocalMallOutlinedIcon />
               </Badge>
             </IconButton>
@@ -352,7 +373,7 @@ export default function Header(props) {
               aria-label="add to shopping cart"
               onClick={toggleDrawer(["right"], true)}
             >
-              <Badge badgeContent={itemCount} color="secondary">
+              <Badge badgeContent={itemCount} max={2000} color="secondary">
                 <LocalMallOutlinedIcon />
               </Badge>
             </IconButton>
@@ -381,10 +402,21 @@ export default function Header(props) {
   };
 
   React.useEffect(() => {
+    const filteredBranch = [];
+    const filteredSubBranch = [];
     category
-      .read()
+      .read("/wc/v3/products/categories?per_page=100")
       .then((res) => {
         setCategories(res.data);
+        res.data.map((cat) => {
+          cat.parent === 0 && filteredBranch.push(cat);
+          cat.parent === 0 &&
+            filteredSubBranch.push(filterCategories(res.data, cat.id));
+        });
+        setBranch(filteredBranch);
+        setSubBranch(filteredSubBranch);
+        console.log("sub branch", filteredSubBranch);
+        console.log("branch", filteredBranch);
       })
       .catch((error) => {
         console.log(error.message);
@@ -518,6 +550,7 @@ export default function Header(props) {
                   <ListItemAvatar>
                     <Badge
                       badgeContent={value.quantity}
+                      max={2000}
                       color="secondary"
                       anchorOrigin={{
                         vertical: "top",
@@ -604,7 +637,8 @@ export default function Header(props) {
             >
               <ListItemText primary="صفحه اصلی" />
             </ListItem>
-            {["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
+            {
+              /*["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
               (text, index) => (
                 <ListItem
                   button
@@ -618,7 +652,26 @@ export default function Header(props) {
                   <ListItemText primary={text} />
                 </ListItem>
               )
-            )}
+                )*/
+
+              branch.map((item, index) => (
+                <React.Fragment>
+                  <ListItem
+                    button
+                    key={item.id}
+                    selected={selectedIndex === item.id}
+                    onClick={(event) => {
+                      history.push(`/categories/${item.id}/${item.name}`);
+                      handleListItemClick(event, item.id);
+                      handleExpand(item.name);
+                    }}
+                  >
+                    <ListItemText primary={item.name} />
+                    {openSubBranch[item.name] ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                </React.Fragment>
+              ))
+            }
           </List>
         </Drawer>
       </React.Fragment>

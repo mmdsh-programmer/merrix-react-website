@@ -66,7 +66,8 @@ export default function Main() {
               <Grid
                 item
                 xs={12}
-                sm={3}
+                sm={4}
+                md={3}
                 key={pr.id}
                 className={classes.dFlex}
               >

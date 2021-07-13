@@ -94,6 +94,7 @@ export default function Checkout() {
   const [loading, setLoading] = React.useState(false);
   const [hasAlert, setHasAlert] = React.useState(false);
   const [outOfStockProducts, setOutOfStockProducts] = React.useState([]);
+  const [phone, setPhone] = React.useState([]);
 
   const selectedProvId = (value) => {
     setFinalProvince(value);
@@ -102,6 +103,13 @@ export default function Checkout() {
 
   const selectedCityId = (value) => {
     setFinalCities(citiesImport.filter((e) => e.province_id === value));
+  };
+
+  const checkPhone = (e) => {
+    const re = /^[0-9\b]+$/;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      setPhone(e.target.value);
+    }
   };
 
   const onSubmit = (data, e) => {
@@ -145,6 +153,7 @@ export default function Checkout() {
         state: finalProvince,
         postcode: "",
         country: "IR",
+        email: data.email,
         phone: data.phone.toString(),
       },
       shipping: {
@@ -176,8 +185,7 @@ export default function Checkout() {
         reset();
       })
       .catch((error) => {
-        console.log(error);
-        toast.error("مشکلی در ثبت سفارش رخ داد");
+        toast.error(`مشکلی در ثبت سفارش رخ داد. (${error})`);
       })
       .finally(() => {
         setLoading(false);
@@ -313,7 +321,7 @@ export default function Checkout() {
                           )}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} sm={6}>
                         <FormControl
                           variant="outlined"
                           fullWidth
@@ -354,7 +362,7 @@ export default function Checkout() {
                           )}
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12} sm={6}>
                         <FormControl
                           variant="outlined"
                           fullWidth
@@ -403,20 +411,45 @@ export default function Checkout() {
                       <Grid item xs={12}>
                         <TextField
                           required
+                          id="email"
+                          name="email"
+                          label="آدرس ایمیل"
+                          fullWidth
+                          autoComplete="given-email"
+                          variant="outlined"
+                          inputRef={register({
+                            required: true,
+                            pattern: {
+                              value: /\S+@\S+\.\S+/,
+                              message: "ایمیل وارد شده معتبر نیست",
+                            },
+                          })}
+                          helperText={
+                            fieldsErrors.email
+                              ? "آدرس ایمیل را به درستی وارد کنید"
+                              : null
+                          }
+                          error={fieldsErrors.email}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          required
                           id="phone"
                           name="phone"
                           label="شماره موبایل"
                           fullWidth
+                          type="tel"
                           autoComplete="given-phone"
                           variant="outlined"
-                          inputProps={{ type: "numeric" }}
+                          value={phone}
+                          onChange={(e) => checkPhone(e)}
                           inputRef={register({
                             required: true,
-                            valueAsNumber: true,
                           })}
                           helperText={
                             fieldsErrors.phone
-                              ? "شماره همراه را به درستی"
+                              ? "شماره همراه را به درستی وارد کنید"
                               : null
                           }
                           error={fieldsErrors.phone}

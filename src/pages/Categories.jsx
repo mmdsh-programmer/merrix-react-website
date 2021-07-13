@@ -82,7 +82,14 @@ export default function Categories(props) {
         <Grid container className={classes.container} spacing={2}>
           {products.map((pr) => {
             return (
-              <Grid item xs={12} sm={4} md={3} key={pr.id} className={classes.dFlex}>
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                md={3}
+                key={pr.id}
+                className={classes.dFlex}
+              >
                 <ProductCard
                   image={
                     typeof pr.images[0] !== "undefined"

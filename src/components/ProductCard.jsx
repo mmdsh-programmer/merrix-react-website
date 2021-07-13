@@ -50,7 +50,7 @@ export default function ProductCard(props) {
           title={props.title}
         />
         <CardContent>
-          <Typography gutterBottom variant="h6" component="h2">
+          <Typography gutterBottom variant="body1" component="h2">
             {props.title}
           </Typography>
         </CardContent>
