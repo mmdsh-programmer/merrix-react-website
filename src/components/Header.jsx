@@ -44,6 +44,10 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import StarBorder from "@material-ui/icons/StarBorder";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -59,6 +63,37 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
+
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -180,6 +215,7 @@ export default function Header(props) {
   const [subBranch, setSubBranch] = React.useState([]);
   const [openSubBranch, setOpenSubBranch] = React.useState({});
   const { control, errors: fieldsErrors, trigger, register } = useForm();
+  const [dropDownAnchorEl, setDropDownAnchorEl] = React.useState(null);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -239,6 +275,29 @@ export default function Header(props) {
 
   const filterSubBranch = (array, index) => {
     return array[index];
+  };
+
+  const handleDropDownOpen = (event) => {
+    setDropDownAnchorEl(event.currentTarget);
+  };
+
+  const handleDropDownClose = () => {
+    setDropDownAnchorEl(null);
+  };
+
+  const chooseNavMenuItems = () => {
+    let index = [];
+    branch.map((item, i) => {
+      if (
+        item.name == "باکس هدیه" ||
+        item.name == "پاکت هدیه" ||
+        item.name == "دفترچه فانتزی" ||
+        item.name == "کاغذ کادو"
+      ) {
+        index.push(branch.indexOf(item));
+      }
+      return index
+    });
   };
 
   const handleSearchChange = (data) => {
@@ -332,20 +391,36 @@ export default function Header(props) {
         <List component="nav" className={classes.flexNav}>
           {["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
             (text, index) => (
-              <ListItem
-                button
-                key={text}
-                className={[classes.navItem, { selected: classes.active }].join(
-                  " "
-                )}
-                selected={selectedIndex === index}
-                onClick={(event) => {
-                  history.push(`/categories/${categoriesId[index]}/${text}`);
-                  handleListItemClick(event, index);
-                }}
-              >
-                <ListItemText primary={text} />
-              </ListItem>
+              <React.Fragment>
+                <ListItem
+                  button
+                  key={text}
+                  className={[
+                    classes.navItem,
+                    { selected: classes.active },
+                  ].join(" ")}
+                  selected={selectedIndex === index}
+                  onClick={(e) => {
+                    handleDropDownOpen(e);
+                  }}
+                >
+                  <ListItemText primary={text} />
+                </ListItem>
+                <StyledMenu
+                  id="customized-menu"
+                  anchorEl={dropDownAnchorEl}
+                  keepMounted
+                  open={Boolean(dropDownAnchorEl)}
+                  onClose={handleDropDownClose}
+                >
+                  {typeof subBranch[index] != "undefined" &&
+                    subBranch[index].map((sub) => (
+                      <StyledMenuItem>
+                        <ListItemText primary={sub.name} />
+                      </StyledMenuItem>
+                    ))}
+                </StyledMenu>
+              </React.Fragment>
             )
           )}
         </List>
@@ -661,14 +736,44 @@ export default function Header(props) {
                     key={item.id}
                     selected={selectedIndex === item.id}
                     onClick={(event) => {
-                      history.push(`/categories/${item.id}/${item.name}`);
-                      handleListItemClick(event, item.id);
                       handleExpand(item.name);
+                      typeof subBranch[index] != "undefined" &&
+                        subBranch[index].length === 0 &&
+                        history.push(`/categories/${item.id}/${item.name}`);
                     }}
                   >
                     <ListItemText primary={item.name} />
-                    {openSubBranch[item.name] ? <ExpandLess /> : <ExpandMore />}
+                    {typeof subBranch[index] != "undefined" &&
+                    subBranch[index].length > 0 ? (
+                      openSubBranch[item.name] ? (
+                        <ExpandLess />
+                      ) : (
+                        <ExpandMore />
+                      )
+                    ) : null}
                   </ListItem>
+                  <Collapse
+                    in={openSubBranch[item.name]}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <List component="div" disablePadding>
+                      {typeof subBranch[index] != "undefined" &&
+                        subBranch[index].length !== 0 &&
+                        subBranch[index].map((sub) => (
+                          <ListItem
+                            button
+                            className={classes.nested}
+                            onClick={(event) => {
+                              history.push(`/categories/${sub.id}/${sub.name}`);
+                              handleListItemClick(event, sub.id);
+                            }}
+                          >
+                            <ListItemText primary={sub.name} />
+                          </ListItem>
+                        ))}
+                    </List>
+                  </Collapse>
                 </React.Fragment>
               ))
             }

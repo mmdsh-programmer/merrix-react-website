@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
@@ -8,6 +8,18 @@ import Header from "components/Header";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { CircularProgress } from "@material-ui/core";
+
+const specialBreakpoint = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 768,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
   dFlex: {
     display: "flex",
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      justifyContent: "center",
+    },
   },
   title: {
     marginTop: theme.spacing(5),
