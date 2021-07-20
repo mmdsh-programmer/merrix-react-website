@@ -106,7 +106,6 @@ export default function Main() {
 
   return (
     <React.Fragment>
-      <Header />
       <Container maxWidth="lg">
         <Grid container className={classes.container} spacing={2}>
           {loading ? (

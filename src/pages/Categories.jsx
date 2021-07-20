@@ -139,7 +139,6 @@ export default function Categories(props) {
 
   return (
     <React.Fragment>
-      <Header />
       <Container maxWidth="lg">
         {loading ? (
           <CircularProgress size={60} className={classes.loading} />

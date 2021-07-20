@@ -23,6 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { useForm } from "react-hook-form";
 import coupon from "services/crud/coupons";
 import { toast } from "react-toastify";
+import Badge from "@material-ui/core/Badge";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -40,9 +41,6 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: 700,
-  },
   title: {
     marginTop: theme.spacing(13),
     marginBottom: theme.spacing(5),
@@ -53,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "0",
   },
   coupon: {
-    marginRight: theme.spacing(4),
+    marginRight: theme.spacing(2),
+    width: "170px"
   },
   couponButton: {
     height: "2.8em",
@@ -110,8 +109,7 @@ export default function Cart(props) {
 
   return (
     <React.Fragment>
-      <Header />
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Typography variant="h5" component="h1" className={classes.title}>
           سبد خرید
         </Typography>
@@ -123,7 +121,6 @@ export default function Cart(props) {
                   <TableRow>
                     <StyledTableCell align="left">تصویر محصول</StyledTableCell>
                     <StyledTableCell align="left">محصول</StyledTableCell>
-                    <StyledTableCell align="left">تعداد</StyledTableCell>
                     <StyledTableCell align="left"></StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -131,22 +128,29 @@ export default function Cart(props) {
                   {cartItems.map((row) => (
                     <StyledTableRow key={row.id}>
                       <StyledTableCell component="th" scope="row">
-                        <Avatar
-                          alt={row.title}
-                          src={row.image}
-                          className={classes.large}
-                        />
+                        <Badge
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          badgeContent={row.quantity}
+                          color="secondary"
+                        >
+                          <Avatar
+                            alt={row.title}
+                            src={row.image}
+                            className={classes.large}
+                          />
+                        </Badge>
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {row.title}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.quantity}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        <ButtonGroup>
+                        <ButtonGroup orientation="vertical">
                           <Button
                             aria-label="increase"
+                            size="small"
                             onClick={() => {
                               increase(row);
                             }}
@@ -156,6 +160,7 @@ export default function Cart(props) {
                           {isInCart(row) && (
                             <Button
                               aria-label="reduce"
+                              size="small"
                               onClick={() => {
                                 selectedCartItem(row.id)[0].quantity === 1
                                   ? removeProduct(row)
@@ -167,6 +172,7 @@ export default function Cart(props) {
                           )}
                           <Button
                             aria-label="remove"
+                            size="small"
                             onClick={() => {
                               removeProduct(row);
                             }}

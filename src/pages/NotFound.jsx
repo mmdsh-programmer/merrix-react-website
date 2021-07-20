@@ -19,7 +19,6 @@ export default function NotFound(props) {
 
   return (
     <React.Fragment>
-      <Header />
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">

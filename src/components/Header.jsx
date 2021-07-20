@@ -1,11 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import {
+  withStyles,
+  makeStyles,
+  createMuiTheme,
+} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import PermIdentityOutlinedIcon from "@material-ui/icons/PermIdentityOutlined";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import List from "@material-ui/core/List";
@@ -43,11 +46,18 @@ import AddIcon from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
-import StarBorder from "@material-ui/icons/StarBorder";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import SendIcon from "@material-ui/icons/Send";
+
+const specialBreakpoint = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 769,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+});
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -147,6 +157,9 @@ const useStyles = makeStyles((theme) => ({
   flexNav: {
     display: "flex",
     margin: "auto",
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   navItem: {
     width: "auto",
@@ -184,6 +197,19 @@ const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
+  cartEmptyText: {
+    marginTop: theme.spacing(3),
+  },
+  mobileMenuIcon: {
+    [specialBreakpoint.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+  merrixLogo: {
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
 }));
 
 export default function Header(props) {
@@ -202,8 +228,6 @@ export default function Header(props) {
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [searchLoading, setSearchLoading] = React.useState("first time");
   const [searchResult, setSearchResult] = React.useState([]);
-  const { mobileView } = state;
-  const categoriesId = [168, 211, 171, 179];
   const {
     cartItems,
     itemCount,
@@ -231,14 +255,6 @@ export default function Header(props) {
     }
 
     setState({ ...state, [anchor]: open });
-  };
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   const handleOpenModal = () => {
@@ -273,31 +289,12 @@ export default function Header(props) {
     setOpenSubBranch({ [name]: !openSubBranch[name] });
   };
 
-  const filterSubBranch = (array, index) => {
-    return array[index];
-  };
-
   const handleDropDownOpen = (event) => {
     setDropDownAnchorEl(event.currentTarget);
   };
 
   const handleDropDownClose = () => {
     setDropDownAnchorEl(null);
-  };
-
-  const chooseNavMenuItems = () => {
-    let index = [];
-    branch.map((item, i) => {
-      if (
-        item.name == "باکس هدیه" ||
-        item.name == "پاکت هدیه" ||
-        item.name == "دفترچه فانتزی" ||
-        item.name == "کاغذ کادو"
-      ) {
-        index.push(branch.indexOf(item));
-      }
-      return index
-    });
   };
 
   const handleSearchChange = (data) => {
@@ -313,167 +310,6 @@ export default function Header(props) {
       .finally(() => {
         setSearchLoading(false);
       });
-  };
-
-  const displayMobile = () => {
-    return (
-      <Toolbar>
-        <IconButton
-          {...{
-            edge: "start",
-            color: "inherit",
-            "aria-label": "menu",
-            "aria-haspopup": "true",
-          }}
-          onClick={handleDrawerOpen}
-          className={classes.mrAuto}
-        >
-          <MenuIcon />
-        </IconButton>
-        {auth && (
-          <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <PermIdentityOutlinedIcon />
-            </IconButton>
-            <IconButton
-              aria-label="search"
-              aria-controls="menu-appbar"
-              color="inherit"
-              onClick={handleOpenModal}
-            >
-              <SearchOutlinedIcon />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              aria-label="add to shopping cart"
-              onClick={toggleDrawer(["right"], true)}
-            >
-              <Badge badgeContent={itemCount} max={2000} color="secondary">
-                <LocalMallOutlinedIcon />
-              </Badge>
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>پروفایل</MenuItem>
-              <MenuItem onClick={handleClose}>حساب کاربری</MenuItem>
-            </Menu>
-          </div>
-        )}
-      </Toolbar>
-    );
-  };
-
-  const displayDesktop = () => {
-    return (
-      <Toolbar>
-        <Typography variant="h6" onClick={() => history.push(`/`)}>
-          Merrix
-        </Typography>
-        <List component="nav" className={classes.flexNav}>
-          {["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
-            (text, index) => (
-              <React.Fragment>
-                <ListItem
-                  button
-                  key={text}
-                  className={[
-                    classes.navItem,
-                    { selected: classes.active },
-                  ].join(" ")}
-                  selected={selectedIndex === index}
-                  onClick={(e) => {
-                    handleDropDownOpen(e);
-                  }}
-                >
-                  <ListItemText primary={text} />
-                </ListItem>
-                <StyledMenu
-                  id="customized-menu"
-                  anchorEl={dropDownAnchorEl}
-                  keepMounted
-                  open={Boolean(dropDownAnchorEl)}
-                  onClose={handleDropDownClose}
-                >
-                  {typeof subBranch[index] != "undefined" &&
-                    subBranch[index].map((sub) => (
-                      <StyledMenuItem>
-                        <ListItemText primary={sub.name} />
-                      </StyledMenuItem>
-                    ))}
-                </StyledMenu>
-              </React.Fragment>
-            )
-          )}
-        </List>
-        {auth && (
-          <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <PermIdentityOutlinedIcon />
-            </IconButton>
-            <IconButton
-              aria-label="search"
-              aria-controls="menu-appbar"
-              color="inherit"
-              onClick={handleOpenModal}
-            >
-              <SearchOutlinedIcon />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              aria-label="add to shopping cart"
-              onClick={toggleDrawer(["right"], true)}
-            >
-              <Badge badgeContent={itemCount} max={2000} color="secondary">
-                <LocalMallOutlinedIcon />
-              </Badge>
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>پروفایل</MenuItem>
-              <MenuItem onClick={handleClose}>حساب کاربری</MenuItem>
-            </Menu>
-          </div>
-        )}
-      </Toolbar>
-    );
   };
 
   React.useEffect(() => {
@@ -496,19 +332,6 @@ export default function Header(props) {
       .catch((error) => {
         console.log(error.message);
       });
-
-    const setResponsiveness = () => {
-      return window.innerWidth < 768
-        ? setState((prevState) => ({ ...prevState, mobileView: true }))
-        : setState((prevState) => ({ ...prevState, mobileView: false }));
-    };
-
-    setResponsiveness();
-    window.addEventListener("resize", () => setResponsiveness());
-
-    return () => {
-      window.removeEventListener("resize", () => setResponsiveness());
-    };
   }, []);
 
   return (
@@ -609,7 +432,79 @@ export default function Header(props) {
         </Container>
       </Dialog>
       <AppBar position="fixed">
-        {mobileView ? displayMobile() : displayDesktop()}
+        <Toolbar>
+          <IconButton
+            {...{
+              edge: "start",
+              color: "inherit",
+              "aria-label": "menu",
+              "aria-haspopup": "true",
+            }}
+            onClick={handleDrawerOpen}
+            className={[classes.mrAuto, classes.mobileMenuIcon].join(" ")}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            onClick={() => history.push(`/`)}
+            className={classes.merrixLogo}
+          >
+            Merrix
+          </Typography>
+          <List component="nav" className={classes.flexNav}>
+            {branch.map((text, index) => (
+              <React.Fragment>
+                <ListItem
+                  button
+                  key={text.id}
+                  className={[
+                    classes.navItem,
+                    { selected: classes.active },
+                  ].join(" ")}
+                  onClick={(e) => {
+                    handleDropDownOpen(e);
+                  }}
+                >
+                  <ListItemText primary={text.name} />
+                </ListItem>
+                <Menu
+                  anchorEl={dropDownAnchorEl}
+                  keepMounted
+                  open={Boolean(dropDownAnchorEl)}
+                  onClose={handleDropDownClose}
+                >
+                  {typeof subBranch[index] != "undefined" &&
+                    subBranch[index].map((subItem) => (
+                      <MenuItem>fuck</MenuItem>
+                    ))}
+                </Menu>
+              </React.Fragment>
+            ))}
+          </List>
+
+          {auth && (
+            <div>
+              <IconButton
+                aria-label="search"
+                aria-controls="menu-appbar"
+                color="inherit"
+                onClick={handleOpenModal}
+              >
+                <SearchOutlinedIcon />
+              </IconButton>
+              <IconButton
+                color="inherit"
+                aria-label="add to shopping cart"
+                onClick={toggleDrawer(["right"], true)}
+              >
+                <Badge badgeContent={itemCount} max={2000} color="secondary">
+                  <LocalMallOutlinedIcon />
+                </Badge>
+              </IconButton>
+            </div>
+          )}
+        </Toolbar>
       </AppBar>
       <React.Fragment>
         <SwipeableDrawer
@@ -664,7 +559,12 @@ export default function Header(props) {
                 </ListItem>
               ))
             ) : (
-              <Typography variant="body1" component="p" align="center">
+              <Typography
+                variant="body1"
+                component="p"
+                align="center"
+                className={classes.cartEmptyText}
+              >
                 سبد خرید خالی است
               </Typography>
             )}
@@ -712,71 +612,53 @@ export default function Header(props) {
             >
               <ListItemText primary="صفحه اصلی" />
             </ListItem>
-            {
-              /*["کاغذ کادو", "باکس هدیه", "پاکت هدیه", "دفترچه فانتزی"].map(
-              (text, index) => (
+            {branch.map((item, index) => (
+              <React.Fragment>
                 <ListItem
                   button
-                  key={text}
-                  selected={selectedIndex === index}
+                  key={item.id}
+                  selected={selectedIndex === item.id}
                   onClick={(event) => {
-                    history.push(`/categories/${categoriesId[index]}/${text}`);
-                    handleListItemClick(event, index);
+                    handleExpand(item.name);
+                    typeof subBranch[index] != "undefined" &&
+                      subBranch[index].length === 0 &&
+                      history.push(`/categories/${item.id}/${item.name}`);
                   }}
                 >
-                  <ListItemText primary={text} />
+                  <ListItemText primary={item.name} />
+                  {typeof subBranch[index] != "undefined" &&
+                  subBranch[index].length > 0 ? (
+                    openSubBranch[item.name] ? (
+                      <ExpandLess />
+                    ) : (
+                      <ExpandMore />
+                    )
+                  ) : null}
                 </ListItem>
-              )
-                )*/
-
-              branch.map((item, index) => (
-                <React.Fragment>
-                  <ListItem
-                    button
-                    key={item.id}
-                    selected={selectedIndex === item.id}
-                    onClick={(event) => {
-                      handleExpand(item.name);
-                      typeof subBranch[index] != "undefined" &&
-                        subBranch[index].length === 0 &&
-                        history.push(`/categories/${item.id}/${item.name}`);
-                    }}
-                  >
-                    <ListItemText primary={item.name} />
+                <Collapse
+                  in={openSubBranch[item.name]}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <List component="div" disablePadding>
                     {typeof subBranch[index] != "undefined" &&
-                    subBranch[index].length > 0 ? (
-                      openSubBranch[item.name] ? (
-                        <ExpandLess />
-                      ) : (
-                        <ExpandMore />
-                      )
-                    ) : null}
-                  </ListItem>
-                  <Collapse
-                    in={openSubBranch[item.name]}
-                    timeout="auto"
-                    unmountOnExit
-                  >
-                    <List component="div" disablePadding>
-                      {typeof subBranch[index] != "undefined" &&
-                        subBranch[index].length !== 0 &&
-                        subBranch[index].map((sub) => (
-                          <ListItem
-                            button
-                            className={classes.nested}
-                            onClick={(event) => {
-                              history.push(`/categories/${sub.id}/${sub.name}`);
-                              handleListItemClick(event, sub.id);
-                            }}
-                          >
-                            <ListItemText primary={sub.name} />
-                          </ListItem>
-                        ))}
-                    </List>
-                  </Collapse>
-                </React.Fragment>
-              ))
-            }
+                      subBranch[index].length !== 0 &&
+                      subBranch[index].map((sub) => (
+                        <ListItem
+                          button
+                          className={classes.nested}
+                          onClick={(event) => {
+                            history.push(`/categories/${sub.id}/${sub.name}`);
+                            handleListItemClick(event, sub.id);
+                          }}
+                        >
+                          <ListItemText primary={sub.name} />
+                        </ListItem>
+                      ))}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            ))}
           </List>
         </Drawer>
       </React.Fragment>

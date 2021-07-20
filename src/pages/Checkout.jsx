@@ -195,7 +195,6 @@ export default function Checkout() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Header />
       <main className={classes.layout}>
         {cartItems.length > 0 && (
           <Paper className={classes.paper}>
