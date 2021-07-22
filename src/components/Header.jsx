@@ -210,6 +210,17 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  sortButton: {
+    margin: theme.spacing(3),
+    position: "fixed",
+    bottom: "0",
+    right: "0",
+    zIndex: 999,
+  },
+  sortIcon: {
+    marginTop: "13px",
+    marginRight: "10px",
+  },
 }));
 
 export default function Header(props) {
@@ -332,7 +343,7 @@ export default function Header(props) {
       .catch((error) => {
         console.log(error.message);
       });
-  }, []);
+  }, [history]);
 
   return (
     <div className={classes.bottomMargin}>
@@ -468,17 +479,6 @@ export default function Header(props) {
                 >
                   <ListItemText primary={text.name} />
                 </ListItem>
-                <Menu
-                  anchorEl={dropDownAnchorEl}
-                  keepMounted
-                  open={Boolean(dropDownAnchorEl)}
-                  onClose={handleDropDownClose}
-                >
-                  {typeof subBranch[index] != "undefined" &&
-                    subBranch[index].map((subItem) => (
-                      <MenuItem>fuck</MenuItem>
-                    ))}
-                </Menu>
               </React.Fragment>
             ))}
           </List>

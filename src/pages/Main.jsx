@@ -8,6 +8,7 @@ import Header from "components/Header";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { CircularProgress } from "@material-ui/core";
+import FilterComponent from "components/FilterComponent";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -115,6 +116,7 @@ export default function Main() {
           )}
         </Grid>
       </Container>
+      <FilterComponent />
     </React.Fragment>
   );
 }
