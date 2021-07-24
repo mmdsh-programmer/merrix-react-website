@@ -96,6 +96,7 @@ export default function Main() {
                   title={pr.name}
                   key={pr.id}
                   id={pr.id}
+                  sku={pr.sku}
                 />
               </Grid>
             );

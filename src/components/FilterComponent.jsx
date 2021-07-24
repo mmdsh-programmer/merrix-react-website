@@ -5,6 +5,7 @@ import Fab from "@material-ui/core/Fab";
 import FilterIcon from "./FilterIcon";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
   sortButton: {
@@ -50,23 +51,22 @@ export default function FilterComponent() {
         open={state["left"]}
         onClose={toggleDrawer("left", false)}
       >
-        <Typography
-          id="discrete-slider"
-          className={classes.filterDrawerContainer}
-          gutterBottom
-        >
-          سایز
-        </Typography>
-        <Slider
-          defaultValue={1}
-          getAriaValueText={valuetext}
-          aria-labelledby="discrete-slider"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={18}
-        />
+        <Grid container spacing={1} className={classes.filterDrawerContainer}>
+          <Typography id="discrete-slider" gutterBottom>
+            سایز
+          </Typography>
+          <Slider
+            defaultValue={1}
+            getAriaValueText={valuetext}
+            aria-labelledby="discrete-slider"
+            valueLabelDisplay="on"
+            step={1}
+            marks
+            min={1}
+            max={18}
+            className={classes.slid}
+          />
+        </Grid>
       </Drawer>
       <Fab
         size="medium"
