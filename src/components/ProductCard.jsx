@@ -12,6 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
 import { CartContext } from "helpers/CartContext";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -25,6 +26,7 @@ const StyledBadge = withStyles((theme) => ({
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
+    width: "100%",
   },
   button: {
     minWidth: "30px",
@@ -43,6 +45,9 @@ const useStyles = makeStyles({
   },
   topMargin: {
     marginTop: "10px",
+  },
+  media: {
+    height: 358,
   },
 });
 
@@ -68,76 +73,109 @@ export default function ProductCard(props) {
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          alt={props.title}
-          height="358"
-          image={props.image}
-          title={props.title}
-        />
+        {props.loading ? (
+          <Skeleton animation="wave" variant="rect" className={classes.media} />
+        ) : (
+          <CardMedia
+            component="img"
+            alt={props.title}
+            height="358"
+            image={props.image}
+            title={props.title}
+          />
+        )}
       </CardActionArea>
       <CardActions>
         <Grid container spacing={1}>
           <Grid item xs={10}>
-            <Typography
-              variant="body1"
-              component="h2"
-              className={classes.topMargin}
-            >
-              {props.title}
-            </Typography>
-            <Typography variant="body1" component="h2">
-              {props.sku}
-            </Typography>
+            {props.loading ? (
+              <React.Fragment>
+                <Skeleton
+                  animation="wave"
+                  height={10}
+                  style={{ marginBottom: 6 }}
+                />
+                <Skeleton
+                  animation="wave"
+                  height={10}
+                  width="60%"
+                  style={{ marginBottom: 6 }}
+                />
+                <Skeleton
+                  animation="wave"
+                  height={10}
+                  width="60%"
+                  style={{ marginBottom: 6 }}
+                />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  className={classes.topMargin}
+                >
+                  {props.title}
+                </Typography>
+                <Typography variant="body1" component="h2">
+                  {props.sku}
+                </Typography>
+              </React.Fragment>
+            )}
           </Grid>
-          <Grid item xs={2} className={classes.buttonContainer}>
-            <ButtonGroup orientation="vertical">
-              {isInCart(props) && (
+          {!props.loading && (
+            <Grid item xs={2} className={classes.buttonContainer}>
+              <ButtonGroup orientation="vertical">
+                {isInCart(props) && (
+                  <Button
+                    aria-label="reduce"
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                    className={[
+                      classes.button,
+                      classes.coloredBorderButton,
+                    ].join(" ")}
+                    onClick={() => {
+                      setCount(Math.max(count - 1, 0));
+                      selectedCartItem(props.id)[0].quantity === 1
+                        ? removeProduct(props)
+                        : decrease(props);
+                    }}
+                  >
+                    <RemoveIcon fontSize="small" />
+                  </Button>
+                )}
+                {isInCart(props) && (
+                  <Button
+                    aria-label="count"
+                    size="small"
+                    variant="outlined"
+                    className={[classes.button, classes.borderlessButton].join(
+                      " "
+                    )}
+                  >
+                    {isInCart(props)
+                      ? selectedCartItem(props.id)[0].quantity
+                      : 0}
+                  </Button>
+                )}
                 <Button
-                  aria-label="reduce"
+                  aria-label="increase"
                   size="small"
                   variant="outlined"
                   color="secondary"
-                  className={[classes.button, classes.coloredBorderButton].join(
-                    " "
-                  )}
+                  className={classes.button}
                   onClick={() => {
-                    setCount(Math.max(count - 1, 0));
-                    selectedCartItem(props.id)[0].quantity === 1
-                      ? removeProduct(props)
-                      : decrease(props);
+                    setCount(count + 1);
+                    isInCart(props) ? increase(props) : addProduct(props);
                   }}
                 >
-                  <RemoveIcon fontSize="small" />
+                  <AddIcon fontSize="small" />
                 </Button>
-              )}
-              {isInCart(props) && (
-                <Button
-                  aria-label="count"
-                  size="small"
-                  variant="outlined"
-                  className={[classes.button, classes.borderlessButton].join(
-                    " "
-                  )}
-                >
-                  {isInCart(props) ? selectedCartItem(props.id)[0].quantity : 0}
-                </Button>
-              )}
-              <Button
-                aria-label="increase"
-                size="small"
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={() => {
-                  setCount(count + 1);
-                  isInCart(props) ? increase(props) : addProduct(props);
-                }}
-              >
-                <AddIcon fontSize="small" />
-              </Button>
-            </ButtonGroup>
-          </Grid>
+              </ButtonGroup>
+            </Grid>
+          )}
         </Grid>
       </CardActions>
     </Card>

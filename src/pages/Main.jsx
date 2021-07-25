@@ -4,7 +4,6 @@ import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
-import Header from "components/Header";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { CircularProgress } from "@material-ui/core";
@@ -97,6 +96,7 @@ export default function Main() {
                   key={pr.id}
                   id={pr.id}
                   sku={pr.sku}
+                  loading={loading}
                 />
               </Grid>
             );
@@ -111,7 +111,27 @@ export default function Main() {
       <Container maxWidth="lg">
         <Grid container className={classes.container} spacing={2}>
           {loading ? (
-            <CircularProgress size={60} className={classes.loading} />
+            [...Array(10).keys()].map((virtual) => {
+              return (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  md={3}
+                  key={virtual}
+                  className={classes.dFlex}
+                >
+                  <ProductCard
+                    image={null}
+                    title={null}
+                    key={virtual}
+                    id={virtual}
+                    sku={null}
+                    loading={loading}
+                  />
+                </Grid>
+              );
+            })
           ) : (
             <ProductsComponent />
           )}
