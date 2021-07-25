@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   slider: {
     maxWidth: 250,
     alignSelf: "center",
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
 }));
 

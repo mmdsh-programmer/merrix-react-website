@@ -55,7 +55,7 @@ export default function Categories(props) {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
-  const [offset, setOffset] = React.useState(10);
+  const [offset, setOffset] = React.useState(11);
   const { key } = props.match.params;
   const { slug } = props.match.params;
 
@@ -111,6 +111,7 @@ export default function Categories(props) {
                   title={pr.name}
                   key={pr.id}
                   id={pr.id}
+                  sku={pr.sku}
                   stock={pr.stock_quantity}
                 />
               </Grid>
