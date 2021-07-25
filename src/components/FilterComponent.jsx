@@ -1,11 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Fab from "@material-ui/core/Fab";
 import FilterIcon from "./FilterIcon";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   sortButton: {
@@ -21,8 +22,45 @@ const useStyles = makeStyles((theme) => ({
   },
   filterDrawerContainer: {
     width: 300,
+    justifyContent: "center",
+    padding: theme.spacing(3),
+  },
+  slider: {
+    maxWidth: 250,
+    alignSelf: "center",
+    marginTop: theme.spacing(2),
   },
 }));
+
+const PrettoSlider = withStyles({
+  root: {
+    color: "#52af77",
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    marginTop: -8,
+    marginLeft: -12,
+    "&:focus, &:hover, &$active": {
+      boxShadow: "inherit",
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: "calc(-50% + 4px)",
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 4,
+  },
+})(Slider);
 
 export default function FilterComponent() {
   const classes = useStyles();
@@ -51,21 +89,31 @@ export default function FilterComponent() {
         open={state["left"]}
         onClose={toggleDrawer("left", false)}
       >
-        <Grid container spacing={1} className={classes.filterDrawerContainer}>
-          <Typography id="discrete-slider" gutterBottom>
+        <Grid
+          container
+          className={classes.filterDrawerContainer}
+          direction="column"
+        >
+          <Typography
+            id="discrete-slider"
+            gutterBottom
+            component="h6"
+            variant="h6"
+          >
             سایز
           </Typography>
-          <Slider
+          <PrettoSlider
             defaultValue={1}
             getAriaValueText={valuetext}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="on"
             step={1}
-            marks
             min={1}
             max={18}
-            className={classes.slid}
+            className={classes.slider}
           />
+          <Divider light />
+          
         </Grid>
       </Drawer>
       <Fab
