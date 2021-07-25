@@ -4,11 +4,9 @@ import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
-import Header from "components/Header";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Button from "components/Button";
-import { CircularProgress } from "@material-ui/core";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -37,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    marginTop: theme.spacing(13),
+    marginTop: theme.spacing(5),
     marginBottom: theme.spacing(5),
   },
   loading: {
@@ -140,11 +138,33 @@ export default function Categories(props) {
   return (
     <React.Fragment>
       <Container maxWidth="lg">
-        {loading ? (
-          <CircularProgress size={60} className={classes.loading} />
-        ) : (
-          <CategoriesComponent />
-        )}
+        <Grid container className={classes.container} spacing={2}>
+          {loading ? (
+            [...Array(10).keys()].map((virtual) => {
+              return (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  md={3}
+                  key={virtual}
+                  className={classes.dFlex}
+                >
+                  <ProductCard
+                    image={null}
+                    title={null}
+                    key={virtual}
+                    id={virtual}
+                    sku={null}
+                    loading={loading}
+                  />
+                </Grid>
+              );
+            })
+          ) : (
+            <CategoriesComponent />
+          )}
+        </Grid>
       </Container>
     </React.Fragment>
   );
