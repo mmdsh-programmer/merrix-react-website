@@ -7,6 +7,8 @@ import ProductCard from "components/ProductCard";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Button from "components/Button";
+import { FilterContext } from "helpers/FilterContext";
+import FilterComponent from "components/FilterComponent";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Categories(props) {
   const classes = useStyles();
   const { user, setUser } = React.useContext(AuthContext);
+  const { filter } = React.useContext(FilterContext);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
@@ -74,8 +77,12 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
+    console.log(filter);
+    const { size, material } = filter;
     product
-      .read(`/wc/v3/products?category=${key}&stock_status=instock&orderby=slug`)
+      .read(
+        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&`
+      )
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -83,7 +90,7 @@ export default function Categories(props) {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [key]);
+  }, [key, filter]);
 
   const CategoriesComponent = () => {
     return (
@@ -167,6 +174,7 @@ export default function Categories(props) {
           )}
         </Grid>
       </Container>
+      <FilterComponent />
     </React.Fragment>
   );
 }

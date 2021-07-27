@@ -647,6 +647,7 @@ export default function Header(props) {
                         <ListItem
                           button
                           className={classes.nested}
+                          key={sub.id}
                           onClick={(event) => {
                             history.push(`/categories/${sub.id}/${sub.name}`);
                             handleListItemClick(event, sub.id);
