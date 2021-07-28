@@ -2,8 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Header from "components/Header";
-import { react } from "@babel/types";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NotFound(props) {
   const classes = useStyles();
+  useDocumentTitle("صفحه یافت نشد")
 
   return (
     <React.Fragment>

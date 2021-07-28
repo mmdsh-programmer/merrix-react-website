@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -49,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     margin: "30px auto",
   },
+  infoText: {
+    width: "100%",
+    textAlign: "center",
+  },
 }));
 
 export default function Categories(props) {
@@ -58,9 +63,10 @@ export default function Categories(props) {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
-  const [offset, setOffset] = React.useState(11);
+  const [offset, setOffset] = React.useState(10);
   const { key } = props.match.params;
   const { slug } = props.match.params;
+  useDocumentTitle(slug);
 
   const loadMore = (endpoint) => {
     product
@@ -80,9 +86,7 @@ export default function Categories(props) {
     console.log(filter);
     const { size, material } = filter || {};
     product
-      .read(
-        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug`
-      )
+      .read(`/wc/v3/products?category=${key}&stock_status=instock&orderby=slug`)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -98,47 +102,63 @@ export default function Categories(props) {
         <Typography variant="h5" component="h1" className={classes.title}>
           {slug}
         </Typography>
-        <Grid container className={classes.container} spacing={2}>
-          {products.map((pr) => {
-            return (
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                md={3}
-                key={pr.id}
-                className={classes.dFlex}
-              >
-                <ProductCard
-                  image={
-                    typeof pr.images[0] !== "undefined"
-                      ? pr.images[0].src
-                      : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
-                  }
-                  title={pr.name}
-                  key={pr.id}
-                  id={pr.id}
-                  sku={pr.sku}
-                  stock={pr.stock_quantity}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
-        <Button
-          className={classes.loadMore}
-          loading={buttonLoading}
-          variant="outlined"
-          onClick={() => {
-            setButtonLoading(true);
-            setOffset(offset + 10);
-            loadMore(
-              `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock`
-            );
-          }}
+        <Grid
+          container
+          className={products.length > 0 ? classes.container : classes.dFlex}
+          spacing={2}
         >
-          محصولات بیشتر
-        </Button>
+          {products.length > 0 ? (
+            products.map((pr) => {
+              return (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  md={3}
+                  key={pr.id}
+                  className={classes.dFlex}
+                >
+                  <ProductCard
+                    image={
+                      typeof pr.images[0] !== "undefined"
+                        ? pr.images[0].src
+                        : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
+                    }
+                    title={pr.name}
+                    key={pr.id}
+                    id={pr.id}
+                    sku={pr.sku}
+                    stock={pr.stock_quantity}
+                  />
+                </Grid>
+              );
+            })
+          ) : (
+            <Typography
+              variant="body1"
+              component="p"
+              className={classes.infoText}
+            >
+              محصولی یافت نشد
+            </Typography>
+          )}
+        </Grid>
+        {products.length > 0 && (
+          <Button
+            className={classes.loadMore}
+            loading={buttonLoading}
+            variant="outlined"
+            onClick={() => {
+              setButtonLoading(true);
+              setOffset(offset + 10);
+              loadMore(
+                `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock`
+              );
+            }}
+          >
+            محصولات بیشتر
+          </Button>
+        )}
       </div>
     );
   };

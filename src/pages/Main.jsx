@@ -6,8 +6,8 @@ import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { CircularProgress } from "@material-ui/core";
 import FilterComponent from "components/FilterComponent";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -50,8 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Main() {
+export default function Main(props) {
   const classes = useStyles();
+  useDocumentTitle("", false, true);
   const { user, setUser } = React.useContext(AuthContext);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);

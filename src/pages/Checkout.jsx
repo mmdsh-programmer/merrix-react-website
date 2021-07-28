@@ -22,6 +22,7 @@ import provinceImport from "services/provinceImport";
 import { CartContext } from "helpers/CartContext";
 import order from "services/crud/order";
 import Alert from "@material-ui/lab/Alert";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -79,6 +80,7 @@ const steps = ["مشخصات شما"];
 
 export default function Checkout() {
   const classes = useStyles();
+  useDocumentTitle("تسویه حساب");
   const {
     register,
     handleSubmit,

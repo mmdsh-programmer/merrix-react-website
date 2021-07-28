@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import coupon from "services/crud/coupons";
 import { toast } from "react-toastify";
 import Badge from "@material-ui/core/Badge";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   coupon: {
     marginRight: theme.spacing(2),
-    width: "170px"
+    width: "170px",
   },
   couponButton: {
     height: "2.8em",
@@ -70,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Cart(props) {
   const classes = useStyles();
+  useDocumentTitle("سبد خرید");
   const {
     cartItems,
     increase,
