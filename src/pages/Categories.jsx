@@ -78,10 +78,10 @@ export default function Categories(props) {
   React.useEffect(() => {
     setLoading(true);
     console.log(filter);
-    const { size, material } = filter;
+    const { size, material } = filter || {};
     product
       .read(
-        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&`
+        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug`
       )
       .then((res) => {
         setProducts(res.data);
