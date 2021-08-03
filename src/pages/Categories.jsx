@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Categories(props) {
   const classes = useStyles();
   const { user, setUser } = React.useContext(AuthContext);
-  const { filter } = React.useContext(FilterContext);
+  const { filter, setFilter } = React.useContext(FilterContext);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -67,6 +67,7 @@ export default function Categories(props) {
   const [offset, setOffset] = React.useState(10);
   const { key } = props.match.params;
   const { slug } = props.match.params;
+  const { size, material } = filter || {};
   useDocumentTitle(slug);
 
   const loadMore = (endpoint) => {
@@ -84,15 +85,20 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    const { size, material } = filter || {};
-    console.log(filter);
     product
       .read(
-        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${material} ${size}`
+        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${
+          typeof material !== "undefined" ? material : ""
+        } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
       )
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
+        console.log(
+          `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${
+            typeof material !== "undefined" ? material : ""
+          } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
+        );
       })
       .catch((error) => {
         console.log(error.message);
@@ -155,7 +161,9 @@ export default function Categories(props) {
               setButtonLoading(true);
               setOffset(offset + 10);
               loadMore(
-                `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock`
+                `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock&orderby=slug&search=${
+                  typeof material !== "undefined" ? material : ""
+                } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
               );
             }}
           >
@@ -197,7 +205,7 @@ export default function Categories(props) {
           )}
         </Grid>
       </Container>
-      <FilterComponent />
+      <FilterComponent slug={slug} />
     </React.Fragment>
   );
 }

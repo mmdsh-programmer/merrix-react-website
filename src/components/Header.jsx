@@ -46,7 +46,7 @@ import AddIcon from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
-import { indexOf } from "lodash";
+import { FilterContext } from "helpers/FilterContext";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -239,6 +239,7 @@ export default function Header(props) {
   const [categories, setCategories] = React.useState([]);
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [searchLoading, setSearchLoading] = React.useState("first time");
+  const { setFilter } = React.useContext(FilterContext);
   const [searchResult, setSearchResult] = React.useState([]);
   const {
     cartItems,
@@ -493,6 +494,7 @@ export default function Header(props) {
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
+                    setFilter();
                     item === "دفترچه فانتزی" && handleDropDownOpen(e);
                     item !== "دفترچه فانتزی" &&
                       history.push(
@@ -666,6 +668,7 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     //handleDropDownOpen(e);
+                    setFilter();
                     item === "دفترچه فانتزی" && handleExpand(item);
                     item !== "دفترچه فانتزی" &&
                       history.push(
@@ -690,6 +693,7 @@ export default function Header(props) {
                         className={classes.nested}
                         key={index}
                         onClick={(event) => {
+                          setFilter();
                           history.push(
                             `/categories/${subNavbarItemsId[index]}/${sub}`
                           );
