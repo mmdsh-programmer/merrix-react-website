@@ -60,6 +60,7 @@ export default function Categories(props) {
   const classes = useStyles();
   const { user, setUser } = React.useContext(AuthContext);
   const { filter } = React.useContext(FilterContext);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
@@ -83,10 +84,12 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    console.log(filter);
     const { size, material } = filter || {};
+    console.log(filter);
     product
-      .read(`/wc/v3/products?category=${key}&stock_status=instock&orderby=slug`)
+      .read(
+        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${material} ${size}`
+      )
       .then((res) => {
         setProducts(res.data);
         setLoading(false);

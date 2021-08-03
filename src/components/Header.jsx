@@ -46,6 +46,7 @@ import AddIcon from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
+import { indexOf } from "lodash";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -251,6 +252,23 @@ export default function Header(props) {
   const [openSubBranch, setOpenSubBranch] = React.useState({});
   const { control, errors: fieldsErrors, trigger, register } = useForm();
   const [dropDownAnchorEl, setDropDownAnchorEl] = React.useState(null);
+  const navBarItems = [
+    "کاغذ کادو",
+    "باکس هدیه",
+    "پاکت هدیه",
+    "دفترچه فانتزی",
+    "باکس دستمال کاغذی",
+  ];
+  const navBarItemsId = [168, 211, 171, 179, 270];
+  const subNavbarItems = [
+    "دفترچه فانتزی بریک",
+    "دفترچه فانتزی میکرو",
+    "دفترچه فانتزی مینی",
+    "دفترچه فانتزی اسلیم",
+    "دفترچه فانتزی مید",
+    "دفترچه فانتزی اسکوئر",
+  ];
+  const subNavbarItemsId = [236, 231, 232, 180, 224, 268];
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -329,6 +347,7 @@ export default function Header(props) {
     category
       .read("/wc/v3/products/categories?per_page=100")
       .then((res) => {
+        console.log(res.data);
         setCategories(res.data);
         res.data.map((cat) => {
           cat.parent === 0 && filteredBranch.push(cat);
@@ -464,21 +483,45 @@ export default function Header(props) {
             Merrix
           </Typography>
           <List component="nav" className={classes.flexNav}>
-            {branch.map((text, index) => (
-              <React.Fragment>
+            {navBarItems.map((item, index) => (
+              <React.Fragment key={index}>
                 <ListItem
                   button
-                  key={text.id}
+                  key={index}
                   className={[
                     classes.navItem,
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
-                    handleDropDownOpen(e);
+                    item === "دفترچه فانتزی" && handleDropDownOpen(e);
+                    item !== "دفترچه فانتزی" &&
+                      history.push(
+                        `/categories/${navBarItemsId[index]}/${item}`
+                      );
                   }}
                 >
-                  <ListItemText primary={text.name} />
+                  <ListItemText primary={item} />
                 </ListItem>
+                <StyledMenu
+                  id="customized-menu"
+                  anchorEl={dropDownAnchorEl}
+                  keepMounted
+                  open={Boolean(dropDownAnchorEl)}
+                  onClose={handleDropDownClose}
+                >
+                  {subNavbarItems.map((sub, index) => (
+                    <StyledMenuItem
+                      key={index}
+                      onClick={(event) => {
+                        history.push(
+                          `/categories/${subNavbarItemsId[index]}/${sub}`
+                        );
+                      }}
+                    >
+                      <ListItemText primary={sub} />
+                    </StyledMenuItem>
+                  ))}
+                </StyledMenu>
               </React.Fragment>
             ))}
           </List>
@@ -612,50 +655,50 @@ export default function Header(props) {
             >
               <ListItemText primary="صفحه اصلی" />
             </ListItem>
-            {branch.map((item, index) => (
-              <React.Fragment>
+            {navBarItems.map((item, index) => (
+              <React.Fragment key={index}>
                 <ListItem
                   button
-                  key={item.id}
-                  selected={selectedIndex === item.id}
-                  onClick={(event) => {
-                    handleExpand(item.name);
-                    typeof subBranch[index] != "undefined" &&
-                      subBranch[index].length === 0 &&
-                      history.push(`/categories/${item.id}/${item.name}`);
+                  key={index}
+                  className={[
+                    classes.navItem,
+                    { selected: classes.active },
+                  ].join(" ")}
+                  onClick={(e) => {
+                    //handleDropDownOpen(e);
+                    item === "دفترچه فانتزی" && handleExpand(item);
+                    item !== "دفترچه فانتزی" &&
+                      history.push(
+                        `/categories/${navBarItemsId[index]}/${item}`
+                      );
                   }}
                 >
-                  <ListItemText primary={item.name} />
-                  {typeof subBranch[index] != "undefined" &&
-                  subBranch[index].length > 0 ? (
-                    openSubBranch[item.name] ? (
+                  <ListItemText primary={item} />
+                  {item === "دفترچه فانتزی" ? (
+                    openSubBranch[item] ? (
                       <ExpandLess />
                     ) : (
                       <ExpandMore />
                     )
                   ) : null}
                 </ListItem>
-                <Collapse
-                  in={openSubBranch[item.name]}
-                  timeout="auto"
-                  unmountOnExit
-                >
+                <Collapse in={openSubBranch[item]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    {typeof subBranch[index] != "undefined" &&
-                      subBranch[index].length !== 0 &&
-                      subBranch[index].map((sub) => (
-                        <ListItem
-                          button
-                          className={classes.nested}
-                          key={sub.id}
-                          onClick={(event) => {
-                            history.push(`/categories/${sub.id}/${sub.name}`);
-                            handleListItemClick(event, sub.id);
-                          }}
-                        >
-                          <ListItemText primary={sub.name} />
-                        </ListItem>
-                      ))}
+                    {subNavbarItems.map((sub, index) => (
+                      <ListItem
+                        button
+                        className={classes.nested}
+                        key={index}
+                        onClick={(event) => {
+                          history.push(
+                            `/categories/${subNavbarItemsId[index]}/${sub}`
+                          );
+                          handleListItemClick(event, subNavbarItemsId[index]);
+                        }}
+                      >
+                        <ListItemText primary={sub} />
+                      </ListItem>
+                    ))}
                   </List>
                 </Collapse>
               </React.Fragment>

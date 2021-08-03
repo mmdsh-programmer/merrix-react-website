@@ -59,8 +59,9 @@ export default function Main(props) {
   React.useEffect(() => {
     setLoading(true);
     product
-      .read("/wc/v3/products?orderby=popularity&stock_status=instock")
+      .read("/wc/v3/products?attribute=کرافت")
       .then((res) => {
+        console.log(res.data);
         setProducts(res.data);
         setLoading(false);
       })

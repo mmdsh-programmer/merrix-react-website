@@ -108,7 +108,48 @@ export default function FilterComponent() {
   };
 
   const valuetext = (value) => {
-    return `${value}°C`;
+    return value;
+  };
+
+  const textToNum = (text) => {
+    switch (text) {
+      case "یک":
+        return 1;
+      case "دو":
+        return 2;
+      case "سه":
+        return 3;
+      case "چهار":
+        return 4;
+      case "پنج":
+        return 5;
+      case "شش":
+        return 6;
+      case "هفت":
+        return 7;
+      case "هشت":
+        return 8;
+      case "نه":
+        return 9;
+      case "ده":
+        return 10;
+      case "یازده":
+        return 11;
+      case "دوازده":
+        return 12;
+      case "سیزده":
+        return 13;
+      case "چهارده":
+        return 14;
+      case "پانزده":
+        return 15;
+      case "شانزده":
+        return 16;
+      case "هفده":
+        return 17;
+      case "هجده":
+        return 18;
+    }
   };
 
   const onSubmit = (data, e) => {
@@ -141,15 +182,77 @@ export default function FilterComponent() {
               <AccordionDetails>
                 <PrettoSlider
                   name="sizeّ"
-                  defaultValue={typeof filter !== "undefined" ? filter.size : 1}
+                  defaultValue={
+                    typeof filter !== "undefined" ? textToNum(filter.size) : 1
+                  }
                   getAriaValueText={valuetext}
                   aria-labelledby="discrete-slider"
                   valueLabelDisplay="on"
                   step={1}
                   min={1}
                   max={18}
+                  key={`slider-${
+                    typeof filter !== "undefined" ? textToNum(filter.size) : 1
+                  }`}
                   className={classes.slider}
-                  onChange={(e, val) => setSize(val)}
+                  onChange={(e, val) => {
+                    switch (val) {
+                      case 1:
+                        setSize("یک");
+                        break;
+                      case 2:
+                        setSize("دو");
+                        break;
+                      case 3:
+                        setSize("سه");
+                        break;
+                      case 4:
+                        setSize("چهار");
+                        break;
+                      case 5:
+                        setSize("پنج");
+                        break;
+                      case 6:
+                        setSize("شش");
+                        break;
+                      case 7:
+                        setSize("هفت");
+                        break;
+                      case 8:
+                        setSize("هشت");
+                        break;
+                      case 9:
+                        setSize("نه");
+                        break;
+                      case 10:
+                        setSize("ده");
+                        break;
+                      case 11:
+                        setSize("یازده");
+                        break;
+                      case 12:
+                        setSize("دوازده");
+                        break;
+                      case 13:
+                        setSize("سیزده");
+                        break;
+                      case 14:
+                        setSize("چهارده");
+                        break;
+                      case 15:
+                        setSize("پانزده");
+                        break;
+                      case 16:
+                        setSize("شانزده");
+                        break;
+                      case 17:
+                        setSize("هفده");
+                        break;
+                      case 18:
+                        setSize("هجده");
+                        break;
+                    }
+                  }}
                 />
               </AccordionDetails>
             </Accordion>
