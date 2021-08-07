@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   },
   buttonContainer: {
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     alignItems: "flex-end",
   },
   topMargin: {
@@ -48,6 +48,9 @@ const useStyles = makeStyles({
   },
   media: {
     height: 358,
+  },
+  cardDescription: {
+    flexDirection: "row-reverse",
   },
 });
 
@@ -70,6 +73,15 @@ export default function ProductCard(props) {
     return cartItems.filter((e) => e.id === id);
   };
 
+  const splitName = (name) => {
+    const firstRow = name.split("|")[0];
+    const firstRowTemp = name.split("|")[1];
+    const secondRow =
+      typeof firstRowTemp !== "undefined" && firstRowTemp.split("—")[0];
+    const splitedName = { firstRow: firstRow, secondRow: secondRow };
+    return splitedName;
+  };
+
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -86,7 +98,7 @@ export default function ProductCard(props) {
         )}
       </CardActionArea>
       <CardActions>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} className={classes.cardDescription}>
           <Grid item xs={10}>
             {props.loading ? (
               <React.Fragment>
@@ -114,11 +126,15 @@ export default function ProductCard(props) {
                   variant="body1"
                   component="h2"
                   className={classes.topMargin}
+                  align="right"
                 >
-                  {props.title}
+                  {splitName(props.title).firstRow}
                 </Typography>
-                <Typography variant="body1" component="h2">
-                  {props.sku}
+                <Typography variant="body1" component="h2" align="right">
+                  {splitName(props.title).secondRow}
+                </Typography>
+                <Typography variant="body1" component="h2" align="right">
+                  X Code : {props.sku}
                 </Typography>
               </React.Fragment>
             )}

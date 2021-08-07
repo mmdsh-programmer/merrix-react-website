@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 0,
   },
+  w100: {
+    width: "100%",
+  },
   container: {
     width: "auto",
     margin: 0,
@@ -64,7 +67,7 @@ export default function Categories(props) {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [buttonLoading, setButtonLoading] = React.useState(false);
-  const [offset, setOffset] = React.useState(10);
+  const [offset, setOffset] = React.useState(2);
   const { key } = props.match.params;
   const { slug } = props.match.params;
   const { size, material } = filter || {};
@@ -87,17 +90,35 @@ export default function Categories(props) {
     setLoading(true);
     product
       .read(
-        `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${
+        `/wc/v3/products?category=${key}&status=publish&search=${
           typeof material !== "undefined" ? material : ""
-        } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
+        } ${
+          typeof size !== "undefined"
+            ? `${
+                slug.includes("X WRAP | کادوپیچ") ||
+                slug.includes("باکس دستمال کاغذی")
+                  ? ""
+                  : size
+              }`
+            : ""
+        }`
       )
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
         console.log(
-          `/wc/v3/products?category=${key}&stock_status=instock&orderby=slug&search=${
+          `/wc/v3/products?category=${key}&status=publish&search=${
             typeof material !== "undefined" ? material : ""
-          } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
+          } ${
+            typeof size !== "undefined"
+              ? `${
+                  slug.includes("X WRAP | کادوپیچ") ||
+                  slug.includes("باکس دستمال کاغذی")
+                    ? ""
+                    : size
+                }`
+              : ""
+          }`
         );
       })
       .catch((error) => {
@@ -107,7 +128,7 @@ export default function Categories(props) {
 
   const CategoriesComponent = () => {
     return (
-      <div>
+      <div className={classes.w100}>
         <Typography variant="h5" component="h1" className={classes.title}>
           {slug}
         </Typography>
@@ -159,11 +180,20 @@ export default function Categories(props) {
             variant="outlined"
             onClick={() => {
               setButtonLoading(true);
-              setOffset(offset + 10);
+              setOffset(offset + 1);
               loadMore(
-                `/wc/v3/products?category=${key}&offset=${offset}&stock_status=instock&orderby=slug&search=${
+                `/wc/v3/products?category=${key}&page=${offset}&status=publish&search=${
                   typeof material !== "undefined" ? material : ""
-                } ${typeof size !== "undefined" ? `سایز ${size}` : ""}`
+                } ${
+                  typeof size !== "undefined"
+                    ? `${
+                        slug.includes("X WRAP | کادوپیچ") ||
+                        slug.includes("باکس دستمال کاغذی")
+                          ? ""
+                          : size
+                      }`
+                    : ""
+                }`
               );
             }}
           >

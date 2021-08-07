@@ -86,7 +86,7 @@ export default function FilterComponent(props) {
   const [state, setState] = React.useState({
     left: false,
   });
-  const [size, setSize] = React.useState(undefined);
+  const [size, setSize] = React.useState("یک");
   const { control, errors: fieldsErrors, handleSubmit } = useForm();
   const { setFilter, filter } = React.useContext(FilterContext);
   const { slug } = props;
@@ -100,15 +100,15 @@ export default function FilterComponent(props) {
         "لینن",
         "رنگی",
         "یووی",
-        "طلاکوب",
+        "شاینی",
         "مخمل",
         "اوپال",
       ],
     },
     xBox: {
       hasSize: true,
-      hasMaterial: true,
-      material: ["دایره", "مربع"],
+      hasMaterial: false,
+      material: [],
     },
     xBag: {
       hasSize: true,
@@ -132,10 +132,6 @@ export default function FilterComponent(props) {
     }
 
     setState({ ...state, [anchor]: open });
-  };
-
-  const valuetext = (value) => {
-    return value;
   };
 
   const textToNum = (text) => {
@@ -181,17 +177,20 @@ export default function FilterComponent(props) {
 
   const onSubmit = (data, e) => {
     e.preventDefault();
-    const finalValue = { ...data, size: size };
+    const finalValue = {
+      ...data,
+      size: size,
+    };
     setFilter(finalValue);
   };
 
   const checkSlug = () => {
     switch (slug) {
-      case "کاغذ کادو":
+      case "X WRAP | کادوپیچ":
         return filterOptions.xWrap;
-      case "باکس هدیه":
+      case "X BOX | متال باکس":
         return filterOptions.xBox;
-      case "پاکت هدیه":
+      case "X BAG | بگ":
         return filterOptions.xBag;
       case "باکس دستمال کاغذی":
         return filterOptions.tissueBox;
@@ -228,7 +227,6 @@ export default function FilterComponent(props) {
                     defaultValue={
                       typeof filter !== "undefined" ? textToNum(filter.size) : 1
                     }
-                    getAriaValueText={valuetext}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="on"
                     step={1}
@@ -314,7 +312,9 @@ export default function FilterComponent(props) {
                     <Controller
                       control={control}
                       defaultValue={
-                        typeof filter !== "undefined" ? filter.material : "none"
+                        typeof filter !== "undefined"
+                          ? filter.material
+                          : undefined
                       }
                       name="material"
                       as={
@@ -325,6 +325,7 @@ export default function FilterComponent(props) {
                                 value={item}
                                 control={<Radio />}
                                 label={item}
+                                key={index}
                               />
                             );
                           })}

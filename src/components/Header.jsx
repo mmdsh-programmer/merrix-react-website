@@ -254,20 +254,20 @@ export default function Header(props) {
   const { control, errors: fieldsErrors, trigger, register } = useForm();
   const [dropDownAnchorEl, setDropDownAnchorEl] = React.useState(null);
   const navBarItems = [
-    "کاغذ کادو",
-    "باکس هدیه",
-    "پاکت هدیه",
-    "دفترچه فانتزی",
+    "X WRAP | کادوپیچ",
+    "X BOX | متال باکس",
+    "X BAG | بگ",
+    "X MEMO | دفترچه وولن",
     "باکس دستمال کاغذی",
   ];
   const navBarItemsId = [168, 211, 171, 179, 270];
   const subNavbarItems = [
-    "دفترچه فانتزی بریک",
-    "دفترچه فانتزی میکرو",
-    "دفترچه فانتزی مینی",
-    "دفترچه فانتزی اسلیم",
-    "دفترچه فانتزی مید",
-    "دفترچه فانتزی اسکوئر",
+    "X MEMO | دفترچه وولن سایز یک (Brick)",
+    "X MEMO | دفترچه وولن سایز دو (Micro)",
+    "X MEMO | دفترچه وولن سایز سه (Mini)",
+    "X MEMO | دفترچه وولن سایز چهار (slim)",
+    "X MEMO | دفترچه وولن سایز پنج (Mid)",
+    "X MEMO | دفترچه وولن سایز شش (Square)",
   ];
   const subNavbarItemsId = [236, 231, 232, 180, 224, 268];
 
@@ -495,8 +495,8 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     setFilter();
-                    item === "دفترچه فانتزی" && handleDropDownOpen(e);
-                    item !== "دفترچه فانتزی" &&
+                    item === "X MEMO | دفترچه وولن" && handleDropDownOpen(e);
+                    item !== "X MEMO | دفترچه وولن" &&
                       history.push(
                         `/categories/${navBarItemsId[index]}/${item}`
                       );
@@ -669,15 +669,15 @@ export default function Header(props) {
                   onClick={(e) => {
                     //handleDropDownOpen(e);
                     setFilter();
-                    item === "دفترچه فانتزی" && handleExpand(item);
-                    item !== "دفترچه فانتزی" &&
+                    item === "X MEMO | دفترچه وولن" && handleExpand(item);
+                    item !== "X MEMO | دفترچه وولن" &&
                       history.push(
                         `/categories/${navBarItemsId[index]}/${item}`
                       );
                   }}
                 >
                   <ListItemText primary={item} />
-                  {item === "دفترچه فانتزی" ? (
+                  {item === "X MEMO | دفترچه وولن" ? (
                     openSubBranch[item] ? (
                       <ExpandLess />
                     ) : (
