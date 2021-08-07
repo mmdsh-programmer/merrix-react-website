@@ -337,14 +337,25 @@ export default function FilterComponent(props) {
               </Accordion>
             )}
             {checkSlug().hasMaterial || checkSlug().hasSize ? (
-              <Button
-                type="submit"
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-              >
-                اعمال فیلتر
-              </Button>
+              <React.Fragment>
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                >
+                  اعمال فیلتر
+                </Button>
+                <Button
+                  type="reset"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => setFilter()}
+                >
+                  پاک کردن فیلتر
+                </Button>
+              </React.Fragment>
             ) : (
               <Typography className={classes.heading}>
                 فیلتر برای این دسته بندی موجود نیست
