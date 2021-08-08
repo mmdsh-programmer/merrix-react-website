@@ -312,9 +312,7 @@ export default function FilterComponent(props) {
                     <Controller
                       control={control}
                       defaultValue={
-                        typeof filter !== "undefined"
-                          ? filter.material
-                          : undefined
+                        typeof filter !== "undefined" ? filter.material : ""
                       }
                       name="material"
                       as={

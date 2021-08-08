@@ -78,6 +78,7 @@ export default function Categories(props) {
       .read(endpoint)
       .then((res) => {
         setButtonLoading(false);
+        console.log(endpoint);
         setProducts(products.concat(res.data));
       })
       .catch((error) => {
@@ -88,9 +89,10 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
+    setOffset(2);
     product
       .read(
-        `/wc/v3/products?category=${key}&orderby=slug&order=asc&stock_status=publish&search=${
+        `/wc/v3/products?category=${key}&orderby=slug&order=asc&status=publish&search=${
           typeof material !== "undefined" ? material : ""
         } ${
           typeof size !== "undefined"
@@ -138,14 +140,14 @@ export default function Categories(props) {
           spacing={2}
         >
           {products.length > 0 ? (
-            products.map((pr) => {
+            products.map((pr, index) => {
               return (
                 <Grid
                   item
                   xs={12}
                   sm={4}
                   md={3}
-                  key={pr.id}
+                  key={index}
                   className={classes.dFlex}
                 >
                   <ProductCard
@@ -155,7 +157,7 @@ export default function Categories(props) {
                         : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
                     }
                     title={pr.name}
-                    key={pr.id}
+                    key={index}
                     id={pr.id}
                     sku={pr.sku}
                     stock={pr.stock_quantity}
@@ -182,7 +184,7 @@ export default function Categories(props) {
               setButtonLoading(true);
               setOffset(offset + 1);
               loadMore(
-                `/wc/v3/products?category=${key}&page=${offset}&status=publish&orderby=slug&order=asc&search=${
+                `/wc/v3/products?category=${key}&page=${offset}&stock_status=instock&orderby=slug&order=asc&search=${
                   typeof material !== "undefined" ? material : ""
                 } ${
                   typeof size !== "undefined"
