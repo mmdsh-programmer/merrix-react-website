@@ -92,7 +92,7 @@ export default function Categories(props) {
     setOffset(2);
     product
       .read(
-        `/wc/v3/products?category=${key}&orderby=slug&order=asc&status=publish&search=${
+        `/wc/v3/products?category=${key}&order=asc&status=publish&search=${
           typeof material !== "undefined" ? material : ""
         } ${
           typeof size !== "undefined"
@@ -109,7 +109,7 @@ export default function Categories(props) {
         setProducts(res.data);
         setLoading(false);
         console.log(
-          `/wc/v3/products?category=${key}&orderby=slug&order=asc&status=publish&search=${
+          `/wc/v3/products?category=${key}&order=asc&status=publish&search=${
             typeof material !== "undefined" ? material : ""
           } ${
             typeof size !== "undefined"
@@ -184,7 +184,7 @@ export default function Categories(props) {
               setButtonLoading(true);
               setOffset(offset + 1);
               loadMore(
-                `/wc/v3/products?category=${key}&page=${offset}&stock_status=instock&orderby=slug&order=asc&search=${
+                `/wc/v3/products?category=${key}&page=${offset}&stock_status=instock&order=asc&search=${
                   typeof material !== "undefined" ? material : ""
                 } ${
                   typeof size !== "undefined"

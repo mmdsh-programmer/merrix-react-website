@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 
 export default function useDocumentTitle(title, prevailOnUnmount = false, shouldRestart = false) {
     const defaultTitle = useRef(document.title);
-    const titlePrefix = 'شرکت مریخ (لوتوس) |'
+    const titlePrefix = 'شرکت مریخ (لوتوس) -'
 
     useEffect(() => {
         document.title = `${titlePrefix} ${title}`;

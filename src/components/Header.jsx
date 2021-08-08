@@ -494,7 +494,7 @@ export default function Header(props) {
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
-                    setFilter();
+                    item !== "X MEMO | دفترچه وولن" && setFilter();
                     item === "X MEMO | دفترچه وولن" && handleDropDownOpen(e);
                     item !== "X MEMO | دفترچه وولن" &&
                       history.push(
@@ -515,6 +515,7 @@ export default function Header(props) {
                     <StyledMenuItem
                       key={index}
                       onClick={(event) => {
+                        setFilter();
                         history.push(
                           `/categories/${subNavbarItemsId[index]}/${sub}`
                         );
@@ -668,7 +669,7 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     //handleDropDownOpen(e);
-                    setFilter();
+                    item !== "X MEMO | دفترچه وولن" && setFilter();
                     item === "X MEMO | دفترچه وولن" && handleExpand(item);
                     item !== "X MEMO | دفترچه وولن" &&
                       history.push(
