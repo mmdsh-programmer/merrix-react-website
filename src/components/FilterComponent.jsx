@@ -109,6 +109,7 @@ export default function FilterComponent(props) {
       hasSize: true,
       hasMaterial: false,
       material: [],
+      
     },
     xBag: {
       hasSize: true,
@@ -341,6 +342,7 @@ export default function FilterComponent(props) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
+                  onClick={toggleDrawer("left", false)}
                 >
                   اعمال فیلتر
                 </Button>
