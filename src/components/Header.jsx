@@ -229,8 +229,6 @@ export default function Header(props) {
   const history = useHistory();
   const [state, setState] = React.useState({
     right: false,
-    mobileView: false,
-    mainMenuOpen: false,
   });
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -553,11 +551,10 @@ export default function Header(props) {
         </Toolbar>
       </AppBar>
       <React.Fragment>
-        <SwipeableDrawer
+        <Drawer
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
-          onOpen={toggleDrawer("right", true)}
         >
           <List className={classes.list}>
             {cartItems.length > 0 ? (
@@ -626,14 +623,22 @@ export default function Header(props) {
                   <Button
                     fullWidth
                     variant="outlined"
-                    onClick={() => history.push(`/cart`)}
+                    onClick={() => {
+                      history.push(`/cart`);
+                      setState({ right: false });
+                      console.log(state.right);
+                    }}
                   >
                     مشاهده سبد خرید
                   </Button>
                   <Button
                     fullWidth
                     variant="outlined"
-                    onClick={() => history.push(`/checkout`)}
+                    onClick={() => {
+                      history.push(`/checkout`);
+                      setState({ right: false });
+                      console.log(state.right);
+                    }}
                   >
                     تسویه حساب
                   </Button>
@@ -641,7 +646,7 @@ export default function Header(props) {
               </ListItem>
             )}
           </List>
-        </SwipeableDrawer>
+        </Drawer>
         <Drawer
           anchor="left"
           open={state.mainMenuOpen}
@@ -654,6 +659,8 @@ export default function Header(props) {
               onClick={(event) => {
                 history.push(`/`);
                 handleListItemClick(event, 4);
+                setFilter();
+                handleDrawerClose()
               }}
             >
               <ListItemText primary="صفحه اصلی" />
@@ -670,6 +677,7 @@ export default function Header(props) {
                   onClick={(e) => {
                     //handleDropDownOpen(e);
                     item !== "X MEMO | دفترچه وولن" && setFilter();
+                    item !== "X MEMO | دفترچه وولن" && handleDrawerClose();
                     item === "X MEMO | دفترچه وولن" && handleExpand(item);
                     item !== "X MEMO | دفترچه وولن" &&
                       history.push(
@@ -695,6 +703,7 @@ export default function Header(props) {
                         key={index}
                         onClick={(event) => {
                           setFilter();
+                          handleDrawerClose();
                           history.push(
                             `/categories/${subNavbarItemsId[index]}/${sub}`
                           );

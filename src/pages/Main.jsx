@@ -139,7 +139,6 @@ export default function Main(props) {
           )}
         </Grid>
       </Container>
-      <FilterComponent />
     </React.Fragment>
   );
 }
