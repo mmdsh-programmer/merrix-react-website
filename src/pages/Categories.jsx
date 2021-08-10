@@ -87,9 +87,18 @@ export default function Categories(props) {
       });
   };
 
+  const handleGoToTop = () => {
+    const anchor = document.querySelector("#back-to-top-anchor");
+
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     setOffset(2);
+    handleGoToTop();
     product
       .read(
         `/wc/v3/products?category=${key}&order=asc&status=publish&search=${

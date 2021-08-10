@@ -109,7 +109,6 @@ export default function FilterComponent(props) {
       hasSize: true,
       hasMaterial: false,
       material: [],
-      
     },
     xBag: {
       hasSize: true,

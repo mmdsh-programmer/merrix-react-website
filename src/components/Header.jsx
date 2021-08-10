@@ -550,6 +550,7 @@ export default function Header(props) {
           )}
         </Toolbar>
       </AppBar>
+      <Toolbar id="back-to-top-anchor" />
       <React.Fragment>
         <Drawer
           anchor={"right"}
@@ -660,7 +661,7 @@ export default function Header(props) {
                 history.push(`/`);
                 handleListItemClick(event, 4);
                 setFilter();
-                handleDrawerClose()
+                handleDrawerClose();
               }}
             >
               <ListItemText primary="صفحه اصلی" />
