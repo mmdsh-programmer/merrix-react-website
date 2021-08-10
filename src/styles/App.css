@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "shabnam";
+  src: url(../fonts/Shabnam.ttf);
+}
+
+body {
+  font-family: "shabnam";
+  overflow-x: hidden;
+}
+
+.Toastify__toast-body {
+  font-family: "shabnam";
+  direction: rtl;
+}
