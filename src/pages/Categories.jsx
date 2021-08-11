@@ -107,17 +107,33 @@ export default function Categories(props) {
   const filterProducts = (data) => {
     let filteredProducts = [];
     console.log(filter);
-    data.map((product) => {
-      if (
-        hasMaterial(
-          product.name,
-          typeof material !== "undefined" ? material : ""
-        ) &&
-        getSkuSize(product.sku) === size
-      ) {
-        filteredProducts.push(product);
-      }
-    });
+    if (
+      slug.includes("X WRAP | کادوپیچ") ||
+      slug.includes("باکس دستمال کاغذی")
+    ) {
+      data.map((product) => {
+        if (
+          hasMaterial(
+            product.name,
+            typeof material !== "undefined" ? material : ""
+          )
+        ) {
+          filteredProducts.push(product);
+        }
+      });
+    } else {
+      data.map((product) => {
+        if (
+          hasMaterial(
+            product.name,
+            typeof material !== "undefined" ? material : ""
+          ) &&
+          getSkuSize(product.sku) === size
+        ) {
+          filteredProducts.push(product);
+        }
+      });
+    }
     setProducts(filteredProducts);
   };
 
