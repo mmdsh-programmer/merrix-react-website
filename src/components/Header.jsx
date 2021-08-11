@@ -185,6 +185,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogAppBar: {
     position: "relative",
+    backgroundColor: "rgb(70,70,70)",
   },
   searchField: {
     marginTop: theme.spacing(5),
@@ -221,6 +222,9 @@ const useStyles = makeStyles((theme) => ({
   sortIcon: {
     marginTop: "13px",
     marginRight: "10px",
+  },
+  mainAppBar: {
+    backgroundColor: "rgb(70,70,70)",
   },
 }));
 
@@ -460,7 +464,7 @@ export default function Header(props) {
           </Grid>
         </Container>
       </Dialog>
-      <AppBar position="fixed">
+      <AppBar position="fixed" className={classes.mainAppBar}>
         <Toolbar>
           <IconButton
             {...{

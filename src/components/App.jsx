@@ -33,6 +33,11 @@ const theme = createMuiTheme(
       fontFamily: "Shabnam",
     },
     direction: "rtl",
+    palette: {
+      primary: {
+        main: "rgb(70,70,70)",
+      },
+    },
   },
   faIR
 );
@@ -52,7 +57,11 @@ export default function App(props) {
                   <Route exact path="/signup" component={Signup} />
                   <Route exact path="/cart" component={Cart} />
                   <Route exact path="/checkout" component={Checkout} />
-                  <Route exact path={["/", "/home" , "/react"]} component={Main} />
+                  <Route
+                    exact
+                    path={["/", "/home", "/react"]}
+                    component={Main}
+                  />
                   <Route path="/categories/:key/:slug" component={Categories} />
                   <Route component={() => <NotFound />} />
                 </Switch>

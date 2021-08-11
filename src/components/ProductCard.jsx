@@ -29,8 +29,8 @@ const useStyles = makeStyles({
     width: "100%",
   },
   button: {
-    minWidth: "30px",
-    padding: "3px 3px",
+    minWidth: "25px",
+    padding: "1px 1px",
   },
   borderlessButton: {
     border: "none",
@@ -45,6 +45,16 @@ const useStyles = makeStyles({
   },
   topMargin: {
     marginTop: "10px",
+    fontSize: "1.2rem",
+    fontWeight: "bold",
+    color: "rgb(70,70,70)",
+  },
+  middleLine: {
+    lineHeight: "18px",
+  },
+  code: {
+    fontSize: "0.8rem",
+    color: "rgb(100,100,100)",
   },
   media: {
     height: 358,
@@ -130,10 +140,20 @@ export default function ProductCard(props) {
                 >
                   {splitName(props.title).firstRow}
                 </Typography>
-                <Typography variant="body1" component="h2" align="right">
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  align="right"
+                  className={classes.middleLine}
+                >
                   {splitName(props.title).secondRow}
                 </Typography>
-                <Typography variant="body1" component="h2" align="right">
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  align="right"
+                  className={classes.code}
+                >
                   X Code : {props.sku}
                 </Typography>
               </React.Fragment>

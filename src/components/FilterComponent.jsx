@@ -25,6 +25,13 @@ const useStyles = makeStyles((theme) => ({
     bottom: "0",
     right: "0",
     zIndex: 999,
+    backgroundColor: "rgb(70,70,70)",
+    "&:hover": {
+      backgroundColor: "rgb(70,70,70)",
+    },
+    "&:active": {
+      backgroundColor: "rgb(70,70,70)",
+    },
   },
   sortIcon: {
     marginTop: "13px",
