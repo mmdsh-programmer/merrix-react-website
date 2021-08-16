@@ -13,3 +13,9 @@ body {
   font-family: "shabnam";
   direction: rtl;
 }
+
+@media screen and (max-width: 991px) {
+  span.MuiTypography-root.MuiListItemText-primary.MuiTypography-body1.MuiTypography-displayBlock {
+    font-size: 10px;
+  }
+}

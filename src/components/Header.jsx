@@ -56,6 +56,7 @@ const specialBreakpoint = createMuiTheme({
       md: 769,
       lg: 1280,
       xl: 1920,
+      menuItem: 991,
     },
   },
 });

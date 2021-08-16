@@ -10,13 +10,15 @@ import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import Paper from "@material-ui/core/Paper";
+import useWindowDimensions from "hooks/screenSize";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
     values: {
       xs: 0,
       sm: 480,
-      md: 768,
+      md: 769,
       lg: 1280,
       xl: 1920,
     },
@@ -57,10 +59,27 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     textAlign: "center",
   },
+  paper: {
+    width: "100%",
+    padding: theme.spacing(2),
+    height: "max-content",
+    position: "sticky",
+    top: "80px",
+  },
+  sortSideBar: {
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  gutter: {
+    width: "100%",
+    height: "80px",
+  },
 }));
 
 export default function Categories(props) {
   const classes = useStyles();
+  const dimensions = useWindowDimensions();
   const { user, setUser } = React.useContext(AuthContext);
   const { filter, setFilter } = React.useContext(FilterContext);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -72,20 +91,7 @@ export default function Categories(props) {
   const { slug } = props.match.params;
   const { size, material } = filter || {};
   useDocumentTitle(slug);
-
-  const loadMore = (endpoint) => {
-    product
-      .read(endpoint)
-      .then((res) => {
-        setButtonLoading(false);
-        console.log(endpoint);
-        setProducts(products.concat(res.data));
-      })
-      .catch((error) => {
-        setButtonLoading(false);
-        console.log(error.message);
-      });
-  };
+  let screenSize = useWindowDimensions();
 
   const handleGoToTop = () => {
     const anchor = document.querySelector("#back-to-top-anchor");
@@ -162,48 +168,64 @@ export default function Categories(props) {
         <Typography variant="h5" component="h1" className={classes.title}>
           {slug}
         </Typography>
-        <Grid
-          container
-          className={products.length > 0 ? classes.container : classes.dFlex}
-          spacing={2}
-        >
-          {products.length > 0 ? (
-            products.slice(0, offset).map((pr, index) => {
-              return (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  md={3}
-                  key={index}
-                  className={classes.dFlex}
-                >
-                  <ProductCard
-                    image={
-                      typeof pr.images[0] !== "undefined"
-                        ? pr.images[0].src
-                        : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
-                    }
-                    title={pr.name}
+        <Grid container spacing={2}>
+          <Grid
+            container
+            item
+            className={[classes.container, classes.sortSideBar].join(" ")}
+            sm={4}
+            md={3}
+          >
+            <Paper elevation={2} className={classes.paper}>
+              <FilterComponent slug={slug} />
+            </Paper>
+          </Grid>
+          <Grid
+            container
+            item
+            className={classes.dFlex}
+            spacing={2}
+            sm={screenSize.width > 769 ? 8 : 12}
+            md={screenSize.width > 769 ? 9 : 12}
+          >
+            {products.length > 0 ? (
+              products.slice(0, offset).map((pr, index) => {
+                return (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={screenSize.width > 769 ? 6 : 4}
+                    md={screenSize.width > 769 ? 4 : 3}
                     key={index}
-                    id={pr.id}
-                    sku={pr.sku}
-                    stock={pr.stock_quantity}
-                  />
-                </Grid>
-              );
-            })
-          ) : (
-            <Typography
-              variant="body1"
-              component="p"
-              className={classes.infoText}
-            >
-              محصولی یافت نشد
-            </Typography>
-          )}
+                    className={classes.dFlex}
+                  >
+                    <ProductCard
+                      image={
+                        typeof pr.images[0] !== "undefined"
+                          ? pr.images[0].src
+                          : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
+                      }
+                      title={pr.name}
+                      key={index}
+                      id={pr.id}
+                      sku={pr.sku}
+                      stock={pr.stock_quantity}
+                    />
+                  </Grid>
+                );
+              })
+            ) : (
+              <Typography
+                variant="body1"
+                component="p"
+                className={classes.infoText}
+              >
+                محصولی یافت نشد
+              </Typography>
+            )}
+          </Grid>
         </Grid>
-        {products.length > 0 && offset < products.length && (
+        {products.length > 0 && offset < products.length ? (
           <Button
             className={classes.loadMore}
             loading={buttonLoading}
@@ -214,6 +236,8 @@ export default function Categories(props) {
           >
             محصولات بیشتر
           </Button>
+        ) : (
+          <div className={classes.gutter}></div>
         )}
       </div>
     );
@@ -250,7 +274,7 @@ export default function Categories(props) {
           )}
         </Grid>
       </Container>
-      <FilterComponent slug={slug} />
+      {screenSize.width < 769 && <FilterComponent slug={slug} />}
     </React.Fragment>
   );
 }

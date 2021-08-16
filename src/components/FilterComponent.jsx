@@ -1,5 +1,9 @@
 import React from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  withStyles,
+  createMuiTheme,
+} from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Fab from "@material-ui/core/Fab";
 import FilterIcon from "./FilterIcon";
@@ -18,6 +22,18 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+const specialBreakpoint = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 769,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+});
+
 const useStyles = makeStyles((theme) => ({
   sortButton: {
     margin: theme.spacing(3),
@@ -31,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     },
     "&:active": {
       backgroundColor: "rgb(70,70,70)",
+    },
+    [specialBreakpoint.breakpoints.up("md")]: {
+      display: "none",
     },
   },
   sortIcon: {
@@ -55,6 +74,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(2),
     width: "100%",
+  },
+  hideMobile: {
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
 }));
 
@@ -167,6 +191,103 @@ export default function FilterComponent(props) {
 
   return (
     <React.Fragment>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className={classes.hideMobile}
+      >
+        {checkSlug().hasSize && (
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>سایز</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <PrettoSlider
+                name="sizeّ"
+                defaultValue={typeof filter !== "undefined" ? filter.size : 1}
+                aria-labelledby="discrete-slider"
+                valueLabelDisplay="on"
+                step={1}
+                min={1}
+                max={18}
+                key={`slider-${
+                  typeof filter !== "undefined" ? filter.size : 1
+                }`}
+                className={classes.slider}
+                onChange={(e, val) => {
+                  setSize(val);
+                }}
+              />
+            </AccordionDetails>
+          </Accordion>
+        )}
+        {checkSlug().hasMaterial && (
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>متریال</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <FormControl component="fieldset">
+                <Controller
+                  control={control}
+                  defaultValue={
+                    typeof filter !== "undefined" ? filter.material : ""
+                  }
+                  name="material"
+                  as={
+                    <RadioGroup aria-label="gender" row>
+                      {checkSlug().material.map((item, index) => {
+                        return (
+                          <FormControlLabel
+                            value={item}
+                            control={<Radio />}
+                            label={item === "ویلو" ? "ویلو (مخمل)" : item}
+                            key={index}
+                          />
+                        );
+                      })}
+                    </RadioGroup>
+                  }
+                />
+              </FormControl>
+            </AccordionDetails>
+          </Accordion>
+        )}
+        {checkSlug().hasMaterial || checkSlug().hasSize ? (
+          <React.Fragment>
+            <Button
+              type="submit"
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={toggleDrawer("left", false)}
+            >
+              اعمال فیلتر
+            </Button>
+            <Button
+              type="reset"
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={() => setFilter()}
+            >
+              پاک کردن فیلتر
+            </Button>
+          </React.Fragment>
+        ) : (
+          <Typography className={classes.heading}>
+            فیلتر برای این دسته بندی موجود نیست
+          </Typography>
+        )}
+      </form>
       <Drawer
         anchor="left"
         open={state["left"]}
