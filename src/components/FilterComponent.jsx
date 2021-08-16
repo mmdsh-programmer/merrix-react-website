@@ -233,7 +233,7 @@ export default function FilterComponent(props) {
                               <FormControlLabel
                                 value={item}
                                 control={<Radio />}
-                                label={item}
+                                label={item === "ویلو" ? "ویلو (مخمل)" : item}
                                 key={index}
                               />
                             );
