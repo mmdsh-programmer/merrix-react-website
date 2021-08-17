@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     textAlign: "center",
   },
+  gutter: {
+    width: "100%",
+    height: "80px",
+  },
 }));
 
 export default function Categories(props) {
@@ -203,7 +207,7 @@ export default function Categories(props) {
             </Typography>
           )}
         </Grid>
-        {products.length > 0 && offset < products.length && (
+        {products.length > 0 && offset < products.length ? (
           <Button
             className={classes.loadMore}
             loading={buttonLoading}
@@ -214,6 +218,8 @@ export default function Categories(props) {
           >
             محصولات بیشتر
           </Button>
+        ) : (
+          <div className={classes.gutter}></div>
         )}
       </div>
     );
