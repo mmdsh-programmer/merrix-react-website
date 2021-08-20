@@ -13,3 +13,7 @@ body {
   font-family: "shabnam";
   direction: rtl;
 }
+
+label#demo-mutiple-checkbox-label {
+  background-color: rgb(240, 240, 240);
+}
