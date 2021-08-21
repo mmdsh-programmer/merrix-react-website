@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
@@ -10,7 +9,6 @@ import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
-import useFilter from "hooks/useFilter";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -67,16 +65,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Categories(props) {
   const classes = useStyles();
-  const { user, setUser } = React.useContext(AuthContext);
   const { filter, setFilter } = React.useContext(FilterContext);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [buttonLoading, setButtonLoading] = React.useState(false);
   const [offset, setOffset] = React.useState(10);
   const { key } = props.match.params;
   const { slug } = props.match.params;
   useDocumentTitle(slug);
-  let [, , filteredProducts] = useFilter(products);
 
   const handleGoToTop = () => {
     const anchor = document.querySelector("#back-to-top-anchor");
@@ -86,50 +81,43 @@ export default function Categories(props) {
     }
   };
 
-  /*const getSkuSize = (sku) => {
+  const getSkuSize = (sku) => {
     return Number(sku.substr(5, 2));
   };
 
-  const hasMaterial = (product, material) => {
-    if (product.includes(material)) return true;
-    return false;
+  const hasMaterial = (product, materials) => {
+    return materials.some((material) => product.includes(material));
   };
 
   const filterProducts = (data) => {
-    let filteredProducts = [];
-    console.log(filter);
-    if (
-      slug.includes("X WRAP | کادوپیچ") ||
-      slug.includes("باکس دستمال کاغذی")
-    ) {
-      data.map((product) => {
-        if (
-          hasMaterial(
-            product.name,
-            typeof material !== "undefined" ? material : ""
-          )
-        ) {
-          filteredProducts.push(product);
-        }
+    let filtered = [];
+    if (filter.materials.length > 0 && typeof filter.size !== "undefined") {
+      filtered = data.filter((product) => {
+        return (
+          getSkuSize(product.sku) === filter.size &&
+          hasMaterial(product.name, filter.materials)
+        );
       });
-    } else {
-      data.map((product) => {
-        if (
-          hasMaterial(
-            product.name,
-            typeof material !== "undefined" ? material : ""
-          ) &&
-          getSkuSize(product.sku) === size
-        ) {
-          filteredProducts.push(product);
-        }
+    } else if (
+      filter.materials.length > 0 &&
+      typeof filter.size === "undefined"
+    ) {
+      filtered = data.filter((product) => {
+        return hasMaterial(product.name, filter.materials);
+      });
+    } else if (
+      filter.materials.length === 0 &&
+      typeof filter.size !== "undefined"
+    ) {
+      filtered = data.filter((product) => {
+        return getSkuSize(product.sku) === filter.size;
       });
     }
-    setProducts(filteredProducts);
-  };*/
+
+    setProducts(filtered);
+  };
 
   React.useEffect(() => {
-    console.log(filter);
     setLoading(true);
     setOffset(10);
     handleGoToTop();
@@ -138,7 +126,9 @@ export default function Categories(props) {
         `/wc/v3/products?category=${key}&order=asc&status=publish&per_page=1000`
       )
       .then((res) => {
-        setProducts(res.data);
+        filter.materials.length > 0 || typeof filter.size !== "undefined"
+          ? filterProducts(res.data)
+          : setProducts(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -158,8 +148,8 @@ export default function Categories(props) {
           className={products.length > 0 ? classes.container : classes.dFlex}
           spacing={2}
         >
-          {filteredProducts.length > 0 ? (
-            filteredProducts.slice(0, offset).map((pr, index) => {
+          {products.length > 0 ? (
+            products.slice(0, offset).map((pr, index) => {
               return (
                 <Grid
                   item
@@ -194,10 +184,9 @@ export default function Categories(props) {
             </Typography>
           )}
         </Grid>
-        {filteredProducts.length > 0 && offset < filteredProducts.length ? (
+        {products.length > 0 && offset < products.length ? (
           <Button
             className={classes.loadMore}
-            loading={buttonLoading}
             variant="outlined"
             onClick={() => {
               setOffset(offset + 10);

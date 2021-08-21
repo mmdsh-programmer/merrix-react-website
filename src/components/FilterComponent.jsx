@@ -1,24 +1,10 @@
 import React from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import Fab from "@material-ui/core/Fab";
-import FilterIcon from "./FilterIcon";
-import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { useForm, Controller } from "react-hook-form";
 import { FilterContext } from "helpers/FilterContext";
-import Accordion from "@material-ui/core/Accordion";
 import Toolbar from "@material-ui/core/Toolbar";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -70,12 +56,14 @@ const useStyles = makeStyles((theme) => ({
   },
   filterBar: {
     backgroundColor: "rgb(240,240,240)",
-    borderRadius: "4px",
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     marginBottom: theme.spacing(2),
     display: "flex",
     alignItems: "stretch",
+    position: "sticky",
+    top: "64px",
+    zIndex: 999,
   },
   chips: {
     display: "flex",
@@ -175,8 +163,12 @@ export default function FilterComponent(props) {
   });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { setFilter, filter } = React.useContext(FilterContext);
-  const [material, setMaterial] = React.useState(filter.materials);
-  const [size, setSize] = React.useState(filter.size);
+  const [material, setMaterial] = React.useState(
+    typeof filter !== "undefined" ? filter.materials : []
+  );
+  const [size, setSize] = React.useState(
+    typeof filter !== "undefined" ? filter.size : undefined
+  );
   const { slug } = props;
   const filterOptions = {
     xWrap: {
@@ -263,7 +255,7 @@ export default function FilterComponent(props) {
       materials: material,
       size: size,
     });
-    console.log(filter);
+    //console.log(filter);
   };
 
   const sizeSubmit = () => {
@@ -276,129 +268,133 @@ export default function FilterComponent(props) {
 
   return (
     <React.Fragment>
-      <Toolbar className={classes.filterBar}>
-        {checkSlug().hasMaterial && (
-          <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel id="demo-mutiple-checkbox-label">متریال</InputLabel>
-            <Select
-              labelId="demo-mutiple-checkbox-label"
-              id="demo-mutiple-checkbox"
-              multiple
-              value={material}
-              onChange={handleMaterialChange}
-              renderValue={(selected) => (
-                <div className={classes.chips}>
-                  {selected.map(
-                    (value, index) =>
-                      typeof value !== "undefined" && (
-                        <Chip
-                          key={index}
-                          label={value}
-                          className={classes.chip}
-                        />
-                      )
-                  )}
+      {checkSlug().hasMaterial || checkSlug().hasSize ? (
+        <Toolbar className={classes.filterBar}>
+          {checkSlug().hasMaterial && (
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel id="demo-mutiple-checkbox-label">متریال</InputLabel>
+              <Select
+                labelId="demo-mutiple-checkbox-label"
+                id="demo-mutiple-checkbox"
+                multiple
+                value={material}
+                onChange={handleMaterialChange}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map(
+                      (value, index) =>
+                        typeof value !== "undefined" && (
+                          <Chip
+                            key={index}
+                            label={value === "ویلو" ? "ویلو (مخمل)" : value}
+                            className={classes.chip}
+                          />
+                        )
+                    )}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {checkSlug().material.map((name, index) => (
+                  <MenuItem key={index} value={name}>
+                    <Checkbox checked={material.indexOf(name) > -1} />
+                    <ListItemText
+                      primary={name === "ویلو" ? "ویلو (مخمل)" : name}
+                    />
+                  </MenuItem>
+                ))}
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={(e) => setFilter({ materials: [], size: size })}
+                  >
+                    <RotateLeftIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={materialSubmit}
+                  >
+                    اعمال
+                  </Button>
                 </div>
-              )}
-              MenuProps={MenuProps}
-            >
-              {checkSlug().material.map((name, index) => (
-                <MenuItem key={index} value={name}>
-                  <Checkbox checked={material.indexOf(name) > -1} />
-                  <ListItemText primary={name} />
-                </MenuItem>
-              ))}
-              <div className={classes.buttonContainer}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  className={classes.submit}
-                  onClick={(e) => setFilter({ materials: [], size: size })}
-                >
-                  <RotateLeftIcon />
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  onClick={materialSubmit}
-                >
-                  اعمال
-                </Button>
-              </div>
-            </Select>
-          </FormControl>
-        )}
+              </Select>
+            </FormControl>
+          )}
 
-        {checkSlug().hasSize && (
-          <React.Fragment>
-            <Button
-              aria-describedby={id}
-              variant="contained"
-              color="primary"
-              onClick={handleSizeClick}
-              className={classes.openSizeButton}
-            >
-              سایز {size ? size : null}
-              <ArrowDropDownIcon />
-            </Button>
-            <Popover
-              id={id}
-              className={classes.sizePopOver}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleSizeClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-            >
-              <PrettoSlider
-                name="sizeّ"
-                defaultValue={
-                  typeof filter.size !== "undefined" ? filter.size : 0
-                }
-                aria-labelledby="discrete-slider"
-                valueLabelDisplay="on"
-                step={1}
-                min={1}
-                max={18}
-                key={`slider-${
-                  typeof filter.size !== "undefined" ? filter.size : 0
-                }`}
-                className={classes.slider}
-                onChange={(e, val) => {
-                  setSize(val);
+          {checkSlug().hasSize && (
+            <React.Fragment>
+              <Button
+                aria-describedby={id}
+                variant="contained"
+                color="primary"
+                onClick={handleSizeClick}
+                className={classes.openSizeButton}
+              >
+                سایز {size ? size : null}
+                <ArrowDropDownIcon />
+              </Button>
+              <Popover
+                id={id}
+                className={classes.sizePopOver}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleSizeClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
-              />
-              <div className={classes.buttonContainer}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  className={classes.submit}
-                  onClick={(e) =>
-                    setFilter({ materials: material, size: undefined })
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <PrettoSlider
+                  name="sizeّ"
+                  defaultValue={
+                    typeof filter.size !== "undefined" ? filter.size : 1
                   }
-                >
-                  <RotateLeftIcon />
-                </Button>
-                <Button
-                  onClick={sizeSubmit}
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  اعمال
-                </Button>
-              </div>
-            </Popover>
-          </React.Fragment>
-        )}
-      </Toolbar>
+                  aria-labelledby="discrete-slider"
+                  valueLabelDisplay="on"
+                  step={1}
+                  min={1}
+                  max={18}
+                  key={`slider-${
+                    typeof filter.size !== "undefined" ? filter.size : 1
+                  }`}
+                  className={classes.slider}
+                  onChange={(e, val) => {
+                    setSize(val);
+                  }}
+                />
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={(e) =>
+                      setFilter({ materials: material, size: undefined })
+                    }
+                  >
+                    <RotateLeftIcon />
+                  </Button>
+                  <Button
+                    onClick={sizeSubmit}
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    اعمال
+                  </Button>
+                </div>
+              </Popover>
+            </React.Fragment>
+          )}
+        </Toolbar>
+      ) : null}
     </React.Fragment>
   );
 }

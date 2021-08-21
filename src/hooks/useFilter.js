@@ -15,30 +15,34 @@ export default function useFilter(products) {
 
   useEffect(() => {
     let filtered = [];
-    if (filter.materials.length > 0 && typeof filter.size !== "undefined") {
-      filtered = products.filter((product) => {
-        return (
-          getSkuSize(product.sku) === filter.size &&
-          hasMaterial(product.name, filter.materials)
-        );
-      });
-    } else if (
-      filter.materials.length > 0 &&
-      typeof filter.size === "undefined"
-    ) {
-      filtered = products.filter((product) => {
-        return hasMaterial(product.name, filter.materials);
-      });
-    } else if (
-      filter.materials.length === 0 &&
-      typeof filter.size !== "undefined"
-    ) {
-      filtered = products.filter((product) => {
-        return getSkuSize(product.sku) === filter.size;
-      });
+    if (typeof filter !== "undefined") {
+      if (filter.materials.length > 0 && typeof filter.size !== "undefined") {
+        filtered = products.filter((product) => {
+          return (
+            getSkuSize(product.sku) === filter.size &&
+            hasMaterial(product.name, filter.materials)
+          );
+        });
+      } else if (
+        filter.materials.length > 0 &&
+        typeof filter.size === "undefined"
+      ) {
+        filtered = products.filter((product) => {
+          return hasMaterial(product.name, filter.materials);
+        });
+      } else if (
+        filter.materials.length === 0 &&
+        typeof filter.size !== "undefined"
+      ) {
+        filtered = products.filter((product) => {
+          return getSkuSize(product.sku) === filter.size;
+        });
+      }
     }
 
-    setFilteredProducts(filtered);
+    filtered.length > 0
+      ? setFilteredProducts(filtered)
+      : setFilteredProducts(products);
   }, [filter]);
 
   return [filter, setFilter, filteredProducts];

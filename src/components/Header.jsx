@@ -350,7 +350,7 @@ export default function Header(props) {
     category
       .read("/wc/v3/products/categories?per_page=100")
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         setCategories(res.data);
         res.data.map((cat) => {
           cat.parent === 0 && filteredBranch.push(cat);
@@ -359,8 +359,8 @@ export default function Header(props) {
         });
         setBranch(filteredBranch);
         setSubBranch(filteredSubBranch);
-        console.log("sub branch", filteredSubBranch);
-        console.log("branch", filteredBranch);
+        /*console.log("sub branch", filteredSubBranch);
+        console.log("branch", filteredBranch);*/
       })
       .catch((error) => {
         console.log(error.message);
@@ -496,7 +496,8 @@ export default function Header(props) {
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
-                    item !== "X MEMO | دفترچه وولن" && setFilter();
+                    item !== "X MEMO | دفترچه وولن" &&
+                      setFilter({ materials: [], size: undefined });
                     item === "X MEMO | دفترچه وولن" && handleDropDownOpen(e);
                     item !== "X MEMO | دفترچه وولن" &&
                       history.push(
@@ -517,7 +518,7 @@ export default function Header(props) {
                     <StyledMenuItem
                       key={index}
                       onClick={(event) => {
-                        setFilter();
+                        setFilter({ materials: [], size: undefined });
                         history.push(
                           `/categories/${subNavbarItemsId[index]}/${sub}`
                         );
@@ -664,7 +665,7 @@ export default function Header(props) {
               onClick={(event) => {
                 history.push(`/`);
                 handleListItemClick(event, 4);
-                setFilter();
+                setFilter({ materials: [], size: undefined });
                 handleDrawerClose();
               }}
             >
@@ -681,7 +682,8 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     //handleDropDownOpen(e);
-                    item !== "X MEMO | دفترچه وولن" && setFilter();
+                    item !== "X MEMO | دفترچه وولن" &&
+                      setFilter({ materials: [], size: undefined });
                     item !== "X MEMO | دفترچه وولن" && handleDrawerClose();
                     item === "X MEMO | دفترچه وولن" && handleExpand(item);
                     item !== "X MEMO | دفترچه وولن" &&
@@ -707,7 +709,7 @@ export default function Header(props) {
                         className={classes.nested}
                         key={index}
                         onClick={(event) => {
-                          setFilter();
+                          setFilter({ materials: [], size: undefined });
                           handleDrawerClose();
                           history.push(
                             `/categories/${subNavbarItemsId[index]}/${sub}`
