@@ -61,9 +61,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     display: "flex",
     alignItems: "stretch",
-    position: "sticky",
-    top: "64px",
-    zIndex: 999,
+    flexWrap: "wrap",
   },
   chips: {
     display: "flex",
@@ -73,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 2,
   },
   formControl: {
-    minWidth: 300,
+    minWidth: 210,
     maxWidth: 300,
     margin: theme.spacing(2),
   },
