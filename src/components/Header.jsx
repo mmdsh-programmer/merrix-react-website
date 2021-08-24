@@ -226,6 +226,9 @@ const useStyles = makeStyles((theme) => ({
   mainAppBar: {
     backgroundColor: "rgb(70,70,70)",
   },
+  navItemText: {
+    textAlign: "center",
+  },
 }));
 
 export default function Header(props) {
@@ -342,6 +345,10 @@ export default function Header(props) {
       .finally(() => {
         setSearchLoading(false);
       });
+  };
+
+  const splitTitle = (title) => {
+    return title.split("|");
   };
 
   React.useEffect(() => {
@@ -464,7 +471,7 @@ export default function Header(props) {
           </Grid>
         </Container>
       </Dialog>
-      <AppBar position="fixed" className={classes.mainAppBar}>
+      <AppBar position="absolute" className={classes.mainAppBar}>
         <Toolbar>
           <IconButton
             {...{
@@ -497,7 +504,12 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     item !== "X MEMO | دفترچه وولن" &&
-                      setFilter({ materials: [], size: undefined });
+                      setFilter({
+                        materials: [],
+                        sizes: [],
+                        style: [],
+                        usage: [],
+                      });
                     item === "X MEMO | دفترچه وولن" && handleDropDownOpen(e);
                     item !== "X MEMO | دفترچه وولن" &&
                       history.push(
@@ -505,7 +517,18 @@ export default function Header(props) {
                       );
                   }}
                 >
-                  <ListItemText primary={item} />
+                  <ListItemText
+                    className={classes.navItemText}
+                    primary={splitTitle(item)[0]}
+                    secondaryTypographyProps={{
+                      style: {
+                        color: "white",
+                      },
+                    }}
+                    secondary={
+                      splitTitle(item).length > 1 ? splitTitle(item)[1] : null
+                    }
+                  />
                 </ListItem>
                 <StyledMenu
                   id="customized-menu"
@@ -518,7 +541,12 @@ export default function Header(props) {
                     <StyledMenuItem
                       key={index}
                       onClick={(event) => {
-                        setFilter({ materials: [], size: undefined });
+                        setFilter({
+                          materials: [],
+                          sizes: [],
+                          style: [],
+                          usage: [],
+                        });
                         history.push(
                           `/categories/${subNavbarItemsId[index]}/${sub}`
                         );
@@ -665,7 +693,12 @@ export default function Header(props) {
               onClick={(event) => {
                 history.push(`/`);
                 handleListItemClick(event, 4);
-                setFilter({ materials: [], size: undefined });
+                setFilter({
+                  materials: [],
+                  sizes: [],
+                  style: [],
+                  usage: [],
+                });
                 handleDrawerClose();
               }}
             >
@@ -683,7 +716,12 @@ export default function Header(props) {
                   onClick={(e) => {
                     //handleDropDownOpen(e);
                     item !== "X MEMO | دفترچه وولن" &&
-                      setFilter({ materials: [], size: undefined });
+                      setFilter({
+                        materials: [],
+                        sizes: [],
+                        style: [],
+                        usage: [],
+                      });
                     item !== "X MEMO | دفترچه وولن" && handleDrawerClose();
                     item === "X MEMO | دفترچه وولن" && handleExpand(item);
                     item !== "X MEMO | دفترچه وولن" &&
@@ -709,7 +747,12 @@ export default function Header(props) {
                         className={classes.nested}
                         key={index}
                         onClick={(event) => {
-                          setFilter({ materials: [], size: undefined });
+                          setFilter({
+                            materials: [],
+                            sizes: [],
+                            style: [],
+                            usage: [],
+                          });
                           handleDrawerClose();
                           history.push(
                             `/categories/${subNavbarItemsId[index]}/${sub}`

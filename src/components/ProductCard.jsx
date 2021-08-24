@@ -47,15 +47,15 @@ const useStyles = makeStyles({
     marginTop: "10px",
     fontSize: "1.2rem",
     fontWeight: "bold",
-    color: "rgb(140,140,140)",
+    color: "rgb(160,160,160)",
   },
   middleLine: {
     lineHeight: "18px",
-    color: "rgb(95,95,95)",
+    color: "rgb(102,102,102)",
   },
   code: {
     fontSize: "0.8rem",
-    color: "rgb(100,100,100)",
+    color: "rgb(160,160,160)",
     marginTop: "2px",
   },
   media: {

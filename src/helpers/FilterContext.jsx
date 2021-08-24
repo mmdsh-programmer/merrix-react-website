@@ -5,7 +5,9 @@ export const FilterContext = React.createContext();
 export default function FilterContextProvider(props) {
   const [filter, setFilter] = React.useState({
     materials: [],
-    size: undefined,
+    sizes: [],
+    style: [],
+    usage: [],
   });
 
   return (

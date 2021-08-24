@@ -14,6 +14,6 @@ body {
   direction: rtl;
 }
 
-label#demo-mutiple-checkbox-label {
+.MuiToolbar-regular .MuiInputLabel-outlined {
   background-color: rgb(240, 240, 240);
 }

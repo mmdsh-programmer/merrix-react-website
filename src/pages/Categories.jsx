@@ -9,6 +9,7 @@ import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import { isBuffer } from "lodash";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -89,32 +90,120 @@ export default function Categories(props) {
     return materials.some((material) => product.includes(material));
   };
 
-  const filterProducts = (data) => {
+  const hasSize = (sku, sizes) => {
+    return sizes.some((size) => getSkuSize(sku) === size);
+  };
+
+  const hasAttribute = (attributes, filter, attributeName) => {
+    const styleOptions = attributes.filter((attribute) => {
+      return attribute.name === attributeName;
+    });
+
+    if (typeof styleOptions[0] !== "undefined") {
+      return styleOptions[0].options.some((option) => filter.includes(option));
+    } else {
+      return false;
+    }
+  };
+
+  const getFilterLength = () => {
+    let count = 0;
+    if (filter.materials.length > 0) {
+      count++;
+    }
+    if (filter.sizes.length > 0) {
+      count++;
+    }
+    if (filter.style.length > 0) {
+      count++;
+    }
+    if (filter.usage.length > 0) {
+      count++;
+    }
+    return count;
+  };
+
+  /*const filterProducts = (data) => {
     let filtered = [];
-    if (filter.materials.length > 0 && typeof filter.size !== "undefined") {
+    if (filter.materials.length > 0 && filter.sizes.length > 0) {
       filtered = data.filter((product) => {
         return (
-          getSkuSize(product.sku) === filter.size &&
+          hasSize(product.sku, filter.sizes) &&
           hasMaterial(product.name, filter.materials)
         );
       });
-    } else if (
-      filter.materials.length > 0 &&
-      typeof filter.size === "undefined"
-    ) {
+    } else if (filter.materials.length > 0 && filter.sizes.length === 0) {
       filtered = data.filter((product) => {
         return hasMaterial(product.name, filter.materials);
       });
-    } else if (
-      filter.materials.length === 0 &&
-      typeof filter.size !== "undefined"
-    ) {
+    } else if (filter.materials.length === 0 && filter.sizes.length > 0) {
       filtered = data.filter((product) => {
-        return getSkuSize(product.sku) === filter.size;
+        return hasSize(product.sku, filter.sizes);
       });
     }
 
     setProducts(filtered);
+  };*/
+
+  const count = (array_elements) => {
+    const sortedArray = array_elements.sort((a, b) => {
+      return a.sku - b.sku;
+    });
+
+    let result = [];
+
+    let current = null;
+    let cnt = 0;
+    for (let i = 0; i < sortedArray.length; i++) {
+      if (sortedArray[i] != current) {
+        if (cnt >= getFilterLength()) {
+          result.push(current);
+        }
+        current = sortedArray[i];
+        cnt = 1;
+      } else {
+        cnt++;
+      }
+    }
+    if (cnt >= getFilterLength()) {
+      result.push(current);
+    }
+    return result;
+  };
+
+  const filterProducts = (data) => {
+    let filteredMaterials = [];
+    let filteredSizes = [];
+    let filteredStyle = [];
+    let filteredUsage = [];
+    if (filter.materials.length > 0) {
+      filteredMaterials = data.filter((product) => {
+        return hasMaterial(product.name, filter.materials);
+      });
+    }
+    if (filter.sizes.length > 0) {
+      filteredSizes = data.filter((product) => {
+        return hasSize(product.sku, filter.sizes);
+      });
+    }
+    if (filter.style.length > 0) {
+      filteredStyle = data.filter((product) => {
+        return hasAttribute(product.attributes, filter.style, "style");
+      });
+    }
+    if (filter.usage.length > 0) {
+      filteredUsage = data.filter((product) => {
+        return hasAttribute(product.attributes, filter.usage, "usage");
+      });
+    }
+
+    const finalFilter = filteredMaterials.concat(
+      filteredSizes,
+      filteredStyle,
+      filteredUsage
+    );
+
+    setProducts(count(finalFilter));
   };
 
   React.useEffect(() => {
@@ -126,7 +215,11 @@ export default function Categories(props) {
         `/wc/v3/products?category=${key}&order=asc&status=publish&per_page=1000`
       )
       .then((res) => {
-        filter.materials.length > 0 || typeof filter.size !== "undefined"
+        console.log(res.data);
+        filter.materials.length > 0 ||
+        filter.sizes.length > 0 ||
+        filter.style.length > 0 ||
+        filter.usage.length > 0
           ? filterProducts(res.data)
           : setProducts(res.data);
         setLoading(false);

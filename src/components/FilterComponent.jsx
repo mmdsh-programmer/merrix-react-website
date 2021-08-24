@@ -11,8 +11,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
-import Popover from "@material-ui/core/Popover";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,8 +58,11 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginBottom: theme.spacing(2),
     display: "flex",
-    alignItems: "stretch",
     flexWrap: "wrap",
+    justifyContent: "center",
+    position: "sticky",
+    top: "0",
+    zIndex: 1,
   },
   chips: {
     display: "flex",
@@ -165,13 +166,21 @@ export default function FilterComponent(props) {
     typeof filter !== "undefined" ? filter.materials : []
   );
   const [size, setSize] = React.useState(
-    typeof filter !== "undefined" ? filter.size : undefined
+    typeof filter !== "undefined" ? filter.sizes : []
+  );
+  const [styleFilter, setStyleFilter] = React.useState(
+    typeof filter !== "undefined" ? filter.style : []
+  );
+  const [usage, setUsage] = React.useState(
+    typeof filter !== "undefined" ? filter.usage : []
   );
   const { slug } = props;
   const filterOptions = {
     xWrap: {
       hasSize: false,
       hasMaterial: true,
+      hasStyle: true,
+      hasUsage: true,
       material: [
         "گلاسه",
         "کرافت",
@@ -182,23 +191,45 @@ export default function FilterComponent(props) {
         "مخمل",
         "اوپال",
       ],
+      style: ["عاشقانه", "ایرانی", "تم تولد"],
+      usage: ["کتاب", "ماگ"],
     },
     xBox: {
       hasSize: true,
       hasMaterial: false,
+      hasStyle: true,
+      hasUsage: true,
       material: [],
+      style: ["عاشقانه", "ایرانی", "تم تولد"],
+      usage: ["کتاب", "ماگ"],
     },
     xBag: {
       hasSize: true,
       hasMaterial: true,
+      hasStyle: true,
+      hasUsage: true,
       material: ["گلاسه", "کرافت", "ویلو"],
+      style: ["عاشقانه", "ایرانی", "تم تولد"],
+      usage: ["کتاب", "ماگ"],
     },
     xMemo: {
       hasSize: false,
       hasMaterial: false,
+      hasStyle: true,
+      hasUsage: true,
       material: [],
+      style: ["عاشقانه", "ایرانی", "تم تولد"],
+      usage: ["کتاب", "ماگ"],
     },
-    tissueBox: { hasSize: false, hasMaterial: false, material: [] },
+    tissueBox: {
+      hasSize: false,
+      hasMaterial: false,
+      hasStyle: true,
+      hasUsage: true,
+      material: [],
+      style: ["عاشقانه", "ایرانی", "تم تولد"],
+      usage: ["کتاب", "ماگ"],
+    },
   };
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -210,14 +241,6 @@ export default function FilterComponent(props) {
     }
 
     setState({ ...state, [anchor]: open });
-  };
-
-  const handleSizeClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleSizeClose = () => {
-    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -248,25 +271,33 @@ export default function FilterComponent(props) {
     setMaterial(removeUndefined(event.target.value));
   };
 
-  const materialSubmit = () => {
-    setFilter({
-      materials: material,
-      size: size,
-    });
-    //console.log(filter);
+  const handleSizeChange = (event) => {
+    setSize(removeUndefined(event.target.value));
   };
 
-  const sizeSubmit = () => {
+  const handleStyleChange = (event) => {
+    setStyleFilter(removeUndefined(event.target.value));
+  };
+
+  const handleUsageChange = (event) => {
+    setUsage(removeUndefined(event.target.value));
+  };
+
+  const handleSubmit = () => {
     setFilter({
       materials: material,
-      size: size,
+      sizes: size,
+      style: styleFilter,
+      usage: usage,
     });
-    console.log(filter);
   };
 
   return (
     <React.Fragment>
-      {checkSlug().hasMaterial || checkSlug().hasSize ? (
+      {checkSlug().hasMaterial ||
+      checkSlug().hasSize ||
+      checkSlug().hasStyle ||
+      checkSlug().hasUsage ? (
         <Toolbar className={classes.filterBar}>
           {checkSlug().hasMaterial && (
             <FormControl className={classes.formControl} variant="outlined">
@@ -306,7 +337,14 @@ export default function FilterComponent(props) {
                     variant="outlined"
                     color="primary"
                     className={classes.submit}
-                    onClick={(e) => setFilter({ materials: [], size: size })}
+                    onClick={(e) =>
+                      setFilter({
+                        materials: [],
+                        sizes: size,
+                        style: styleFilter,
+                        usage: usage,
+                      })
+                    }
                   >
                     <RotateLeftIcon />
                   </Button>
@@ -314,7 +352,7 @@ export default function FilterComponent(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={materialSubmit}
+                    onClick={handleSubmit}
                   >
                     اعمال
                   </Button>
@@ -324,72 +362,181 @@ export default function FilterComponent(props) {
           )}
 
           {checkSlug().hasSize && (
-            <React.Fragment>
-              <Button
-                aria-describedby={id}
-                variant="contained"
-                color="primary"
-                onClick={handleSizeClick}
-                className={classes.openSizeButton}
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
+              <Select
+                labelId="size-mutiple-checkbox-label"
+                id="size-mutiple-checkbox"
+                multiple
+                value={size}
+                onChange={handleSizeChange}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map(
+                      (value, index) =>
+                        typeof value !== "undefined" && (
+                          <Chip
+                            key={index}
+                            label={`سایز ${value}`}
+                            className={classes.chip}
+                          />
+                        )
+                    )}
+                  </div>
+                )}
+                MenuProps={MenuProps}
               >
-                سایز {size ? size : null}
-                <ArrowDropDownIcon />
-              </Button>
-              <Popover
-                id={id}
-                className={classes.sizePopOver}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleSizeClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <PrettoSlider
-                  name="sizeّ"
-                  defaultValue={
-                    typeof filter.size !== "undefined" ? filter.size : 1
-                  }
-                  aria-labelledby="discrete-slider"
-                  valueLabelDisplay="on"
-                  step={1}
-                  min={1}
-                  max={18}
-                  key={`slider-${
-                    typeof filter.size !== "undefined" ? filter.size : 1
-                  }`}
-                  className={classes.slider}
-                  onChange={(e, val) => {
-                    setSize(val);
-                  }}
-                />
+                {[...Array(18).keys()].map((name, index) => (
+                  <MenuItem key={index} value={name + 1}>
+                    <Checkbox checked={size.indexOf(name + 1) > -1} />
+                    <ListItemText primary={`سایز ${name + 1}`} />
+                  </MenuItem>
+                ))}
                 <div className={classes.buttonContainer}>
                   <Button
                     variant="outlined"
                     color="primary"
                     className={classes.submit}
                     onClick={(e) =>
-                      setFilter({ materials: material, size: undefined })
+                      setFilter({
+                        materials: material,
+                        sizes: [],
+                        style: styleFilter,
+                        usage: usage,
+                      })
                     }
                   >
                     <RotateLeftIcon />
                   </Button>
                   <Button
-                    onClick={sizeSubmit}
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    onClick={handleSubmit}
                   >
                     اعمال
                   </Button>
                 </div>
-              </Popover>
-            </React.Fragment>
+              </Select>
+            </FormControl>
+          )}
+          {checkSlug().hasStyle && (
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel id="style-mutiple-checkbox-label">طرح</InputLabel>
+              <Select
+                labelId="style-mutiple-checkbox-label"
+                id="style-mutiple-checkbox"
+                multiple
+                value={styleFilter}
+                onChange={handleStyleChange}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map(
+                      (value, index) =>
+                        typeof value !== "undefined" && (
+                          <Chip
+                            key={index}
+                            label={value}
+                            className={classes.chip}
+                          />
+                        )
+                    )}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {checkSlug().style.map((name, index) => (
+                  <MenuItem key={index} value={name}>
+                    <Checkbox checked={styleFilter.indexOf(name) > -1} />
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={(e) =>
+                      setFilter({
+                        materials: material,
+                        sizes: size,
+                        style: [],
+                        usage: usage,
+                      })
+                    }
+                  >
+                    <RotateLeftIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={handleSubmit}
+                  >
+                    اعمال
+                  </Button>
+                </div>
+              </Select>
+            </FormControl>
+          )}
+          {checkSlug().hasUsage && (
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel id="usage-mutiple-checkbox-label">کاربرد</InputLabel>
+              <Select
+                labelId="usage-mutiple-checkbox-label"
+                id="usage-mutiple-checkbox"
+                multiple
+                value={usage}
+                onChange={handleUsageChange}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map(
+                      (value, index) =>
+                        typeof value !== "undefined" && (
+                          <Chip
+                            key={index}
+                            label={value}
+                            className={classes.chip}
+                          />
+                        )
+                    )}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {checkSlug().usage.map((name, index) => (
+                  <MenuItem key={index} value={name}>
+                    <Checkbox checked={usage.indexOf(name) > -1} />
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={(e) =>
+                      setFilter({
+                        materials: material,
+                        sizes: size,
+                        style: styleFilter,
+                        usage: [],
+                      })
+                    }
+                  >
+                    <RotateLeftIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={handleSubmit}
+                  >
+                    اعمال
+                  </Button>
+                </div>
+              </Select>
+            </FormControl>
           )}
         </Toolbar>
       ) : null}
