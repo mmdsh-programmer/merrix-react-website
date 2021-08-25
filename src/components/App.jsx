@@ -12,7 +12,6 @@ import Signup from "pages/Signup";
 import NotFound from "pages/NotFound";
 import Categories from "pages/Categories";
 import Cart from "pages/Cart";
-import { PrivateRoute } from "components/PrivateRoute";
 import AuthContextProvider from "helpers/AuthContext";
 import CartContextProvider from "helpers/CartContext";
 import FilterContextProvider from "helpers/FilterContext";

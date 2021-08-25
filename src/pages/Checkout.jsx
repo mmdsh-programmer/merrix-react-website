@@ -80,7 +80,7 @@ const steps = ["مشخصات شما"];
 
 export default function Checkout() {
   const classes = useStyles();
-  useDocumentTitle("تسویه حساب");
+  useDocumentTitle("ثبت سفارش");
   const {
     register,
     handleSubmit,
@@ -135,7 +135,7 @@ export default function Checkout() {
       sendData(data, products);
     } else {
       setLoading(false);
-      toast.error("لطفا ابتدا سبد خرید خود را اصلاح کنید.");
+      toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
     }
   };
 
@@ -170,12 +170,6 @@ export default function Checkout() {
         postcode: "",
         country: "IR",
       },
-      meta_data: [
-        {
-          key: "receivables",
-          value: data.receivables,
-        },
-      ],
       line_items: products,
     };
     console.log(outOfStockProducts.length);
@@ -201,7 +195,7 @@ export default function Checkout() {
         {cartItems.length > 0 && (
           <Paper className={classes.paper}>
             <Typography component="h1" variant="h4" align="center">
-              تسویه حساب
+              ثبت سفارش
             </Typography>
             <Stepper activeStep={activeStep} className={classes.stepper}>
               {steps.map((label) => (
@@ -290,37 +284,6 @@ export default function Checkout() {
                           }
                           error={fieldsErrors.shopName}
                         />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <FormControl
-                          variant="outlined"
-                          fullWidth
-                          required
-                          error={fieldsErrors.receivables}
-                        >
-                          <InputLabel id="receivables">وصول مطالبات</InputLabel>
-                          <Controller
-                            as={
-                              <Select
-                                labelId="receivables-label"
-                                label="وصول مطالبات"
-                              >
-                                <MenuItem value="چکی">چکی</MenuItem>
-                                <MenuItem value="نقدی">نقدی</MenuItem>
-                                <MenuItem value="اعتباری">اعتباری</MenuItem>
-                              </Select>
-                            }
-                            name="receivables"
-                            control={control}
-                            defaultValue=""
-                            rules={{ required: true }}
-                          />
-                          {fieldsErrors.receivables && (
-                            <FormHelperText>
-                              وصول مطالبات نمیتواند خالی باشد
-                            </FormHelperText>
-                          )}
-                        </FormControl>
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <FormControl
@@ -474,7 +437,7 @@ export default function Checkout() {
         )}
         {cartItems.length === 0 && (
           <Typography component="h1" variant="h4" align="center">
-            سبد خرید شما خالی است. لطفا ابتدا سبد خرید خود را پر نمایید
+            سبد شفارشات شما خالی است. لطفا ابتدا سبد سفارشات خود را تکمیل نمایید
           </Typography>
         )}
       </main>

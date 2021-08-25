@@ -8,7 +8,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Header from "components/Header";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { CartContext } from "helpers/CartContext";
@@ -71,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Cart(props) {
   const classes = useStyles();
-  useDocumentTitle("سبد خرید");
+  useDocumentTitle("بازبینی سفارش");
   const {
     cartItems,
     increase,
@@ -113,7 +112,7 @@ export default function Cart(props) {
     <React.Fragment>
       <Container maxWidth="md">
         <Typography variant="h5" component="h1" className={classes.title}>
-          سبد خرید
+          بازبینی سفارش
         </Typography>
         {cartItems.length > 0 ? (
           <React.Fragment>
@@ -225,14 +224,14 @@ export default function Cart(props) {
                   onClick={() => history.push(`/checkout`)}
                   className={classes.goToCheckout}
                 >
-                  تسویه حساب
+                  ثبت سفارش
                 </Button>
               </Grid>
             </Grid>
           </React.Fragment>
         ) : (
           <Typography variant="body1" component="p" align="center">
-            سبد خرید خالی است
+            سبد سفارشات خالی است
           </Typography>
         )}
       </Container>

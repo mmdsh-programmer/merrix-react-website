@@ -589,6 +589,7 @@ export default function Header(props) {
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
+          className={classes.cartDrawer}
         >
           <List className={classes.list}>
             {cartItems.length > 0 ? (
@@ -642,7 +643,7 @@ export default function Header(props) {
                 align="center"
                 className={classes.cartEmptyText}
               >
-                سبد خرید خالی است
+                سبد سفارشات خالی است
               </Typography>
             )}
             {cartItems.length > 0 && (
@@ -663,7 +664,7 @@ export default function Header(props) {
                       console.log(state.right);
                     }}
                   >
-                    مشاهده سبد خرید
+                    بازبینی سفارش
                   </Button>
                   <Button
                     fullWidth
@@ -674,7 +675,7 @@ export default function Header(props) {
                       console.log(state.right);
                     }}
                   >
-                    تسویه حساب
+                    ثبت سفارش
                   </Button>
                 </ButtonGroup>
               </ListItem>
@@ -685,6 +686,7 @@ export default function Header(props) {
           anchor="left"
           open={state.mainMenuOpen}
           onClose={handleDrawerClose}
+          className={classes.menuDrawer}
         >
           <List className={classes.list}>
             <ListItem

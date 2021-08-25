@@ -7,6 +7,7 @@
 body {
   font-family: "shabnam";
   overflow-x: hidden;
+  background-color: #f7f7f7 !important;
 }
 
 .Toastify__toast-body {
@@ -16,4 +17,9 @@ body {
 
 .MuiToolbar-regular .MuiInputLabel-outlined {
   background-color: rgb(240, 240, 240);
+}
+
+.MuiPaper-root.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiPaper-elevation16,
+.MuiPaper-root.MuiDrawer-paper.MuiDrawer-paperAnchorRight.MuiPaper-elevation16 {
+  background-color: #f7f7f7 !important;
 }
