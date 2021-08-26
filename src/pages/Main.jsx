@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
@@ -6,8 +7,8 @@ import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import Avatar from "@material-ui/core/Avatar";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -48,95 +49,73 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     margin: 0,
   },
+  link: {
+    width: "100%",
+  },
+  square: {
+    width: "100%",
+    height: "600px",
+    objectFit: "cover",
+    borderRadius: 0,
+  },
 }));
 
 export default function Main(props) {
   const classes = useStyles();
   useDocumentTitle("", false, true);
-  const { user, setUser } = React.useContext(AuthContext);
-  const [products, setProducts] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  React.useEffect(() => {
-    setLoading(true);
-    product
-      .read("/wc/v3/products?attribute=کرافت")
-      .then((res) => {
-        console.log(res.data);
-        setProducts(res.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setLoading(false);
-      });
-  }, []);
-
-  const ProductsComponent = () => {
-    return (
-      <div>
-        <Typography variant="h5" component="h1" className={classes.title}>
-          پرفروش ترین محصولات
-        </Typography>
-        <Grid container className={classes.container} spacing={2}>
-          {products.map((pr) => {
-            return (
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                md={3}
-                key={pr.id}
-                className={classes.dFlex}
-              >
-                <ProductCard
-                  image={
-                    typeof pr.images[0] !== "undefined"
-                      ? pr.images[0].src
-                      : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
-                  }
-                  title={pr.name}
-                  key={pr.id}
-                  id={pr.id}
-                  sku={pr.sku}
-                  loading={loading}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </div>
-    );
-  };
 
   return (
     <React.Fragment>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container className={classes.container} spacing={2}>
-          {loading ? (
-            [...Array(10).keys()].map((virtual) => {
-              return (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  md={3}
-                  key={virtual}
-                  className={classes.dFlex}
-                >
-                  <ProductCard
-                    image={null}
-                    title={null}
-                    key={virtual}
-                    id={virtual}
-                    sku={null}
-                    loading={loading}
-                  />
-                </Grid>
-              );
-            })
-          ) : (
-            <ProductsComponent />
-          )}
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link
+              to="/categories/168/X WRAP | کادوپیچ"
+              className={classes.link}
+            >
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xwrap.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link
+              to="/categories/211/X BOX | متال باکس"
+              className={classes.link}
+            >
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xbox.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link
+              to="/categories/171/X BAG | بگ"
+              className={classes.link}
+            >
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xbag.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link
+              to="/categories/179/X MEMO | دفترچه وولن"
+              className={classes.link}
+            >
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xmemo.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
         </Grid>
       </Container>
     </React.Fragment>

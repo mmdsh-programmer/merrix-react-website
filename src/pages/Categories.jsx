@@ -69,7 +69,7 @@ export default function Categories(props) {
   const { filter, setFilter } = React.useContext(FilterContext);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [offset, setOffset] = React.useState(10);
+  const [offset, setOffset] = React.useState(12);
   const { key } = props.match.params;
   const { slug } = props.match.params;
   useDocumentTitle(slug);
@@ -208,7 +208,7 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    setOffset(10);
+    setOffset(12);
     handleGoToTop();
     product
       .read(
@@ -232,10 +232,6 @@ export default function Categories(props) {
   const CategoriesComponent = () => {
     return (
       <div className={classes.w100}>
-        <Typography variant="h5" component="h1" className={classes.title}>
-          {slug}
-        </Typography>
-        <FilterComponent slug={slug} />
         <Grid
           container
           className={products.length > 0 ? classes.container : classes.dFlex}
@@ -282,7 +278,7 @@ export default function Categories(props) {
             className={classes.loadMore}
             variant="outlined"
             onClick={() => {
-              setOffset(offset + 10);
+              setOffset(offset + 12);
             }}
           >
             محصولات بیشتر
@@ -296,10 +292,14 @@ export default function Categories(props) {
 
   return (
     <React.Fragment>
+      <Typography variant="h5" component="h1" className={classes.title}>
+        {slug}
+      </Typography>
+      <FilterComponent slug={slug} />
       <Container maxWidth="lg">
         <Grid container className={classes.container} spacing={2}>
           {loading ? (
-            [...Array(10).keys()].map((virtual) => {
+            [...Array(4).keys()].map((virtual) => {
               return (
                 <Grid
                   item

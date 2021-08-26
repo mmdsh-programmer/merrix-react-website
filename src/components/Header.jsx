@@ -1,6 +1,7 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import {
+  alpha,
   withStyles,
   makeStyles,
   createMuiTheme,
@@ -14,9 +15,7 @@ import Menu from "@material-ui/core/Menu";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
-import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 import category from "services/crud/categories";
 import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "@material-ui/core/Drawer";
@@ -47,6 +46,8 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import { FilterContext } from "helpers/FilterContext";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -206,6 +207,9 @@ const useStyles = makeStyles((theme) => ({
     [specialBreakpoint.breakpoints.up("md")]: {
       display: "none",
     },
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      marginRight: "0",
+    },
   },
   merrixLogo: {
     [specialBreakpoint.breakpoints.down("sm")]: {
@@ -228,6 +232,77 @@ const useStyles = makeStyles((theme) => ({
   },
   navItemText: {
     textAlign: "center",
+  },
+  square: {
+    width: "140px",
+    height: "auto",
+    borderRadius: 0,
+  },
+  link: {
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      margin: "auto",
+    },
+  },
+  search: {
+    position: "absolute",
+    right: "60px",
+    top: "10px",
+    paddingTop: "15px",
+    paddingBottom: "15px",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: "rgba(247, 247, 247 , 0)",
+    display: "flex",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    transition: "all 0.3s",
+    top: "50%",
+    transform: "translateY(-50%)",
+    "&:hover": {
+      backgroundColor: "rgba(247, 247, 247 , 1)",
+      color: "black",
+    },
+    "&:focus": {
+      backgroundColor: "rgba(247, 247, 247 , 1)",
+      color: "black",
+    },
+    "&:active": {
+      backgroundColor: "rgba(247, 247, 247 , 1)",
+      color: "black",
+    },
+    borderRadius: "50px",
+    marginLeft: 0,
+    [theme.breakpoints.up("sm")]: {
+      marginRight: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: "25px 14px",
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    // vertical padding + font size from searchIcon
+    paddingRight: `calc(1em + ${theme.spacing(3)}px)`,
+    marginLeft: theme.spacing(2),
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "0.01ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+  flex: {
+    display: "flex",
   },
 }));
 
@@ -485,13 +560,14 @@ export default function Header(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            onClick={() => history.push(`/`)}
-            className={classes.merrixLogo}
-          >
-            Merrix
-          </Typography>
+          <Link to="/" className={classes.link}>
+            <Avatar
+              alt="logo"
+              src={process.env.PUBLIC_URL + "/logo.png"}
+              className={classes.square}
+            />
+          </Link>
+
           <List component="nav" className={classes.flexNav}>
             {navBarItems.map((item, index) => (
               <React.Fragment key={index}>
@@ -561,15 +637,20 @@ export default function Header(props) {
           </List>
 
           {auth && (
-            <div>
-              <IconButton
-                aria-label="search"
-                aria-controls="menu-appbar"
-                color="inherit"
-                onClick={handleOpenModal}
-              >
-                <SearchOutlinedIcon />
-              </IconButton>
+            <div className={classes.flex}>
+              <div className={classes.search}>
+                <InputBase
+                  placeholder="جست و جو محصول..."
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                />
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+              </div>
               <IconButton
                 color="inherit"
                 aria-label="add to shopping cart"

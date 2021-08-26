@@ -12,6 +12,7 @@ import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles((theme) => ({
   sortButton: {
@@ -54,8 +55,6 @@ const useStyles = makeStyles((theme) => ({
   },
   filterBar: {
     backgroundColor: "rgb(240,240,240)",
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
     marginBottom: theme.spacing(2),
     display: "flex",
     flexWrap: "wrap",
@@ -75,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 210,
     maxWidth: 300,
     margin: theme.spacing(2),
+    marginTop: 0,
   },
   openSizeButton: {
     width: "200px",
@@ -105,35 +105,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PrettoSlider = withStyles({
-  root: {
-    color: "rgb(120,120,120)",
-    height: 8,
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: "#fff",
-    border: "2px solid currentColor",
-    marginTop: -8,
-    marginLeft: -12,
-    "&:focus, &:hover, &$active": {
-      boxShadow: "inherit",
-    },
-  },
-  active: {},
-  valueLabel: {
-    left: "calc(-50% + 4px)",
-  },
-  track: {
-    height: 8,
+const BootstrapInput = withStyles((theme) => ({
+  input: {
     borderRadius: 4,
+    position: "relative",
+    border: "1px solid #ced4da",
   },
-  rail: {
-    height: 8,
-    borderRadius: 4,
-  },
-})(Slider);
+}))(InputBase);
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -300,7 +278,7 @@ export default function FilterComponent(props) {
       checkSlug().hasUsage ? (
         <Toolbar className={classes.filterBar}>
           {checkSlug().hasMaterial && (
-            <FormControl className={classes.formControl} variant="outlined">
+            <FormControl className={classes.formControl}>
               <InputLabel id="demo-mutiple-checkbox-label">متریال</InputLabel>
               <Select
                 labelId="demo-mutiple-checkbox-label"
@@ -362,7 +340,7 @@ export default function FilterComponent(props) {
           )}
 
           {checkSlug().hasSize && (
-            <FormControl className={classes.formControl} variant="outlined">
+            <FormControl className={classes.formControl}>
               <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
               <Select
                 labelId="size-mutiple-checkbox-label"
@@ -421,7 +399,7 @@ export default function FilterComponent(props) {
             </FormControl>
           )}
           {checkSlug().hasStyle && (
-            <FormControl className={classes.formControl} variant="outlined">
+            <FormControl className={classes.formControl}>
               <InputLabel id="style-mutiple-checkbox-label">طرح</InputLabel>
               <Select
                 labelId="style-mutiple-checkbox-label"
@@ -480,7 +458,7 @@ export default function FilterComponent(props) {
             </FormControl>
           )}
           {checkSlug().hasUsage && (
-            <FormControl className={classes.formControl} variant="outlined">
+            <FormControl className={classes.formControl}>
               <InputLabel id="usage-mutiple-checkbox-label">کاربرد</InputLabel>
               <Select
                 labelId="usage-mutiple-checkbox-label"

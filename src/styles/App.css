@@ -23,3 +23,28 @@ body {
 .MuiPaper-root.MuiDrawer-paper.MuiDrawer-paperAnchorRight.MuiPaper-elevation16 {
   background-color: #f7f7f7 !important;
 }
+
+/*.MuiInputLabel-outlined {
+  transform: translate(-14px, 13px) scale(1) !important;
+}*/
+
+.MuiToolbar-root .MuiSelect-select.MuiSelect-select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.MuiInput-underline:after {
+  border-bottom: none !important;
+}
+
+.MuiInput-underline:hover:not(.Mui-disabled):before {
+  border-bottom: none !important;
+}
+
+.MuiToolbar-root .MuiInputLabel-formControl {
+  right: 8px !important;
+}
+
+.MuiInput-underline:before {
+  border-bottom: none !important;
+}
