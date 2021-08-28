@@ -1,12 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { AuthContext } from "helpers/AuthContext";
 import Grid from "@material-ui/core/Grid";
-import product from "services/crud/products";
-import ProductCard from "components/ProductCard";
 import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import Avatar from "@material-ui/core/Avatar";
 

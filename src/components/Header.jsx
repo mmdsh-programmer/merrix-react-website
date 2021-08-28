@@ -243,66 +243,14 @@ const useStyles = makeStyles((theme) => ({
       margin: "auto",
     },
   },
-  search: {
-    position: "absolute",
-    right: "60px",
-    top: "10px",
-    paddingTop: "15px",
-    paddingBottom: "15px",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: "rgba(247, 247, 247 , 0)",
-    display: "flex",
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    transition: "all 0.3s",
-    top: "50%",
-    transform: "translateY(-50%)",
-    "&:hover": {
-      backgroundColor: "rgba(247, 247, 247 , 1)",
-      color: "black",
-    },
-    "&:focus": {
-      backgroundColor: "rgba(247, 247, 247 , 1)",
-      color: "black",
-    },
-    "&:active": {
-      backgroundColor: "rgba(247, 247, 247 , 1)",
-      color: "black",
-    },
-    borderRadius: "50px",
-    marginLeft: 0,
-    [theme.breakpoints.up("sm")]: {
-      marginRight: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: "25px 14px",
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    // vertical padding + font size from searchIcon
-    paddingRight: `calc(1em + ${theme.spacing(3)}px)`,
-    marginLeft: theme.spacing(2),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "0.01ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
   flex: {
     display: "flex",
+  },
+  stickyButtonGroup: {
+    position: "sticky",
+    bottom: 0,
+    backgroundColor: "#f7f7f7",
+    zIndex: 1,
   },
 }));
 
@@ -638,19 +586,10 @@ export default function Header(props) {
 
           {auth && (
             <div className={classes.flex}>
-              <div className={classes.search}>
-                <InputBase
-                  placeholder="جست و جو محصول..."
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ "aria-label": "search" }}
-                />
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-              </div>
+              <IconButton color="inherit" aria-label="search">
+                <SearchIcon />
+              </IconButton>
+
               <IconButton
                 color="inherit"
                 aria-label="add to shopping cart"
@@ -728,7 +667,7 @@ export default function Header(props) {
               </Typography>
             )}
             {cartItems.length > 0 && (
-              <ListItem>
+              <ListItem className={classes.stickyButtonGroup}>
                 <ButtonGroup
                   className={classes.styledButton}
                   fullWidth

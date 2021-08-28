@@ -9,7 +9,6 @@ import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
-import { isBuffer } from "lodash";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -61,6 +60,22 @@ const useStyles = makeStyles((theme) => ({
   gutter: {
     width: "100%",
     height: "80px",
+  },
+  allCenter: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  descriptionHolder: {
+    marginBottom: theme.spacing(5),
+  },
+  description: {
+    borderLeft: "1px solid #6e6e6e",
+    paddingLeft: "20px",
+    [theme.breakpoints.down("sm")]: {
+      borderLeft: "none",
+      paddingLeft: "0",
+    },
   },
 }));
 
@@ -292,9 +307,39 @@ export default function Categories(props) {
 
   return (
     <React.Fragment>
-      <Typography variant="h5" component="h1" className={classes.title}>
-        {slug}
-      </Typography>
+      <Container maxWidth="lg" className={classes.descriptionHolder}>
+        <Grid
+          container
+          className={classes.container}
+          spacing={2}
+          alignItems="center"
+          justify="center"
+        >
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h5" component="h1" className={classes.title}>
+              {slug}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography
+              variant="body1"
+              component="p"
+              className={classes.description}
+              align="justify"
+            >
+              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+              استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
+              ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+              و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای
+              زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و
+              متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان
+              رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی
+              ایجاد کرد
+            </Typography>
+          </Grid>
+        </Grid>
+      </Container>
+
       <FilterComponent slug={slug} />
       <Container maxWidth="lg">
         <Grid container className={classes.container} spacing={2}>

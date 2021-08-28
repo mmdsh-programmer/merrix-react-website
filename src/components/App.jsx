@@ -19,6 +19,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import "../styles/App.css";
 import Checkout from "pages/Checkout";
 import Header from "./Header";
+import BackToTop from "./BackToTop";
 
 const shabnam = {
   fontFamily: "Shabnam",
@@ -35,6 +36,9 @@ const theme = createMuiTheme(
     palette: {
       primary: {
         main: "rgb(70,70,70)",
+      },
+      secondary: {
+        main: "rgb(218,31,61)",
       },
     },
   },
@@ -64,6 +68,7 @@ export default function App(props) {
                   <Route path="/categories/:key/:slug" component={Categories} />
                   <Route component={() => <NotFound />} />
                 </Switch>
+                <BackToTop />
               </Router>
             </CartContextProvider>
           </FilterContextProvider>
