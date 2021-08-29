@@ -225,6 +225,7 @@ export default function Categories(props) {
     setLoading(true);
     setOffset(12);
     handleGoToTop();
+
     product
       .read(
         `/wc/v3/products?category=${key}&order=asc&status=publish&per_page=1000`
@@ -247,6 +248,7 @@ export default function Categories(props) {
   const CategoriesComponent = () => {
     return (
       <div className={classes.w100}>
+        <FilterComponent slug={slug} />
         <Grid
           container
           className={products.length > 0 ? classes.container : classes.dFlex}
@@ -340,7 +342,6 @@ export default function Categories(props) {
         </Grid>
       </Container>
 
-      <FilterComponent slug={slug} />
       <Container maxWidth="lg">
         <Grid container className={classes.container} spacing={2}>
           {loading ? (

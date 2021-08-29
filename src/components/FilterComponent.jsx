@@ -78,6 +78,8 @@ const useStyles = makeStyles((theme) => ({
     position: "sticky",
     top: "0",
     zIndex: 1,
+    marginLeft: "7px",
+    marginRight: "7px",
   },
   chips: {
     display: "flex",
@@ -119,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   buttonContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#fcfcfc",
     position: "sticky",
     bottom: "0px",
     display: "flex",

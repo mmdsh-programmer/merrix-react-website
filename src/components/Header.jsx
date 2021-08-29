@@ -27,27 +27,13 @@ import { CartContext } from "helpers/CartContext";
 import { Badge } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import CloseIcon from "@material-ui/icons/Close";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
 import { useForm, Controller } from "react-hook-form";
-import searchresult from "services/crud/search";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import AddIcon from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import { FilterContext } from "helpers/FilterContext";
 import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
+import Search from "./Search";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -60,21 +46,6 @@ const specialBreakpoint = createMuiTheme({
     },
   },
 });
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-}))(TableRow);
 
 const StyledMenu = withStyles({
   paper: {
@@ -266,9 +237,10 @@ export default function Header(props) {
   const [openModal, setOpenModal] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
   const [selectedIndex, setSelectedIndex] = React.useState();
-  const [searchLoading, setSearchLoading] = React.useState("first time");
+
   const { setFilter } = React.useContext(FilterContext);
-  const [searchResult, setSearchResult] = React.useState([]);
+
+  const [openSearch, setOpenSearch] = React.useState(false);
   const {
     cartItems,
     itemCount,
@@ -315,10 +287,6 @@ export default function Header(props) {
     setState({ ...state, [anchor]: open });
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
   const handleCloseModal = () => {
     setOpenModal(false);
   };
@@ -329,10 +297,6 @@ export default function Header(props) {
 
   const handleDrawerClose = () => {
     setState((prevState) => ({ ...prevState, mainMenuOpen: false }));
-  };
-
-  const isInCart = (product) => {
-    return !!cartItems.find((item) => item.id === product.id);
   };
 
   const selectedCartItem = (id) => {
@@ -355,19 +319,12 @@ export default function Header(props) {
     setDropDownAnchorEl(null);
   };
 
-  const handleSearchChange = (data) => {
-    setSearchLoading(true);
-    searchresult
-      .read(`/wc/v3/products?search=${data}&stock_status=instock`)
-      .then((res) => {
-        setSearchResult(typeof res.data != "undefined" && res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setSearchLoading(false);
-      });
+  const handleSearchOpen = () => {
+    setOpenSearch(!openSearch);
+  };
+
+  const handleSearchClose = () => {
+    setOpenSearch(false);
   };
 
   const splitTitle = (title) => {
@@ -399,101 +356,6 @@ export default function Header(props) {
 
   return (
     <div className={classes.bottomMargin}>
-      <Dialog fullScreen open={openModal} onClose={handleCloseModal}>
-        <AppBar className={classes.dialogAppBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleCloseModal}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              جست و جو
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Container maxWidth="md">
-          <Grid container className={classes.container} spacing={2}>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="search"
-              name="search"
-              label="نام محصول"
-              type="search"
-              variant="outlined"
-              fullWidth
-              className={classes.searchField}
-              inputRef={register({ required: "Required" })}
-              onChange={(e) => {
-                e.target.value.length > 0
-                  ? handleSearchChange(e.target.value)
-                  : setSearchResult([]);
-              }}
-            />
-            {searchResult.length > 0 ? (
-              <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="customized table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="left">
-                        تصویر محصول
-                      </StyledTableCell>
-                      <StyledTableCell align="left">محصول</StyledTableCell>
-                      <StyledTableCell align="left"></StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {searchResult.map((row) => (
-                      <StyledTableRow key={row.id}>
-                        <StyledTableCell component="th" scope="row">
-                          <Avatar
-                            alt={row.images[0].alt}
-                            src={row.images[0].src}
-                            className={classes.large}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell align="left">
-                          {row.name}
-                        </StyledTableCell>
-                        <StyledTableCell align="left">
-                          <ButtonGroup>
-                            <Button
-                              aria-label="increase"
-                              onClick={() => {
-                                const product = {
-                                  id: row.id,
-                                  title: row.name,
-                                  image: row.images[0].src,
-                                  stock: row.stock_quantity,
-                                };
-                                isInCart(product)
-                                  ? increase(product)
-                                  : addProduct(product);
-                              }}
-                            >
-                              <AddIcon fontSize="small" />
-                            </Button>
-                          </ButtonGroup>
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            ) : (
-              <Typography variant="h6" className={classes.title}>
-                {searchLoading == "first time" && searchResult.length == 0
-                  ? "جستجو کنید..."
-                  : "موردی یافت نشد"}
-              </Typography>
-            )}
-          </Grid>
-        </Container>
-      </Dialog>
       <AppBar position="absolute" className={classes.mainAppBar}>
         <Toolbar>
           <IconButton
@@ -584,9 +446,15 @@ export default function Header(props) {
             ))}
           </List>
 
+          <Search open={openSearch} onClose={handleSearchClose} />
+
           {auth && (
             <div className={classes.flex}>
-              <IconButton color="inherit" aria-label="search">
+              <IconButton
+                color="inherit"
+                aria-label="search"
+                onClick={handleSearchOpen}
+              >
                 <SearchIcon />
               </IconButton>
 
