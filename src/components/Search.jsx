@@ -40,10 +40,10 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
-    cursor: `url(${process.env.PUBLIC_URL}/cancel.png) , auto`,
   },
   searchTitle: {
     marginBottom: theme.spacing(5),
+    width: "100%",
   },
   searchField: {
     marginBottom: theme.spacing(5),
@@ -66,13 +66,15 @@ const useStyles = makeStyles((theme) => ({
     [specialBreakpoint.breakpoints.down("xs")]: {
       width: "95%",
     },
-    borderRadius: "25px",
-    backgroundColor: "#f7f7f7",
+    cursor: `auto`,
   },
   dialogContent: {
     [specialBreakpoint.breakpoints.down("xs")]: {
       padding: "8px 0px",
     },
+  },
+  dialogRoot: {
+    cursor: `url(${process.env.PUBLIC_URL}/cancel.png) , auto`,
   },
 }));
 
@@ -103,7 +105,7 @@ export default function Search(props) {
   };
 
   let typingTimer;
-  let doneTypingInterval = 4000;
+  let doneTypingInterval = 750;
 
   const handleKeyUp = (data) => {
     clearTimeout(typingTimer);
@@ -141,6 +143,7 @@ export default function Search(props) {
       aria-labelledby="max-width-dialog-title"
       classes={{
         paper: classes.dialog,
+        root: classes.dialogRoot,
       }}
     >
       <DialogTitle id="max-width-dialog-title" className={classes.dialogTitle}>
@@ -233,7 +236,11 @@ export default function Search(props) {
                     className={classes.searchGif}
                   />
                 ) : !searchLoading && searchResult.length === 0 ? (
-                  <Typography variant="h6" className={classes.searchTitle}>
+                  <Typography
+                    variant="h6"
+                    className={classes.searchTitle}
+                    align="center"
+                  >
                     محصولی یافت نشد
                   </Typography>
                 ) : null}

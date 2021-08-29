@@ -150,7 +150,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "auto",
   },
   styledButton: {
-    margin: "10px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  drawerButton: {
+    margin: "5px 0",
   },
   active: {
     backgroundColor: "red",
@@ -536,14 +543,9 @@ export default function Header(props) {
             )}
             {cartItems.length > 0 && (
               <ListItem className={classes.stickyButtonGroup}>
-                <ButtonGroup
-                  className={classes.styledButton}
-                  fullWidth
-                  orientation="vertical"
-                  color="primary"
-                  aria-label="vertical outlined primary button group"
-                >
+                <div className={classes.styledButton}>
                   <Button
+                    className={classes.drawerButton}
                     fullWidth
                     variant="outlined"
                     onClick={() => {
@@ -555,6 +557,7 @@ export default function Header(props) {
                     بازبینی سفارش
                   </Button>
                   <Button
+                    className={classes.drawerButton}
                     fullWidth
                     variant="outlined"
                     onClick={() => {
@@ -565,7 +568,7 @@ export default function Header(props) {
                   >
                     ثبت سفارش
                   </Button>
-                </ButtonGroup>
+                </div>
               </ListItem>
             )}
           </List>
