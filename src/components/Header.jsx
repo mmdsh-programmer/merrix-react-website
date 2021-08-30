@@ -1,17 +1,10 @@
 import React from "react";
 import { useHistory, Link } from "react-router-dom";
-import {
-  alpha,
-  withStyles,
-  makeStyles,
-  createMuiTheme,
-} from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -26,11 +19,6 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { CartContext } from "helpers/CartContext";
 import { Badge } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { useForm, Controller } from "react-hook-form";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Collapse from "@material-ui/core/Collapse";
 import { FilterContext } from "helpers/FilterContext";
 import SearchIcon from "@material-ui/icons/Search";
 import Search from "./Search";
@@ -46,37 +34,6 @@ const specialBreakpoint = createMuiTheme({
     },
   },
 });
-
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -241,24 +198,15 @@ export default function Header(props) {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [openModal, setOpenModal] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
   const [selectedIndex, setSelectedIndex] = React.useState();
 
   const { setFilter } = React.useContext(FilterContext);
 
   const [openSearch, setOpenSearch] = React.useState(false);
-  const {
-    cartItems,
-    itemCount,
-    removeProduct,
-    increase,
-    addProduct,
-  } = React.useContext(CartContext);
+  const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
   const [branch, setBranch] = React.useState([]);
   const [subBranch, setSubBranch] = React.useState([]);
-  const [openSubBranch, setOpenSubBranch] = React.useState({});
-  const { control, errors: fieldsErrors, trigger, register } = useForm();
   const [dropDownAnchorEl, setDropDownAnchorEl] = React.useState(null);
   const navBarItems = [
     "X WRAP | کادوپیچ",
@@ -268,15 +216,6 @@ export default function Header(props) {
     "باکس دستمال کاغذی",
   ];
   const navBarItemsId = [168, 211, 171, 179, 270];
-  const subNavbarItems = [
-    "X MEMO | دفترچه وولن سایز یک (Brick)",
-    "X MEMO | دفترچه وولن سایز دو (Micro)",
-    "X MEMO | دفترچه وولن سایز سه (Mini)",
-    "X MEMO | دفترچه وولن سایز چهار (slim)",
-    "X MEMO | دفترچه وولن سایز پنج (Mid)",
-    "X MEMO | دفترچه وولن سایز شش (Square)",
-  ];
-  const subNavbarItemsId = [236, 231, 232, 180, 224, 268];
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -294,10 +233,6 @@ export default function Header(props) {
     setState({ ...state, [anchor]: open });
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   const handleDrawerOpen = () => {
     setState((prevState) => ({ ...prevState, mainMenuOpen: true }));
   };
@@ -306,24 +241,8 @@ export default function Header(props) {
     setState((prevState) => ({ ...prevState, mainMenuOpen: false }));
   };
 
-  const selectedCartItem = (id) => {
-    return cartItems.filter((e) => e.id === id);
-  };
-
   const filterCategories = (array, id) => {
     return array.filter((e) => e.parent === id);
-  };
-
-  const handleExpand = (name) => {
-    setOpenSubBranch({ [name]: !openSubBranch[name] });
-  };
-
-  const handleDropDownOpen = (event) => {
-    setDropDownAnchorEl(event.currentTarget);
-  };
-
-  const handleDropDownClose = () => {
-    setDropDownAnchorEl(null);
   };
 
   const handleSearchOpen = () => {
@@ -396,18 +315,14 @@ export default function Header(props) {
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
-                    item !== "X MEMO | دفترچه وولن" &&
-                      setFilter({
-                        materials: [],
-                        sizes: [],
-                        style: [],
-                        usage: [],
-                      });
-                    item === "X MEMO | دفترچه وولن" && handleDropDownOpen(e);
-                    item !== "X MEMO | دفترچه وولن" &&
-                      history.push(
-                        `/categories/${navBarItemsId[index]}/${item}`
-                      );
+                    setFilter({
+                      materials: [],
+                      sizes: [],
+                      style: [],
+                      usage: [],
+                      type: [],
+                    });
+                    history.push(`/categories/${navBarItemsId[index]}/${item}`);
                   }}
                 >
                   <ListItemText
@@ -423,32 +338,6 @@ export default function Header(props) {
                     }
                   />
                 </ListItem>
-                <StyledMenu
-                  id="customized-menu"
-                  anchorEl={dropDownAnchorEl}
-                  keepMounted
-                  open={Boolean(dropDownAnchorEl)}
-                  onClose={handleDropDownClose}
-                >
-                  {subNavbarItems.map((sub, index) => (
-                    <StyledMenuItem
-                      key={index}
-                      onClick={(event) => {
-                        setFilter({
-                          materials: [],
-                          sizes: [],
-                          style: [],
-                          usage: [],
-                        });
-                        history.push(
-                          `/categories/${subNavbarItemsId[index]}/${sub}`
-                        );
-                      }}
-                    >
-                      <ListItemText primary={sub} />
-                    </StyledMenuItem>
-                  ))}
-                </StyledMenu>
               </React.Fragment>
             ))}
           </List>
@@ -591,6 +480,7 @@ export default function Header(props) {
                   sizes: [],
                   style: [],
                   usage: [],
+                  type: [],
                 });
                 handleDrawerClose();
               }}
@@ -608,56 +498,19 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     //handleDropDownOpen(e);
-                    item !== "X MEMO | دفترچه وولن" &&
-                      setFilter({
-                        materials: [],
-                        sizes: [],
-                        style: [],
-                        usage: [],
-                      });
-                    item !== "X MEMO | دفترچه وولن" && handleDrawerClose();
-                    item === "X MEMO | دفترچه وولن" && handleExpand(item);
-                    item !== "X MEMO | دفترچه وولن" &&
-                      history.push(
-                        `/categories/${navBarItemsId[index]}/${item}`
-                      );
+                    setFilter({
+                      materials: [],
+                      sizes: [],
+                      style: [],
+                      usage: [],
+                      type: [],
+                    });
+                    handleDrawerClose();
+                    history.push(`/categories/${navBarItemsId[index]}/${item}`);
                   }}
                 >
                   <ListItemText primary={item} />
-                  {item === "X MEMO | دفترچه وولن" ? (
-                    openSubBranch[item] ? (
-                      <ExpandLess />
-                    ) : (
-                      <ExpandMore />
-                    )
-                  ) : null}
                 </ListItem>
-                <Collapse in={openSubBranch[item]} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    {subNavbarItems.map((sub, index) => (
-                      <ListItem
-                        button
-                        className={classes.nested}
-                        key={index}
-                        onClick={(event) => {
-                          setFilter({
-                            materials: [],
-                            sizes: [],
-                            style: [],
-                            usage: [],
-                          });
-                          handleDrawerClose();
-                          history.push(
-                            `/categories/${subNavbarItemsId[index]}/${sub}`
-                          );
-                          handleListItemClick(event, subNavbarItemsId[index]);
-                        }}
-                      >
-                        <ListItemText primary={sub} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Collapse>
               </React.Fragment>
             ))}
           </List>
