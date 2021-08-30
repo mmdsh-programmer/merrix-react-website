@@ -182,7 +182,7 @@ export default function Search(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {searchResult.map((row) => (
+                    {searchResult.map((row, index) => (
                       <StyledTableRow key={row.id}>
                         <StyledTableCell component="th" scope="row">
                           <Avatar
@@ -208,9 +208,11 @@ export default function Search(props) {
                               aria-label="increase"
                               onClick={() => {
                                 const product = {
-                                  id: row.id,
-                                  title: row.name,
                                   image: row.images[0].src,
+                                  title: row.name,
+                                  key: index,
+                                  id: row.id,
+                                  sku: row.sku,
                                   stock: row.stock_quantity,
                                 };
                                 isInCart(product)

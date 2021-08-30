@@ -554,7 +554,7 @@ export default function Header(props) {
                       console.log(state.right);
                     }}
                   >
-                    بازبینی سفارش
+                    ویرایش سفارش
                   </Button>
                   <Button
                     className={classes.drawerButton}

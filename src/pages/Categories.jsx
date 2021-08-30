@@ -228,7 +228,7 @@ export default function Categories(props) {
 
     product
       .read(
-        `/wc/v3/products?category=${key}&order=asc&status=publish&per_page=1000`
+        `/wc/v3/products?category=${key}&order=asc&stock_status=instock&per_page=1000`
       )
       .then((res) => {
         console.log(res.data);

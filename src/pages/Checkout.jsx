@@ -23,6 +23,7 @@ import { CartContext } from "helpers/CartContext";
 import order from "services/crud/order";
 import Alert from "@material-ui/lab/Alert";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import product from "services/crud/products";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -97,6 +98,7 @@ export default function Checkout() {
   const [hasAlert, setHasAlert] = React.useState(false);
   const [outOfStockProducts, setOutOfStockProducts] = React.useState([]);
   const [phone, setPhone] = React.useState([]);
+  const [newProducts, setNewProducts] = React.useState([]);
 
   const selectedProvId = (value) => {
     setFinalProvince(value);
@@ -114,29 +116,36 @@ export default function Checkout() {
     }
   };
 
-  const onSubmit = (data, e) => {
+  const onSubmit = (formData, e) => {
     e.preventDefault();
     setLoading(true);
     setOutOfStockProducts([]);
-    const products = [];
-    const hasError = false;
-    let errorCount = 0;
-    cartItems.map((item) => {
-      if (item.stock < item.quantity) {
-        setOutOfStockProducts((prev) => [...prev, item]);
-        errorCount++;
-      } else {
-        products.push({ product_id: item.id, quantity: item.quantity });
-      }
-    });
-
-    if (errorCount === 0) {
-      console.log(data);
-      sendData(data, products);
-    } else {
-      setLoading(false);
-      toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
-    }
+    let products = [];
+    product
+      .read(`/wc/v3/products?per_page=2000`)
+      .then(({ data }) => {
+        let notAvailableProducts = [];
+        cartItems.map((item) => {
+          let found = data.find((searchItem) => searchItem.sku === item.sku);
+          if (found.stock_quantity < item.quantity)
+            notAvailableProducts.push({
+              ...item,
+              outOfStock: item.quantity - found.stock_quantity,
+            });
+        });
+        setOutOfStockProducts(notAvailableProducts);
+        if (notAvailableProducts.length === 0) {
+          cartItems.map((item) => {
+            products.push({ product_id: item.id, quantity: item.quantity });
+          });
+          sendData(formData, products);
+        } else {
+          setLoading(false);
+          toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
+        }
+        console.log("outofstock", notAvailableProducts);
+      })
+      .catch((error) => console.log(error));
   };
 
   const sendData = (data, products) => {
@@ -207,8 +216,8 @@ export default function Checkout() {
             {outOfStockProducts.length > 0
               ? outOfStockProducts.map((item) => (
                   <Alert severity="error" className={classes.alert}>
-                    موجودی انبار محصول {item.title} کمتر از تعداد انتخاب شده
-                    میباشد
+                    موجودی انبار محصول {item.title} به تعداد {item.outOfStock}{" "} 
+                    عدد کمتر از تعداد انتخاب شده میباشد 
                   </Alert>
                 ))
               : null}

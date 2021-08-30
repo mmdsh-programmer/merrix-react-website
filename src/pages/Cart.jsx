@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Cart(props) {
   const classes = useStyles();
-  useDocumentTitle("بازبینی سفارش");
+  useDocumentTitle("ویرایش سفارش");
   const {
     cartItems,
     increase,
@@ -112,7 +112,7 @@ export default function Cart(props) {
     <React.Fragment>
       <Container maxWidth="md">
         <Typography variant="h5" component="h1" className={classes.title}>
-          بازبینی سفارش
+          ویرایش سفارش
         </Typography>
         {cartItems.length > 0 ? (
           <React.Fragment>

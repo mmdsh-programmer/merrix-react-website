@@ -53,6 +53,7 @@ const useStyles = makeStyles({
   middleLine: {
     lineHeight: "18px",
     color: "rgb(102,102,102)",
+    marginTop: 10,
   },
   code: {
     fontSize: "0.8rem",
@@ -64,7 +65,9 @@ const useStyles = makeStyles({
   },
   cardDescription: {
     flexDirection: "row-reverse",
+    minHeight: 78,
   },
+  cardAction: {},
 });
 
 export default function ProductCard(props) {
@@ -110,16 +113,15 @@ export default function ProductCard(props) {
           />
         )}
       </CardActionArea>
-      <CardActions>
+      <CardActions
+        classes={{
+          root: classes.cardAction,
+        }}
+      >
         <Grid container spacing={1} className={classes.cardDescription}>
           <Grid item xs={10}>
             {props.loading ? (
               <React.Fragment>
-                <Skeleton
-                  animation="wave"
-                  height={10}
-                  style={{ marginBottom: 6 }}
-                />
                 <Skeleton
                   animation="wave"
                   height={10}
@@ -135,14 +137,6 @@ export default function ProductCard(props) {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Typography
-                  variant="body1"
-                  component="h2"
-                  className={classes.topMargin}
-                  align="right"
-                >
-                  {splitName(props.title).firstRow}
-                </Typography>
                 <Typography
                   variant="body1"
                   component="h2"
@@ -206,6 +200,7 @@ export default function ProductCard(props) {
                   color="secondary"
                   className={classes.button}
                   onClick={() => {
+                    console.log(props)
                     setCount(count + 1);
                     isInCart(props) ? increase(props) : addProduct(props);
                   }}
