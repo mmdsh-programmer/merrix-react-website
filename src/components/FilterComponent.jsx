@@ -203,15 +203,11 @@ export default function FilterComponent(props) {
   const [usage, setUsage] = React.useState(
     typeof filter !== "undefined" ? filter.usage : []
   );
-  const [type, setType] = React.useState(
-    typeof filter !== "undefined" ? filter.type : []
-  );
   const { slug } = props;
   const filterOptions = {
     xWrap: {
       hasSize: false,
       hasMaterial: true,
-      hasType: false,
       hasStyle: true,
       hasUsage: true,
       material: [
@@ -226,51 +222,42 @@ export default function FilterComponent(props) {
       ],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
-      type: [],
     },
     xBox: {
       hasSize: true,
-      hasMaterial: false,
-      hasType: true,
+      hasMaterial: true,
       hasStyle: true,
       hasUsage: true,
-      material: [],
+      material: ["فلزی", "چوبی"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
-      type: ["فلزی", "چوبی"],
     },
     xBag: {
       hasSize: true,
       hasMaterial: true,
-      hasType: false,
       hasStyle: true,
       hasUsage: true,
       material: ["گلاسه", "کرافت", "ویلو"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
-      type: [],
     },
     xMemo: {
       hasSize: true,
       hasMaterial: false,
-      hasType: false,
       hasStyle: true,
       hasUsage: true,
       material: [],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
-      type: [],
     },
     tissueBox: {
       hasSize: false,
       hasMaterial: false,
-      hasType: false,
       hasStyle: true,
       hasUsage: true,
       material: [],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
-      type: [],
     },
   };
 
@@ -315,17 +302,12 @@ export default function FilterComponent(props) {
     setUsage(removeUndefined(event.target.value));
   };
 
-  const handleTypeChange = (event) => {
-    setType(removeUndefined(event.target.value));
-  };
-
   const handleSubmit = () => {
     setFilter({
       materials: material,
       sizes: size,
       style: styleFilter,
       usage: usage,
-      type: type,
     });
   };
 
@@ -340,7 +322,6 @@ export default function FilterComponent(props) {
   return (
     <React.Fragment>
       {checkSlug().hasMaterial ||
-      checkSlug().hasType ||
       checkSlug().hasSize ||
       checkSlug().hasStyle ||
       checkSlug().hasUsage ? (
@@ -409,40 +390,6 @@ export default function FilterComponent(props) {
                         <ListItemText
                           primary={name === "ویلو" ? "ویلو (مخمل)" : name}
                         />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-              {checkSlug().hasType && (
-                <FormControl className={classes.mobileFormControl} fullWidth>
-                  <InputLabel id="type-mutiple-checkbox-label">نوع</InputLabel>
-                  <Select
-                    labelId="type-mutiple-checkbox-label"
-                    id="type-mutiple-checkbox"
-                    multiple
-                    value={type}
-                    onChange={handleTypeChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().type.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={type.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
                       </MenuItem>
                     ))}
                   </Select>
@@ -606,52 +553,6 @@ export default function FilterComponent(props) {
                         <ListItemText
                           primary={name === "ویلو" ? "ویلو (مخمل)" : name}
                         />
-                      </MenuItem>
-                    ))}
-                    <div className={classes.buttonContainer}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={handleSubmit}
-                      >
-                        اعمال
-                      </Button>
-                    </div>
-                  </Select>
-                </FormControl>
-              </Grid>
-            )}
-            {checkSlug().hasType && (
-              <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="type-mutiple-checkbox-label">نوع</InputLabel>
-                  <Select
-                    labelId="type-mutiple-checkbox-label"
-                    id="type-mutiple-checkbox"
-                    multiple
-                    value={type}
-                    onChange={handleTypeChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().type.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={type.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
                       </MenuItem>
                     ))}
                     <div className={classes.buttonContainer}>

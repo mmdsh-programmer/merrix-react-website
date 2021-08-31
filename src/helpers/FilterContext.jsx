@@ -8,7 +8,6 @@ export default function FilterContextProvider(props) {
     sizes: [],
     style: [],
     usage: [],
-    type: [],
   });
 
   return (

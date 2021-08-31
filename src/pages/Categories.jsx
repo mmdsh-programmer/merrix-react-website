@@ -102,12 +102,8 @@ export default function Categories(props) {
   };
 
   const hasMaterial = (product, materials) => {
-    return materials.some((material) => product.includes(material));
-  };
-
-  const hasType = (product, types) => {
-    return types.some((type) =>
-      product.includes(type === "فلزی" ? "متال باکس" : type)
+    return materials.some((material) =>
+      product.includes(material === "فلزی" ? "متال باکس" : material)
     );
   };
 
@@ -139,9 +135,6 @@ export default function Categories(props) {
       count++;
     }
     if (filter.usage.length > 0) {
-      count++;
-    }
-    if (filter.type.length > 0) {
       count++;
     }
     return count;
@@ -201,7 +194,6 @@ export default function Categories(props) {
     let filteredSizes = [];
     let filteredStyle = [];
     let filteredUsage = [];
-    let filteredType = [];
     if (filter.materials.length > 0) {
       filteredMaterials = data.filter((product) => {
         return hasMaterial(product.name, filter.materials);
@@ -222,17 +214,11 @@ export default function Categories(props) {
         return hasAttribute(product.attributes, filter.usage, "usage");
       });
     }
-    if (filter.type.length > 0) {
-      filteredType = data.filter((product) => {
-        return hasType(product.name, filter.type);
-      });
-    }
 
     const finalFilter = filteredMaterials.concat(
       filteredSizes,
       filteredStyle,
-      filteredUsage,
-      filteredType
+      filteredUsage
     );
 
     setProducts(count(finalFilter));
@@ -252,8 +238,7 @@ export default function Categories(props) {
         filter.materials.length > 0 ||
         filter.sizes.length > 0 ||
         filter.style.length > 0 ||
-        filter.usage.length > 0 ||
-        filter.type.length > 0
+        filter.usage.length > 0
           ? filterProducts(res.data)
           : setProducts(res.data);
         setLoading(false);
