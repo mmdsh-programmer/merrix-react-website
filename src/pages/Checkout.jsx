@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Stepper from "@material-ui/core/Stepper";
@@ -20,10 +20,29 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import citiesImport from "services/citiesImport";
 import provinceImport from "services/provinceImport";
 import { CartContext } from "helpers/CartContext";
-import order from "services/crud/order";
 import Alert from "@material-ui/lab/Alert";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import product from "services/crud/products";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import order from "services/crud/order";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+
+const specialBreakpoint = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 769,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -75,6 +94,29 @@ const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(3),
   },
+  dialogIcon: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: 20,
+  },
+  actionColor: {
+    color: "green",
+    fontSize: 50,
+  },
+  dialogAction: {
+    justifyContent: "center",
+  },
+  dialogTitle: {
+    "& h2": {
+      fontSize: "1.75rem",
+      [specialBreakpoint.breakpoints.down("xs")]: {
+        fontSize: "1.3rem",
+      },
+    },
+  },
+  okButton: {
+    minWidth: 250,
+  },
 }));
 
 const steps = ["مشخصات شما"];
@@ -98,7 +140,7 @@ export default function Checkout() {
   const [hasAlert, setHasAlert] = React.useState(false);
   const [outOfStockProducts, setOutOfStockProducts] = React.useState([]);
   const [phone, setPhone] = React.useState([]);
-  const [newProducts, setNewProducts] = React.useState([]);
+  const [messageOpen, setMessageOpen] = React.useState(false);
 
   const selectedProvId = (value) => {
     setFinalProvince(value);
@@ -114,6 +156,14 @@ export default function Checkout() {
     if (e.target.value === "" || re.test(e.target.value)) {
       setPhone(e.target.value);
     }
+  };
+
+  const handleMessageOpen = () => {
+    setMessageOpen(true);
+  };
+
+  const handleMessageClose = () => {
+    setMessageOpen(false);
   };
 
   const onSubmit = (formData, e) => {
@@ -185,7 +235,7 @@ export default function Checkout() {
     order
       .create(finalData, "/wc/v3/orders?status=processing")
       .then((res) => {
-        toast.success("سفارش با موفقیت ثبت شد");
+        handleMessageOpen();
         handleCheckout();
         reset();
       })
@@ -195,6 +245,55 @@ export default function Checkout() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+  const AlertDialog = () => {
+    return (
+      <div>
+        <Dialog
+          open={messageOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <div className={classes.dialogIcon}>
+            <CheckCircleIcon fontSize="large" className={classes.actionColor} />
+          </div>
+          <DialogTitle
+            id="alert-dialog-slide-title"
+            classes={{
+              root: classes.dialogTitle,
+            }}
+          >
+            سفارش شما با موفقیت ثبت شد
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              همکاران ما در اسرع وقت با شما تماس میگیرند.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions
+            classes={{
+              root: classes.dialogAction,
+            }}
+          >
+            <Button
+              color="primary"
+              onClick={handleMessageClose}
+              variant="outlined"
+              className={classes.okButton}
+            >
+              تایید
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
   };
 
   return (
@@ -216,8 +315,8 @@ export default function Checkout() {
             {outOfStockProducts.length > 0
               ? outOfStockProducts.map((item) => (
                   <Alert severity="error" className={classes.alert}>
-                    موجودی انبار محصول {item.title} به تعداد {item.outOfStock}{" "} 
-                    عدد کمتر از تعداد انتخاب شده میباشد 
+                    موجودی انبار محصول {item.title} به تعداد {item.outOfStock}{" "}
+                    عدد کمتر از تعداد انتخاب شده میباشد
                   </Alert>
                 ))
               : null}
@@ -449,6 +548,8 @@ export default function Checkout() {
             سبد شفارشات شما خالی است. لطفا ابتدا سبد سفارشات خود را تکمیل نمایید
           </Typography>
         )}
+
+        <AlertDialog />
       </main>
     </React.Fragment>
   );
