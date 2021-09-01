@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(7),
   },
   heading: {
+    color: "#a0a0a0",
     fontSize: theme.typography.pxToRem(18),
     flexShrink: 0,
     [specialBreakpoint.breakpoints.down("xs")]: {
@@ -85,7 +86,7 @@ export default function SizeGuide(props) {
               id="kraft-xbag-header"
             >
               <Typography className={classes.heading}>
-                راهنمای سایز پاکت هدیه کرافت
+                راهنمای سایز بگ کرافت
               </Typography>
             </AccordionSummary>
             <AccordionDetails
@@ -128,7 +129,7 @@ export default function SizeGuide(props) {
               id="glossy-xbag-header"
             >
               <Typography className={classes.heading}>
-                راهنمای سایز پاکت هدیه گلاسه
+                راهنمای سایز بگ گلاسه
               </Typography>
             </AccordionSummary>
             <AccordionDetails
@@ -171,7 +172,7 @@ export default function SizeGuide(props) {
               id="fantasy-xmemo-header"
             >
               <Typography className={classes.heading}>
-                راهنمای سایز دفترچه فانتزی
+                راهنمای سایز دفترچه وولن
               </Typography>
             </AccordionSummary>
             <AccordionDetails
@@ -214,7 +215,7 @@ export default function SizeGuide(props) {
               id="metal-box-header"
             >
               <Typography className={classes.heading}>
-                راهنمای سایز باکس هدیه فلزی
+                راهنمای سایز متال باکس
               </Typography>
             </AccordionSummary>
             <AccordionDetails

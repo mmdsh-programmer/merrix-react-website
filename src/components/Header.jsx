@@ -87,12 +87,18 @@ const useStyles = makeStyles((theme) => ({
   flexNav: {
     display: "flex",
     margin: "auto",
+    padding: 0,
     [specialBreakpoint.breakpoints.down("sm")]: {
       display: "none",
     },
   },
   navItem: {
     width: "auto",
+    minHeight: 76,
+    "&:hover $primaryListItemText": {
+      opacity: 1,
+      height: "auto",
+    },
   },
   avatar: {
     width: "55px",
@@ -187,6 +193,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f7f7f7",
     zIndex: 1,
   },
+  primaryListItemText: {
+    opacity: 0,
+    height: 0,
+    overflow: "hidden",
+    transition: "visibility 0s, opacity 0.5s linear",
+  },
+  secondaryItemText: {},
 }));
 
 export default function Header(props) {
@@ -207,15 +220,14 @@ export default function Header(props) {
   const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
   const [branch, setBranch] = React.useState([]);
   const [subBranch, setSubBranch] = React.useState([]);
-  const [dropDownAnchorEl, setDropDownAnchorEl] = React.useState(null);
   const navBarItems = [
     "X WRAP | کادوپیچ",
-    "X BOX | متال باکس",
     "X BAG | بگ",
+    "X BOX | متال باکس",
     "X MEMO | دفترچه وولن",
-    "باکس دستمال کاغذی",
+    "TISSUE BOX | باکس دستمال کاغذی",
   ];
-  const navBarItemsId = [168, 211, 171, 179, 270];
+  const navBarItemsId = [168, 171, 211, 179, 270];
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -330,14 +342,28 @@ export default function Header(props) {
                 >
                   <ListItemText
                     className={classes.navItemText}
-                    primary={splitTitle(item)[0]}
+                    primary={
+                      <Typography
+                        style={{ color: "white" }}
+                        className={classes.primaryListItemText}
+                      >
+                        {splitTitle(item)[0]}
+                      </Typography>
+                    }
                     secondaryTypographyProps={{
                       style: {
                         color: "white",
                       },
                     }}
                     secondary={
-                      splitTitle(item).length > 1 ? splitTitle(item)[1] : null
+                      <Typography
+                        style={{ color: "white" }}
+                        className={classes.secondaryListItemText}
+                      >
+                        {splitTitle(item).length > 1
+                          ? splitTitle(item)[1]
+                          : null}
+                      </Typography>
                     }
                   />
                 </ListItem>
