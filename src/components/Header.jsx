@@ -257,6 +257,15 @@ export default function Header(props) {
     return title.split("|");
   };
 
+  const emptyFilter = () => {
+    setFilter({
+      materials: [],
+      sizes: [],
+      style: [],
+      usage: [],
+    });
+  };
+
   React.useEffect(() => {
     const filteredBranch = [];
     const filteredSubBranch = [];
@@ -315,13 +324,7 @@ export default function Header(props) {
                     { selected: classes.active },
                   ].join(" ")}
                   onClick={(e) => {
-                    setFilter({
-                      materials: [],
-                      sizes: [],
-                      style: [],
-                      usage: [],
-                      type: [],
-                    });
+                    emptyFilter();
                     history.push(`/categories/${navBarItemsId[index]}/${item}`);
                   }}
                 >
@@ -340,6 +343,26 @@ export default function Header(props) {
                 </ListItem>
               </React.Fragment>
             ))}
+            <ListItem
+              button
+              className={[classes.navItem, { selected: classes.active }].join(
+                " "
+              )}
+              onClick={(e) => {
+                emptyFilter();
+                history.push(`/size-guide`);
+              }}
+            >
+              <ListItemText
+                className={classes.navItemText}
+                primary={"راهنمای سایز"}
+                secondaryTypographyProps={{
+                  style: {
+                    color: "white",
+                  },
+                }}
+              />
+            </ListItem>
           </List>
 
           <Search open={openSearch} onClose={handleSearchClose} />
@@ -475,13 +498,7 @@ export default function Header(props) {
               onClick={(event) => {
                 history.push(`/`);
                 handleListItemClick(event, 4);
-                setFilter({
-                  materials: [],
-                  sizes: [],
-                  style: [],
-                  usage: [],
-                  type: [],
-                });
+                emptyFilter();
                 handleDrawerClose();
               }}
             >
@@ -498,13 +515,7 @@ export default function Header(props) {
                   ].join(" ")}
                   onClick={(e) => {
                     //handleDropDownOpen(e);
-                    setFilter({
-                      materials: [],
-                      sizes: [],
-                      style: [],
-                      usage: [],
-                      type: [],
-                    });
+                    emptyFilter();
                     handleDrawerClose();
                     history.push(`/categories/${navBarItemsId[index]}/${item}`);
                   }}
@@ -513,6 +524,19 @@ export default function Header(props) {
                 </ListItem>
               </React.Fragment>
             ))}
+            <ListItem
+              button
+              className={[classes.navItem, { selected: classes.active }].join(
+                " "
+              )}
+              onClick={(e) => {
+                handleDrawerClose();
+                emptyFilter();
+                history.push(`/size-guide`);
+              }}
+            >
+              <ListItemText primary={"راهنمای سایز"} />
+            </ListItem>
           </List>
         </Drawer>
       </React.Fragment>

@@ -228,7 +228,7 @@ export default function Categories(props) {
     setLoading(true);
     setOffset(12);
     handleGoToTop();
-
+    console.log(filter);
     product
       .read(
         `/wc/v3/products?category=${key}&order=asc&stock_status=instock&per_page=1000`

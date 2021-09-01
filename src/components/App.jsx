@@ -18,6 +18,7 @@ import FilterContextProvider from "helpers/FilterContext";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "../styles/App.css";
 import Checkout from "pages/Checkout";
+import SizeGuide from "pages/SizeGuide";
 import Header from "./Header";
 import BackToTop from "./BackToTop";
 
@@ -60,6 +61,7 @@ export default function App(props) {
                   <Route exact path="/signup" component={Signup} />
                   <Route exact path="/cart" component={Cart} />
                   <Route exact path="/checkout" component={Checkout} />
+                  <Route exact path="/size-guide" component={SizeGuide} />
                   <Route
                     exact
                     path={["/", "/home", "/react"]}
