@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
   infoText: {
     width: "100%",
     textAlign: "center",
+    marginTop: theme.spacing(5),
   },
   gutter: {
     width: "100%",
@@ -81,10 +82,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Categories(props) {
   const classes = useStyles();
-  const { filter, setFilter } = React.useContext(FilterContext);
+  const { filter } = React.useContext(FilterContext);
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [offset, setOffset] = React.useState(12);
+  const [offset, setOffset] = React.useState(16);
   const { key } = props.match.params;
   const { slug } = props.match.params;
   useDocumentTitle(slug);
@@ -172,7 +173,7 @@ export default function Categories(props) {
     let current = null;
     let cnt = 0;
     for (let i = 0; i < sortedArray.length; i++) {
-      if (sortedArray[i] != current) {
+      if (sortedArray[i] !== current) {
         if (cnt >= getFilterLength()) {
           result.push(current);
         }
@@ -226,12 +227,12 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    setOffset(12);
+    setOffset(16);
     handleGoToTop();
     console.log(filter);
     product
       .read(
-        `/wc/v3/products?category=${key}&order=asc&stock_status=instock&per_page=1000`
+        `/wc/v3/products?category=${key}&order=asc&stock_status=instock&status=publish&per_page=1000`
       )
       .then((res) => {
         console.log(res.data);
@@ -298,7 +299,7 @@ export default function Categories(props) {
             className={classes.loadMore}
             variant="outlined"
             onClick={() => {
-              setOffset(offset + 12);
+              setOffset(offset + 16);
             }}
           >
             محصولات بیشتر

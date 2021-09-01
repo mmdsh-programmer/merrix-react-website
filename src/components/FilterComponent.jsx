@@ -17,6 +17,9 @@ import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import _without from "lodash/without";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -192,16 +195,32 @@ export default function FilterComponent(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { setFilter, filter } = React.useContext(FilterContext);
   const [material, setMaterial] = React.useState(
-    typeof filter !== "undefined" ? filter.materials : []
+    typeof filter !== "undefined"
+      ? filter.materials.length === 0
+        ? ["همه محصولات"]
+        : filter.materials
+      : ["همه محصولات"]
   );
   const [size, setSize] = React.useState(
-    typeof filter !== "undefined" ? filter.sizes : []
+    typeof filter !== "undefined"
+      ? filter.sizes.length === 0
+        ? ["همه محصولات"]
+        : filter.sizes
+      : ["همه محصولات"]
   );
   const [styleFilter, setStyleFilter] = React.useState(
-    typeof filter !== "undefined" ? filter.style : []
+    typeof filter !== "undefined"
+      ? filter.style.length === 0
+        ? ["همه محصولات"]
+        : filter.style
+      : ["همه محصولات"]
   );
   const [usage, setUsage] = React.useState(
-    typeof filter !== "undefined" ? filter.usage : []
+    typeof filter !== "undefined"
+      ? filter.usage.length === 0
+        ? ["همه محصولات"]
+        : filter.usage
+      : ["همه محصولات"]
   );
   const { slug } = props;
   const filterOptions = {
@@ -287,27 +306,51 @@ export default function FilterComponent(props) {
   };
 
   const handleMaterialChange = (event) => {
-    setMaterial(removeUndefined(event.target.value));
+    let val = event.target.value;
+    if (val.includes("همه محصولات")) {
+      val.splice(val.indexOf("همه محصولات"), 1);
+    }
+    setMaterial(
+      val.length === 0 ? ["همه محصولات"] : removeUndefined(event.target.value)
+    );
   };
 
   const handleSizeChange = (event) => {
-    setSize(removeUndefined(event.target.value));
+    let val = event.target.value;
+    if (val.includes("همه محصولات")) {
+      val.splice(val.indexOf("همه محصولات"), 1);
+    }
+    setSize(
+      val.length === 0 ? ["همه محصولات"] : removeUndefined(event.target.value)
+    );
   };
 
   const handleStyleChange = (event) => {
-    setStyleFilter(removeUndefined(event.target.value));
+    let val = event.target.value;
+    if (val.includes("همه محصولات")) {
+      val.splice(val.indexOf("همه محصولات"), 1);
+    }
+    setStyleFilter(
+      val.length === 0 ? ["همه محصولات"] : removeUndefined(event.target.value)
+    );
   };
 
   const handleUsageChange = (event) => {
-    setUsage(removeUndefined(event.target.value));
+    let val = event.target.value;
+    if (val.includes("همه محصولات")) {
+      val.splice(val.indexOf("همه محصولات"), 1);
+    }
+    setUsage(
+      val.length === 0 ? ["همه محصولات"] : removeUndefined(event.target.value)
+    );
   };
 
   const handleSubmit = () => {
     setFilter({
-      materials: material,
-      sizes: size,
-      style: styleFilter,
-      usage: usage,
+      materials: material.includes("همه محصولات") ? [] : material,
+      sizes: size.includes("همه محصولات") ? [] : size,
+      style: styleFilter.includes("همه محصولات") ? [] : styleFilter,
+      usage: usage.includes("همه محصولات") ? [] : usage,
     });
   };
 
@@ -317,6 +360,28 @@ export default function FilterComponent(props) {
 
   const handleMobileFilterClose = () => {
     setOpenMobileFilter(false);
+  };
+
+  const handleChipDelete = (e, value, destination) => {
+    e.preventDefault();
+    switch (destination) {
+      case "material":
+        setMaterial((current) =>
+          current.length === 1 ? ["همه محصولات"] : _without(current, value)
+        );
+      case "size":
+        setSize((current) =>
+          current.length === 1 ? ["همه محصولات"] : _without(current, value)
+        );
+      case "style":
+        setStyleFilter((current) =>
+          current.length === 1 ? ["همه محصولات"] : _without(current, value)
+        );
+      case "usage":
+        setUsage((current) =>
+          current.length === 1 ? ["همه محصولات"] : _without(current, value)
+        );
+    }
   };
 
   return (
@@ -377,6 +442,26 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value === "ویلو" ? "ویلو (مخمل)" : value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "material")
+                                }
                               />
                             )
                         )}
@@ -411,8 +496,32 @@ export default function FilterComponent(props) {
                             typeof value !== "undefined" && (
                               <Chip
                                 key={index}
-                                label={`سایز ${value}`}
+                                label={
+                                  value !== "همه محصولات"
+                                    ? `سایز ${value}`
+                                    : value
+                                }
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "size")
+                                }
                               />
                             )
                         )}
@@ -447,6 +556,26 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "style")
+                                }
                               />
                             )
                         )}
@@ -483,6 +612,26 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "usage")
+                                }
                               />
                             )
                         )}
@@ -540,6 +689,30 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value === "ویلو" ? "ویلو (مخمل)" : value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "material")
+                                }
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  value === "همه محصولات" && handleSubmit();
+                                }}
                               />
                             )
                         )}
@@ -586,8 +759,32 @@ export default function FilterComponent(props) {
                             typeof value !== "undefined" && (
                               <Chip
                                 key={index}
-                                label={`سایز ${value}`}
+                                label={
+                                  value !== "همه محصولات"
+                                    ? `سایز ${value}`
+                                    : value
+                                }
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "size")
+                                }
                               />
                             )
                         )}
@@ -634,6 +831,26 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "style")
+                                }
                               />
                             )
                         )}
@@ -682,6 +899,26 @@ export default function FilterComponent(props) {
                                 key={index}
                                 label={value}
                                 className={classes.chip}
+                                clickable
+                                deleteIcon={
+                                  value !== "همه محصولات" ? (
+                                    <CancelIcon
+                                      onMouseDown={(event) =>
+                                        event.stopPropagation()
+                                      }
+                                    />
+                                  ) : (
+                                    <CheckCircleIcon
+                                      onMouseDown={(event) => {
+                                        event.stopPropagation();
+                                        handleSubmit();
+                                      }}
+                                    />
+                                  )
+                                }
+                                onDelete={(e) =>
+                                  handleChipDelete(e, value, "usage")
+                                }
                               />
                             )
                         )}
