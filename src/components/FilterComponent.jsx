@@ -228,8 +228,8 @@ export default function FilterComponent(props) {
     xWrap: {
       hasSize: false,
       hasMaterial: true,
-      hasStyle: true,
-      hasUsage: true,
+      hasStyle: false,
+      hasUsage: false,
       material: [
         "گلاسه",
         "کرافت",
@@ -246,8 +246,8 @@ export default function FilterComponent(props) {
     xBox: {
       hasSize: true,
       hasMaterial: true,
-      hasStyle: true,
-      hasUsage: true,
+      hasStyle: false,
+      hasUsage: false,
       material: ["فلزی", "چوبی"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
@@ -255,8 +255,8 @@ export default function FilterComponent(props) {
     xBag: {
       hasSize: true,
       hasMaterial: true,
-      hasStyle: true,
-      hasUsage: true,
+      hasStyle: false,
+      hasUsage: false,
       material: ["گلاسه", "کرافت", "ویلو"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
@@ -264,8 +264,8 @@ export default function FilterComponent(props) {
     xMemo: {
       hasSize: true,
       hasMaterial: false,
-      hasStyle: true,
-      hasUsage: true,
+      hasStyle: false,
+      hasUsage: false,
       material: [],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
@@ -273,8 +273,8 @@ export default function FilterComponent(props) {
     tissueBox: {
       hasSize: false,
       hasMaterial: false,
-      hasStyle: true,
-      hasUsage: true,
+      hasStyle: false,
+      hasUsage: false,
       material: [],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
@@ -293,7 +293,7 @@ export default function FilterComponent(props) {
         return filterOptions.xBox;
       case "X BAG | بگ":
         return filterOptions.xBag;
-      case "باکس دستمال کاغذی":
+      case "TISSUE BOX | باکس دستمال کاغذی":
         return filterOptions.tissueBox;
       default:
         return filterOptions.xMemo;
@@ -312,7 +312,9 @@ export default function FilterComponent(props) {
       val.splice(val.indexOf(defaultFilterText), 1);
     }
     setMaterial(
-      val.length === 0 ? [defaultFilterText] : removeUndefined(event.target.value)
+      val.length === 0
+        ? [defaultFilterText]
+        : removeUndefined(event.target.value)
     );
   };
 
@@ -322,7 +324,9 @@ export default function FilterComponent(props) {
       val.splice(val.indexOf(defaultFilterText), 1);
     }
     setSize(
-      val.length === 0 ? [defaultFilterText] : removeUndefined(event.target.value)
+      val.length === 0
+        ? [defaultFilterText]
+        : removeUndefined(event.target.value)
     );
   };
 
@@ -332,7 +336,9 @@ export default function FilterComponent(props) {
       val.splice(val.indexOf(defaultFilterText), 1);
     }
     setStyleFilter(
-      val.length === 0 ? [defaultFilterText] : removeUndefined(event.target.value)
+      val.length === 0
+        ? [defaultFilterText]
+        : removeUndefined(event.target.value)
     );
   };
 
@@ -342,7 +348,9 @@ export default function FilterComponent(props) {
       val.splice(val.indexOf(defaultFilterText), 1);
     }
     setUsage(
-      val.length === 0 ? [defaultFilterText] : removeUndefined(event.target.value)
+      val.length === 0
+        ? [defaultFilterText]
+        : removeUndefined(event.target.value)
     );
   };
 
