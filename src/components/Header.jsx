@@ -99,6 +99,11 @@ const useStyles = makeStyles((theme) => ({
       opacity: 1,
       height: "auto",
     },
+    "&:hover $secondaryListItemText": {
+      opacity: 0,
+      height: 0,
+      overflow: "hidden",
+    },
   },
   avatar: {
     width: "55px",
@@ -197,9 +202,13 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0,
     height: 0,
     overflow: "hidden",
-    transition: "visibility 0s, opacity 0.5s linear",
+    transition: "visibility 0.5s, opacity 0.5s linear",
   },
-  secondaryItemText: {},
+  secondaryListItemText: {
+    opacity: 1,
+    height: "auto",
+    transition: "visibility 0.5s, opacity 0.5s linear",
+  },
 }));
 
 export default function Header(props) {
@@ -382,9 +391,9 @@ export default function Header(props) {
               <ListItemText
                 className={classes.navItemText}
                 primary={"راهنمای سایز"}
-                secondaryTypographyProps={{
+                primaryTypographyProps={{
                   style: {
-                    color: "white",
+                    color: "#17b0de",
                   },
                 }}
               />
@@ -561,7 +570,14 @@ export default function Header(props) {
                 history.push(`/size-guide`);
               }}
             >
-              <ListItemText primary={"راهنمای سایز"} />
+              <ListItemText
+                primary={"راهنمای سایز"}
+                primaryTypographyProps={{
+                  style: {
+                    color: "#17b0de",
+                  },
+                }}
+              />
             </ListItem>
           </List>
         </Drawer>
