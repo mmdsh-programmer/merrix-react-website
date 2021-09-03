@@ -172,7 +172,7 @@ export default function SizeGuide(props) {
               id="fantasy-xmemo-header"
             >
               <Typography className={classes.heading}>
-                راهنمای سایز دفترچه وولن
+                راهنمای سایز دفترچه
               </Typography>
             </AccordionSummary>
             <AccordionDetails
