@@ -375,21 +375,31 @@ export default function FilterComponent(props) {
     e.preventDefault();
     switch (destination) {
       case "material":
-        setMaterial((current) =>
-          current.length === 1 ? [defaultFilterText] : _without(current, value)
-        );
+        setFilter({
+          materials: material.length === 1 ? [] : _without(material, value),
+          sizes: size.includes(defaultFilterText) ? [] : size,
+          style: styleFilter.includes(defaultFilterText) ? [] : styleFilter,
+          usage: usage.includes(defaultFilterText) ? [] : usage,
+        });
+        break;
       case "size":
-        setSize((current) =>
-          current.length === 1 ? [defaultFilterText] : _without(current, value)
-        );
+        setFilter({
+          materials: material.includes(defaultFilterText) ? [] : material,
+          sizes: size.length === 1 ? [] : _without(size, value),
+          style: styleFilter.includes(defaultFilterText) ? [] : styleFilter,
+          usage: usage.includes(defaultFilterText) ? [] : usage,
+        });
+        break;
       case "style":
         setStyleFilter((current) =>
           current.length === 1 ? [defaultFilterText] : _without(current, value)
         );
+        break;
       case "usage":
         setUsage((current) =>
           current.length === 1 ? [defaultFilterText] : _without(current, value)
         );
+        break;
     }
   };
 
