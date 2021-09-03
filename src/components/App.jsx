@@ -62,11 +62,7 @@ export default function App(props) {
                   <Route exact path="/cart" component={Cart} />
                   <Route exact path="/checkout" component={Checkout} />
                   <Route exact path="/size-guide" component={SizeGuide} />
-                  <Route
-                    exact
-                    path={["/", "/home", "/react"]}
-                    component={Main}
-                  />
+                  <Route exact path={["/", "/home"]} component={Main} />
                   <Route path="/categories/:key/:slug" component={Categories} />
                   <Route component={() => <NotFound />} />
                 </Switch>
