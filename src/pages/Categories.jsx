@@ -98,6 +98,33 @@ export default function Categories(props) {
     }
   };
 
+  const categoryDescription = {
+    xWrap:
+      "کادوپیچ همواره یکی از عناصر ضروری برای زینت بخشی هدایاست. این محصول با طراحی منحصر به فرد، تنوع جنس و مناسب با رویدادهای ویژه می‌تواند ارزش دوچندانی به هدیه ببخشد.",
+    xBox:
+      "این محصول انحصاری برند مریخ با تکنولوژی مدرن و طراحی ویژه در اندازه های مختلف تولید می‌شود. متال باکس ها با کاربری چندگانه و تکنیک های چاپی ویژه همچون متالایز، در بازار بی‌رقیب بوده وبرای همه‌ی سلایق ارائه می‌گردد.",
+    xBag:
+      "که با نام های شاپینگ بگ و ساک دستی در بازار شناخته می‌شود، محصولی تکمیلی و زینت بخش برای بسته بندی هدایاست. این محصول در ابعاد و طرح های متنوع برای تمامی سنین و سلایق ارائه می‌شود؛ همچنین به دلیل کیفیت و دوام بالا قابلیت مصرف چندباره و کاربردی دراز مدت دارد.",
+    xMemo:
+      "دفترچه ای برای یادداشت های روزانه، هفتگی و ماهانه‌ی افراد با تقویم یک ساله است که در 8 رنگ، طرح و جلد مختلف برای علاقه‌مندان به برنامه ریزی و گزارش نویسی عرضه می شود.",
+    tissueBox: null,
+  };
+
+  const checkSlug = () => {
+    switch (slug) {
+      case "X WRAP | کادوپیچ":
+        return categoryDescription.xWrap;
+      case "X BOX | متال باکس":
+        return categoryDescription.xBox;
+      case "X BAG | بگ":
+        return categoryDescription.xBag;
+      case "TISSUE BOX | باکس دستمال کاغذی":
+        return categoryDescription.tissueBox;
+      default:
+        return categoryDescription.xMemo;
+    }
+  };
+
   const getSkuSize = (sku) => {
     return Number(sku.substr(5, 2));
   };
@@ -321,28 +348,23 @@ export default function Categories(props) {
           alignItems="center"
           justify="center"
         >
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={checkSlug() !== null ? 6 : 12}>
             <Typography variant="h5" component="h1" className={classes.title}>
               {slug}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography
-              variant="body1"
-              component="p"
-              className={classes.description}
-              align="justify"
-            >
-              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-              استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
-              ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-              و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد کتابهای
-              زیادی در شصت و سه درصد گذشته حال و آینده شناخت فراوان جامعه و
-              متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان
-              رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی
-              ایجاد کرد
-            </Typography>
-          </Grid>
+          {checkSlug() !== null && (
+            <Grid item xs={12} md={6}>
+              <Typography
+                variant="body1"
+                component="p"
+                className={classes.description}
+                align="justify"
+              >
+                {checkSlug()}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Container>
 
