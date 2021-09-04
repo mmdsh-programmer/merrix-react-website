@@ -233,7 +233,7 @@ export default function Header(props) {
     "X WRAP | کادوپیچ",
     "X BAG | بگ",
     "X BOX | متال باکس",
-    "X MEMO | دفترچه وولن",
+    "X MEMO | دفترچه",
     "TISSUE BOX | باکس دستمال کاغذی",
   ];
   const navBarItemsId = [168, 171, 211, 179, 270];
