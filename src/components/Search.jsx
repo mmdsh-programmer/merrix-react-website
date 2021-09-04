@@ -133,7 +133,7 @@ export default function Search(props) {
   React.useEffect(() => {
     setSearchLoading("first time");
     setSearchResult([]);
-  }, [props]);
+  }, [props.open]);
 
   return (
     <Dialog
