@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
     height: "600px",
     objectFit: "cover",
     borderRadius: 0,
+    [specialBreakpoint.breakpoints.down("xs")]: {
+      height: "300px",
+    },
   },
 }));
 
@@ -66,12 +69,33 @@ export default function Main(props) {
         <Grid container className={classes.container} spacing={2}>
           <Grid item xs={12} md={6} className={classes.dFlex}>
             <Link
+              to="/categories/179/X MEMO | دفترچه وولن"
+              className={classes.link}
+            >
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xmemo.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link
               to="/categories/168/X WRAP | کادوپیچ"
               className={classes.link}
             >
               <Avatar
                 alt="logo"
                 src={process.env.PUBLIC_URL + "/xwrap.jpg"}
+                className={classes.square}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.dFlex}>
+            <Link to="/categories/171/X BAG | بگ" className={classes.link}>
+              <Avatar
+                alt="logo"
+                src={process.env.PUBLIC_URL + "/xbag.jpg"}
                 className={classes.square}
               />
             </Link>
@@ -84,30 +108,6 @@ export default function Main(props) {
               <Avatar
                 alt="logo"
                 src={process.env.PUBLIC_URL + "/xbox.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={12} md={6} className={classes.dFlex}>
-            <Link
-              to="/categories/171/X BAG | بگ"
-              className={classes.link}
-            >
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xbag.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={12} md={6} className={classes.dFlex}>
-            <Link
-              to="/categories/179/X MEMO | دفترچه وولن"
-              className={classes.link}
-            >
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xmemo.jpg"}
                 className={classes.square}
               />
             </Link>
