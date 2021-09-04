@@ -390,12 +390,22 @@ export default function Header(props) {
             >
               <ListItemText
                 className={classes.navItemText}
-                primary={"راهنمای سایز"}
-                primaryTypographyProps={{
-                  style: {
-                    color: "#17b0de",
-                  },
-                }}
+                primary={
+                  <Typography
+                    style={{ color: "#17b0de" }}
+                    className={classes.primaryListItemText}
+                  >
+                    SIZE GUIDE
+                  </Typography>
+                }
+                secondary={
+                  <Typography
+                    style={{ color: "#17b0de" }}
+                    className={classes.secondaryListItemText}
+                  >
+                    راهنمای سایز محصولات
+                  </Typography>
+                }
               />
             </ListItem>
           </List>
@@ -571,7 +581,7 @@ export default function Header(props) {
               }}
             >
               <ListItemText
-                primary={"راهنمای سایز"}
+                primary={"راهنمای سایز محصولات"}
                 primaryTypographyProps={{
                   style: {
                     color: "#17b0de",

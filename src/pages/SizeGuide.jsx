@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SizeGuide(props) {
   const classes = useStyles();
-  useDocumentTitle("راهنمای سایز");
+  useDocumentTitle("راهنمای سایز محصولات");
   const [expanded, setExpanded] = React.useState("kraft-xbag");
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -72,7 +72,7 @@ export default function SizeGuide(props) {
     <React.Fragment>
       <Container maxWidth="lg">
         <Typography variant="h5" component="h1" className={classes.title}>
-          راهنمای سایز
+          راهنمای سایز محصولات
         </Typography>
         <div className={classes.root}>
           <Accordion
