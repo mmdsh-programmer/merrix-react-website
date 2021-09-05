@@ -263,10 +263,10 @@ export default function FilterComponent(props) {
     },
     xMemo: {
       hasSize: true,
-      hasMaterial: false,
+      hasMaterial: true,
       hasStyle: false,
       hasUsage: false,
-      material: [],
+      material: ["دفترچه دیلی بوکلت (بولت ژورنال)" , "دفترچه وولن بوکلت"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
     },

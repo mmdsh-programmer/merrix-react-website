@@ -9,6 +9,7 @@ import Button from "components/Button";
 import { FilterContext } from "helpers/FilterContext";
 import FilterComponent from "components/FilterComponent";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import category from "services/crud/categories";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -106,7 +107,7 @@ export default function Categories(props) {
     xBag:
       "که با نام های شاپینگ بگ و ساک دستی در بازار شناخته می‌شود، محصولی تکمیلی و زینت بخش برای بسته بندی هدایاست. این محصول در ابعاد و طرح های متنوع برای تمامی سنین و سلایق ارائه می‌شود؛ همچنین به دلیل کیفیت و دوام بالا قابلیت مصرف چندباره و کاربردی دراز مدت دارد.",
     xMemo:
-      "دفترچه ای برای یادداشت های روزانه، هفتگی و ماهانه‌ی افراد با تقویم یک ساله است که در 8 رنگ، طرح و جلد مختلف برای علاقه‌مندان به برنامه ریزی و گزارش نویسی عرضه می شود.",
+      "دفترچه های مریخ در شش سایز مختلف و برای یادداشت های روزانه، برای تمام سلایق و سنین، محصولی کاربردی است که تنوع طرح و رنگ در طراحی آنها، استفاده از آنها را لذتبخش تر کرده  است.",
     tissueBox: null,
   };
 
@@ -223,9 +224,15 @@ export default function Categories(props) {
     let filteredStyle = [];
     let filteredUsage = [];
     if (filter.materials.length > 0) {
-      filteredMaterials = data.filter((product) => {
-        return hasMaterial(product.name, filter.materials);
-      });
+      if (slug.includes("X MEMO | دفترچه")) {
+        filteredMaterials = data.filter((product) => {
+          return hasAttribute(product.attributes, filter.materials, "material");
+        });
+      } else {
+        filteredMaterials = data.filter((product) => {
+          return hasMaterial(product.name, filter.materials);
+        });
+      }
     }
     if (filter.sizes.length > 0) {
       filteredSizes = data.filter((product) => {
