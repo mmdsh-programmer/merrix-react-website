@@ -200,7 +200,6 @@ export default function ProductCard(props) {
                   color="secondary"
                   className={classes.button}
                   onClick={() => {
-                    console.log(props)
                     setCount(count + 1);
                     isInCart(props) ? increase(props) : addProduct(props);
                   }}
