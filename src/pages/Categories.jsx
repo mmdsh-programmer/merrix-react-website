@@ -121,7 +121,7 @@ export default function Categories(props) {
         return categoryDescription.xBag;
       case "TISSUE BOX | باکس دستمال کاغذی":
         return categoryDescription.tissueBox;
-      default:
+      case "X MEMO | دفترچه":
         return categoryDescription.xMemo;
     }
   };
