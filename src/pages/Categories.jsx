@@ -126,6 +126,33 @@ export default function Categories(props) {
     }
   };
 
+  const isNew = (date) => {
+    const now = new Date();
+    const productCreatedTime = {
+      day: Number(date.substr(8, 2)),
+      month: Number(date.substr(5, 2)),
+      year: Number(date.substr(0, 4)),
+    };
+    const currentTime = {
+      day: now.getDate(),
+      month: now.getMonth() + 1,
+      year: now.getFullYear(),
+    };
+    const current = new Date(
+      `${currentTime.month}/${currentTime.day}/${currentTime.year}`
+    );
+    const product = new Date(
+      `${productCreatedTime.month}/${productCreatedTime.day}/${productCreatedTime.year}`
+    );
+    const diffTime = Math.abs(current - product);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 31) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const getSkuSize = (sku) => {
     return Number(sku.substr(5, 2));
   };
@@ -266,7 +293,7 @@ export default function Categories(props) {
     console.log(filter);
     product
       .read(
-        `/wc/v3/products?category=${key}&order=asc&stock_status=instock&status=publish&per_page=1000`
+        `/wc/v3/products?category=${key}&orderby=date&stock_status=instock&status=publish&per_page=1000`
       )
       .then((res) => {
         console.log(res.data);
@@ -314,6 +341,7 @@ export default function Categories(props) {
                     id={pr.id}
                     sku={pr.sku}
                     stock={pr.stock_quantity}
+                    new={isNew(pr.date_created)}
                   />
                 </Grid>
               );

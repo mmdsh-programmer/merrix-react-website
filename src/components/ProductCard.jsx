@@ -13,6 +13,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
 import { CartContext } from "helpers/CartContext";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Chip from "@material-ui/core/Chip";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -67,7 +68,11 @@ const useStyles = makeStyles({
     flexDirection: "row-reverse",
     minHeight: 78,
   },
-  cardAction: {},
+  customChip: {
+    position: "absolute",
+    right: 5,
+    top: 5,
+  },
 });
 
 export default function ProductCard(props) {
@@ -110,6 +115,14 @@ export default function ProductCard(props) {
             height="358"
             image={props.image}
             title={props.title}
+          />
+        )}
+        {props.new && (
+          <Chip
+            variant="default"
+            color="secondary"
+            label="جدید"
+            className={classes.customChip}
           />
         )}
       </CardActionArea>

@@ -104,6 +104,33 @@ export default function Search(props) {
     return !!cartItems.find((item) => item.id === product.id);
   };
 
+  const isNew = (date) => {
+    const now = new Date();
+    const productCreatedTime = {
+      day: Number(date.substr(8, 2)),
+      month: Number(date.substr(5, 2)),
+      year: Number(date.substr(0, 4)),
+    };
+    const currentTime = {
+      day: now.getDate(),
+      month: now.getMonth() + 1,
+      year: now.getFullYear(),
+    };
+    const current = new Date(
+      `${currentTime.month}/${currentTime.day}/${currentTime.year}`
+    );
+    const product = new Date(
+      `${productCreatedTime.month}/${productCreatedTime.day}/${productCreatedTime.year}`
+    );
+    const diffTime = Math.abs(current - product);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 31) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   let typingTimer;
   let doneTypingInterval = 750;
 
@@ -214,6 +241,7 @@ export default function Search(props) {
                                   id: row.id,
                                   sku: row.sku,
                                   stock: row.stock_quantity,
+                                  new: isNew(row.date_created),
                                 };
                                 isInCart(product)
                                   ? increase(product)
