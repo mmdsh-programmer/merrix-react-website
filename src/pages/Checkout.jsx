@@ -214,7 +214,6 @@ export default function Checkout() {
         state: finalProvince,
         postcode: "",
         country: "IR",
-        email: data.email,
         phone: data.phone.toString(),
       },
       shipping: {
@@ -478,30 +477,6 @@ export default function Checkout() {
                             fieldsErrors.address ? "آدرس را وارد کنید" : null
                           }
                           error={fieldsErrors.address}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          required
-                          id="email"
-                          name="email"
-                          label="آدرس ایمیل"
-                          fullWidth
-                          autoComplete="given-email"
-                          variant="outlined"
-                          inputRef={register({
-                            required: true,
-                            pattern: {
-                              value: /\S+@\S+\.\S+/,
-                              message: "ایمیل وارد شده معتبر نیست",
-                            },
-                          })}
-                          helperText={
-                            fieldsErrors.email
-                              ? "آدرس ایمیل را به درستی وارد کنید"
-                              : null
-                          }
-                          error={fieldsErrors.email}
                         />
                       </Grid>
                       <Grid item xs={12}>
