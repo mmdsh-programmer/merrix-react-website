@@ -57,7 +57,11 @@ body {
   background-color: #fcfcfc;
 }
 
-
+.color-animate {
+  /*animation-name: color;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;*/
+}
 
 @keyframes color {
   0% {

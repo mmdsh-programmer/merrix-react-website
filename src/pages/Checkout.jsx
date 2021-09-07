@@ -315,7 +315,7 @@ export default function Checkout() {
               ? outOfStockProducts.map((item) => (
                   <Alert severity="error" className={classes.alert}>
                     موجودی انبار محصول {item.title} به تعداد {item.outOfStock}{" "}
-                    عدد کمتر از تعداد انتخاب شده میباشد
+                    بسته کمتر از تعداد انتخاب شده میباشد
                   </Alert>
                 ))
               : null}
