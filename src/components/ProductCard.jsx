@@ -76,6 +76,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 0,
     //backgroundColor: "#50bb50",
   },
+  showPieces: {
+    fontSize: "0.8rem",
+    color: "rgb(160,160,160)",
+    marginTop: 5,
+    direction: "initial",
+  },
 }));
 
 export default function ProductCard(props) {
@@ -160,6 +166,13 @@ export default function ProductCard(props) {
                   className={classes.middleLine}
                 >
                   {splitName(props.title).secondRow}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  className={classes.showPieces}
+                >
+                  {props.pieces} Pieces
                 </Typography>
                 <Typography
                   variant="body1"
