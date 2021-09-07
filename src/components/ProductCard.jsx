@@ -24,7 +24,7 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
     width: "100%",
@@ -70,10 +70,13 @@ const useStyles = makeStyles({
   },
   customChip: {
     position: "absolute",
-    right: 5,
-    top: 5,
+    right: 0,
+    top: 15,
+    minWidth: 65,
+    borderRadius: 0,
+    //backgroundColor: "#50bb50",
   },
-});
+}));
 
 export default function ProductCard(props) {
   const classes = useStyles();
@@ -121,8 +124,8 @@ export default function ProductCard(props) {
           <Chip
             variant="default"
             color="secondary"
-            label="جدید"
-            className={classes.customChip}
+            label="New"
+            className={[classes.customChip, "color-animate"].join(" ")}
           />
         )}
       </CardActionArea>

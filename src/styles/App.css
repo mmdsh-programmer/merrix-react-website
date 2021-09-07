@@ -56,3 +56,17 @@ body {
 .MuiPaper-root.MuiMenu-paper.MuiPopover-paper {
   background-color: #fcfcfc;
 }
+
+
+
+@keyframes color {
+  0% {
+    background-color: #6bb46b;
+  }
+  50% {
+    background-color: #2a682a;
+  }
+  100% {
+    background-color: #6bb46b;
+  }
+}
