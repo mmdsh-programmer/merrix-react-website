@@ -57,9 +57,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
   },
   code: {
-    fontSize: "0.8rem",
+    fontSize: "0.77rem",
     color: "rgb(160,160,160)",
-    marginTop: "2px",
   },
   media: {
     height: 358,
@@ -77,10 +76,16 @@ const useStyles = makeStyles((theme) => ({
     //backgroundColor: "#50bb50",
   },
   showPieces: {
-    fontSize: "0.8rem",
+    fontSize: "0.77rem",
     color: "rgb(160,160,160)",
-    marginTop: 5,
+    marginTop: 10,
     direction: "initial",
+  },
+  pack: {
+    alignSelf: "center",
+    whiteSpace: "pre",
+    direction: "initial",
+    fontSize: "0.81rem",
   },
 }));
 
@@ -94,6 +99,7 @@ export default function ProductCard(props) {
     decrease,
     removeProduct,
   } = React.useContext(CartContext);
+  const [show, setShow] = React.useState(false);
 
   const isInCart = (product) => {
     return !!cartItems.find((item) => item.id === product.id);
@@ -110,6 +116,16 @@ export default function ProductCard(props) {
       typeof firstRowTemp !== "undefined" && firstRowTemp.split("—")[0];
     const splitedName = { firstRow: firstRow, secondRow: secondRow };
     return splitedName;
+  };
+
+  const handleShowPack = () => {
+    const count = isInCart(props) ? selectedCartItem(props.id)[0].quantity : 0;
+    if (count + 1 == 1) {
+      setShow(true);
+      setTimeout(() => {
+        setShow(false);
+      }, 1800);
+    }
   };
 
   return (
@@ -172,7 +188,7 @@ export default function ProductCard(props) {
                   component="h2"
                   className={classes.showPieces}
                 >
-                  {props.pieces} Pieces
+                  Package: {props.pieces} pcs
                 </Typography>
                 <Typography
                   variant="body1"
@@ -180,7 +196,7 @@ export default function ProductCard(props) {
                   align="right"
                   className={classes.code}
                 >
-                  X Code : {props.sku}
+                  X Code: {props.sku}
                 </Typography>
               </React.Fragment>
             )}
@@ -199,6 +215,7 @@ export default function ProductCard(props) {
                       classes.coloredBorderButton,
                     ].join(" ")}
                     onClick={() => {
+                      handleShowPack();
                       setCount(Math.max(count - 1, 0));
                       selectedCartItem(props.id)[0].quantity === 1
                         ? removeProduct(props)
@@ -213,6 +230,7 @@ export default function ProductCard(props) {
                     aria-label="count"
                     size="small"
                     variant="outlined"
+                    style={{ visibility: show ? "hidden" : "visible" }}
                     className={[classes.button, classes.borderlessButton].join(
                       " "
                     )}
@@ -229,6 +247,7 @@ export default function ProductCard(props) {
                   color="secondary"
                   className={classes.button}
                   onClick={() => {
+                    handleShowPack();
                     setCount(count + 1);
                     isInCart(props) ? increase(props) : addProduct(props);
                   }}
@@ -236,6 +255,17 @@ export default function ProductCard(props) {
                   <AddIcon fontSize="small" />
                 </Button>
               </ButtonGroup>
+              {show && (
+                <Typography
+                  variant="body1"
+                  component="h2"
+                  className={[classes.pack, "animate__fadeInLeft"].join(" ")}
+                >
+                  {isInCart(props) ? selectedCartItem(props.id)[0].quantity : 0}
+                  {"\t"}
+                  package
+                </Typography>
+              )}
             </Grid>
           )}
         </Grid>
