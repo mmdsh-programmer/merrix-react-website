@@ -13,11 +13,8 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
 import { CartContext } from "helpers/CartContext";
 import Skeleton from "@material-ui/lab/Skeleton";
-import Chip from "@material-ui/core/Chip";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
-import FiberNewTwoToneIcon from "@material-ui/icons/FiberNewTwoTone";
-import FiberNewOutlinedIcon from "@material-ui/icons/FiberNewOutlined";
 import Fade from "@material-ui/core/Fade";
 
 const StyledBadge = withStyles((theme) => ({
