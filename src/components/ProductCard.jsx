@@ -14,6 +14,11 @@ import Grid from "@material-ui/core/Grid";
 import { CartContext } from "helpers/CartContext";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Chip from "@material-ui/core/Chip";
+import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
+import FiberNewTwoToneIcon from "@material-ui/icons/FiberNewTwoTone";
+import FiberNewOutlinedIcon from "@material-ui/icons/FiberNewOutlined";
+import Fade from "@material-ui/core/Fade";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -52,9 +57,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgb(160,160,160)",
   },
   middleLine: {
-    lineHeight: "18px",
     color: "rgb(102,102,102)",
-    marginTop: 10,
   },
   code: {
     fontSize: "0.77rem",
@@ -86,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "pre",
     direction: "initial",
     fontSize: "0.81rem",
+  },
+  customBox: {
+    marginTop: 10,
   },
 }));
 
@@ -142,14 +148,6 @@ export default function ProductCard(props) {
             title={props.title}
           />
         )}
-        {props.new && (
-          <Chip
-            variant="default"
-            color="secondary"
-            label="New"
-            className={[classes.customChip, "color-animate"].join(" ")}
-          />
-        )}
       </CardActionArea>
       <CardActions
         classes={{
@@ -175,14 +173,34 @@ export default function ProductCard(props) {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Typography
-                  variant="body1"
-                  component="h2"
-                  align="right"
-                  className={classes.middleLine}
+                <Box
+                  component="div"
+                  display="flex"
+                  textOverflow="ellipsis"
+                  flexDirection="row-reverse"
+                  alignItems="center"
+                  overflow="hidden"
+                  className={classes.customBox}
                 >
-                  {splitName(props.title).secondRow}
-                </Typography>
+                  {props.new && <div className="new-label">New</div>}
+                  <Tooltip
+                    title={splitName(props.title).secondRow}
+                    arrow
+                    placement="top"
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 300 }}
+                  >
+                    <Typography
+                      variant="body1"
+                      component="h2"
+                      align="right"
+                      className={classes.middleLine}
+                      noWrap
+                    >
+                      {splitName(props.title).secondRow}
+                    </Typography>
+                  </Tooltip>
+                </Box>
                 <Typography
                   variant="body1"
                   component="h2"
