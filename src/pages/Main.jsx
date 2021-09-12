@@ -69,7 +69,7 @@ export default function Main(props) {
         <Grid container className={classes.container} spacing={2}>
           <Grid item xs={12} md={6} className={classes.dFlex}>
             <Link
-              to="/categories/179/X MEMO | دفترچه وولن"
+              to="/categories/179/X MEMO | دفترچه"
               className={classes.link}
             >
               <Avatar
