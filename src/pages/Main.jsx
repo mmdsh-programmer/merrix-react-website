@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import Avatar from "@material-ui/core/Avatar";
+import { FilterContext } from "helpers/FilterContext";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -62,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Main(props) {
   const classes = useStyles();
   useDocumentTitle("", false, true);
+  const { setFilter } = React.useContext(FilterContext);
+
+  const emptyFilter = () => {
+    setFilter({
+      materials: [],
+      sizes: [],
+      style: [],
+      usage: [],
+    });
+  };
 
   return (
     <React.Fragment>
@@ -71,6 +82,7 @@ export default function Main(props) {
             <Link
               to="/categories/179/X MEMO | دفترچه"
               className={classes.link}
+              onClick={() => emptyFilter()}
             >
               <Avatar
                 alt="logo"
@@ -83,6 +95,7 @@ export default function Main(props) {
             <Link
               to="/categories/168/X WRAP | کادوپیچ"
               className={classes.link}
+              onClick={() => emptyFilter()}
             >
               <Avatar
                 alt="logo"
@@ -92,7 +105,11 @@ export default function Main(props) {
             </Link>
           </Grid>
           <Grid item xs={12} md={6} className={classes.dFlex}>
-            <Link to="/categories/171/X BAG | بگ" className={classes.link}>
+            <Link
+              to="/categories/171/X BAG | بگ"
+              className={classes.link}
+              onClick={() => emptyFilter()}
+            >
               <Avatar
                 alt="logo"
                 src={process.env.PUBLIC_URL + "/xbag.jpg"}
@@ -104,6 +121,7 @@ export default function Main(props) {
             <Link
               to="/categories/211/X BOX | متال باکس"
               className={classes.link}
+              onClick={() => emptyFilter()}
             >
               <Avatar
                 alt="logo"
