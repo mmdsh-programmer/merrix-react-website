@@ -16,6 +16,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
 import Fade from "@material-ui/core/Fade";
+import NewIcon from "components/NewIcon";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
