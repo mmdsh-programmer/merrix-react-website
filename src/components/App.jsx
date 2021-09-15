@@ -21,6 +21,7 @@ import Checkout from "pages/Checkout";
 import SizeGuide from "pages/SizeGuide";
 import Header from "./Header";
 import BackToTop from "./BackToTop";
+import CallButton from "./CallButton";
 
 const shabnam = {
   fontFamily: "Shabnam",
@@ -67,6 +68,7 @@ export default function App(props) {
                   <Route component={() => <NotFound />} />
                 </Switch>
                 <BackToTop />
+                <CallButton />
               </Router>
             </CartContextProvider>
           </FilterContextProvider>
