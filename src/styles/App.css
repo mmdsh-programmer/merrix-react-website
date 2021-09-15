@@ -77,6 +77,12 @@ body {
   margin-right: 5px;
 }
 
+@media screen and (max-width: 1025px) {
+  .mobile-version p {
+    font-size: 0.8rem;
+  }
+}
+
 @keyframes color {
   0% {
     background-color: #6bb46b;

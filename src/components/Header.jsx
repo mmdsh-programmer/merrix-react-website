@@ -22,6 +22,9 @@ import Button from "@material-ui/core/Button";
 import { FilterContext } from "helpers/FilterContext";
 import SearchIcon from "@material-ui/icons/Search";
 import Search from "./Search";
+import Divider from "@material-ui/core/Divider";
+import TelegramIcon from "@material-ui/icons/Telegram";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -209,6 +212,20 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     transition: "visibility 0.5s, opacity 0.5s linear",
   },
+  verticalDivider: {
+    backgroundColor: "#FFF",
+    height: 20,
+    alignSelf: "center",
+    margin: "0 10px",
+  },
+  justifyCenter: {
+    justifyContent: "center",
+  },
+  mobileHide: {
+    [specialBreakpoint.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
 }));
 
 export default function Header(props) {
@@ -343,6 +360,7 @@ export default function Header(props) {
                   className={[
                     classes.navItem,
                     { selected: classes.active },
+                    "mobile-version",
                   ].join(" ")}
                   onClick={(e) => {
                     emptyFilter();
@@ -380,9 +398,11 @@ export default function Header(props) {
             ))}
             <ListItem
               button
-              className={[classes.navItem, { selected: classes.active }].join(
-                " "
-              )}
+              className={[
+                classes.navItem,
+                { selected: classes.active },
+                "mobile-version",
+              ].join(" ")}
               onClick={(e) => {
                 emptyFilter();
                 history.push(`/size-guide`);
@@ -414,6 +434,30 @@ export default function Header(props) {
 
           {auth && (
             <div className={classes.flex}>
+              <div className={[classes.flex, classes.mobileHide].join(" ")}>
+                <IconButton
+                  color="inherit"
+                  aria-label="telegram"
+                  onClick={() =>
+                    window.open("https://t.me/merrix9111", "_blank")
+                  }
+                >
+                  <TelegramIcon />
+                </IconButton>
+                <IconButton
+                  color="inherit"
+                  aria-label="whatsapp"
+                  onClick={() =>
+                    window.open("https://wa.me/989357249111", "_blank")
+                  }
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+                <Divider
+                  orientation="vertical"
+                  className={classes.verticalDivider}
+                />
+              </div>
               <IconButton
                 color="inherit"
                 aria-label="search"
@@ -421,7 +465,6 @@ export default function Header(props) {
               >
                 <SearchIcon />
               </IconButton>
-
               <IconButton
                 color="inherit"
                 aria-label="add to shopping cart"
@@ -537,6 +580,24 @@ export default function Header(props) {
           className={classes.menuDrawer}
         >
           <List className={classes.list}>
+            <div className={[classes.flex, classes.justifyCenter].join(" ")}>
+              <IconButton
+                color="inherit"
+                aria-label="telegram"
+                onClick={() => window.open("https://t.me/merrix9111", "_blank")}
+              >
+                <TelegramIcon />
+              </IconButton>
+              <IconButton
+                color="inherit"
+                aria-label="whatsapp"
+                onClick={() =>
+                  window.open("https://wa.me/989357249111", "_blank")
+                }
+              >
+                <WhatsAppIcon />
+              </IconButton>
+            </div>
             <ListItem
               button
               selected={selectedIndex === 4}
