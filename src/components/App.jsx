@@ -68,7 +68,6 @@ export default function App(props) {
                   <Route component={() => <NotFound />} />
                 </Switch>
                 <BackToTop />
-                <CallButton />
               </Router>
             </CartContextProvider>
           </FilterContextProvider>
