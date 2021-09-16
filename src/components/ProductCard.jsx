@@ -16,7 +16,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
 import Fade from "@material-ui/core/Fade";
-import NewIcon from "components/NewIcon";
+import { Avatar } from "@material-ui/core";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -90,6 +90,13 @@ const useStyles = makeStyles((theme) => ({
   },
   customBox: {
     marginTop: 10,
+  },
+  new: {
+    width: 30,
+    height: "auto",
+    objectFit: "contain",
+    borderRadius: 0,
+    marginLeft: 5,
   },
 }));
 
@@ -180,7 +187,18 @@ export default function ProductCard(props) {
                   overflow="hidden"
                   className={classes.customBox}
                 >
-                  {props.new && <div className="new-label">New</div>}
+                  {props.new && (
+                    <Avatar
+                      alt="new"
+                      src={process.env.PUBLIC_URL + "/new.png"}
+                      className={classes.new}
+                      imgProps={{
+                        style: {
+                          objectFit: "contain",
+                        },
+                      }}
+                    />
+                  )}
                   <Tooltip
                     title={splitName(props.title).secondRow}
                     arrow
