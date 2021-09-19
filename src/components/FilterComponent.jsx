@@ -266,7 +266,7 @@ export default function FilterComponent(props) {
       hasMaterial: true,
       hasStyle: false,
       hasUsage: false,
-      material: ["دفترچه دیلی بوکلت (بولت ژورنال)" , "دفترچه وولن بوکلت"],
+      material: ["دفترچه دیلی بوکلت (بولت ژورنال)", "دفترچه وولن بوکلت"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
     },
