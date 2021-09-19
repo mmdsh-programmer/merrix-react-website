@@ -19,6 +19,8 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Radio from "@material-ui/core/Radio";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import _without from "lodash/without";
 
 const specialBreakpoint = createMuiTheme({
@@ -306,6 +308,32 @@ export default function FilterComponent(props) {
     });
   };
 
+  const handleSingleSelectChange = (select, event) => {
+    const value = event.target.value;
+    switch (select) {
+      case "material":
+        setMaterial(
+          value.length > 1
+            ? typeof value[value.length - 1] !== "undefined"
+              ? [value[value.length - 1]]
+              : [defaultFilterText]
+            : [defaultFilterText]
+        );
+        break;
+      case "size":
+        setSize(
+          value.length > 1
+            ? typeof value[value.length - 1] !== "undefined"
+              ? [value[value.length - 1]]
+              : [defaultFilterText]
+            : [defaultFilterText]
+        );
+        break;
+    }
+
+    //setMaterial(data)
+  };
+
   const handleMaterialChange = (event) => {
     let val = event.target.value;
     if (val.includes(defaultFilterText)) {
@@ -449,7 +477,7 @@ export default function FilterComponent(props) {
                     id="demo-mutiple-checkbox"
                     multiple
                     value={material}
-                    onChange={handleMaterialChange}
+                    onChange={(e) => handleSingleSelectChange("material", e)}
                     renderValue={(selected) => (
                       <div className={classes.chips}>
                         {selected.map(
@@ -488,7 +516,10 @@ export default function FilterComponent(props) {
                   >
                     {checkSlug().material.map((name, index) => (
                       <MenuItem key={index} value={name}>
-                        <Checkbox checked={material.indexOf(name) > -1} />
+                        <FormControlLabel
+                          control={<Radio />}
+                          checked={material.indexOf(name) > -1}
+                        />
                         <ListItemText
                           primary={name === "ویلو" ? "ویلو (مخمل)" : name}
                         />
@@ -505,7 +536,7 @@ export default function FilterComponent(props) {
                     id="size-mutiple-checkbox"
                     multiple
                     value={size}
-                    onChange={handleSizeChange}
+                    onChange={(e) => handleSingleSelectChange("size", e)}
                     renderValue={(selected) => (
                       <div className={classes.chips}>
                         {selected.map(
@@ -548,7 +579,10 @@ export default function FilterComponent(props) {
                   >
                     {[...Array(18).keys()].map((name, index) => (
                       <MenuItem key={index} value={name + 1}>
-                        <Checkbox checked={size.indexOf(name + 1) > -1} />
+                        <FormControlLabel
+                          control={<Radio />}
+                          checked={size.indexOf(name + 1) > -1}
+                        />
                         <ListItemText primary={`سایز ${name + 1}`} />
                       </MenuItem>
                     ))}
@@ -691,10 +725,9 @@ export default function FilterComponent(props) {
                   <InputLabel id="demo-mutiple-checkbox-label">نوع</InputLabel>
                   <Select
                     labelId="demo-mutiple-checkbox-label"
-                    id="demo-mutiple-checkbox"
-                    multiple
                     value={material}
-                    onChange={handleMaterialChange}
+                    multiple
+                    onChange={(e) => handleSingleSelectChange("material", e)}
                     renderValue={(selected) => (
                       <div className={classes.chips}>
                         {selected.map(
@@ -737,7 +770,10 @@ export default function FilterComponent(props) {
                   >
                     {checkSlug().material.map((name, index) => (
                       <MenuItem key={index} value={name}>
-                        <Checkbox checked={material.indexOf(name) > -1} />
+                        <FormControlLabel
+                          control={<Radio />}
+                          checked={material.indexOf(name) > -1}
+                        />
                         <ListItemText
                           primary={name === "ویلو" ? "ویلو (مخمل)" : name}
                         />
@@ -766,7 +802,7 @@ export default function FilterComponent(props) {
                     id="size-mutiple-checkbox"
                     multiple
                     value={size}
-                    onChange={handleSizeChange}
+                    onChange={(e) => handleSingleSelectChange("size", e)}
                     renderValue={(selected) => (
                       <div className={classes.chips}>
                         {selected.map(
@@ -809,7 +845,10 @@ export default function FilterComponent(props) {
                   >
                     {[...Array(18).keys()].map((name, index) => (
                       <MenuItem key={index} value={name + 1}>
-                        <Checkbox checked={size.indexOf(name + 1) > -1} />
+                        <FormControlLabel
+                          control={<Radio />}
+                          checked={size.indexOf(name + 1) > -1}
+                        />
                         <ListItemText primary={`سایز ${name + 1}`} />
                       </MenuItem>
                     ))}
