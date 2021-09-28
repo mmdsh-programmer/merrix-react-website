@@ -7,7 +7,6 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "components/Button";
 import Typography from "@material-ui/core/Typography";
-import Header from "components/Header";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import Grid from "@material-ui/core/Grid";
@@ -137,7 +136,6 @@ export default function Checkout() {
   const [finalProvince, setFinalProvince] = React.useState("");
   const [finalCities, setFinalCities] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [hasAlert, setHasAlert] = React.useState(false);
   const [outOfStockProducts, setOutOfStockProducts] = React.useState([]);
   const [phone, setPhone] = React.useState([]);
   const [messageOpen, setMessageOpen] = React.useState(false);
@@ -149,6 +147,15 @@ export default function Checkout() {
 
   const selectedCityId = (value) => {
     setFinalCities(citiesImport.filter((e) => e.province_id === value));
+  };
+
+  const handleProvinceChange = (e) => {
+    const selectedProvince = selectedProvId(e.target.value);
+    selectedCityId(selectedProvince[0].id);
+  };
+
+  const handleCityChange = (e) => {
+    console.log(e.target.value);
   };
 
   const checkPhone = (e) => {
@@ -170,6 +177,7 @@ export default function Checkout() {
     e.preventDefault();
     setLoading(true);
     setOutOfStockProducts([]);
+    console.log(formData);
     let products = [];
     product
       .read(`/wc/v3/products?per_page=2000`)
@@ -211,7 +219,7 @@ export default function Checkout() {
         address_2: "",
         city: data.city,
         company: data.shopName,
-        state: finalProvince,
+        state: data.province,
         postcode: "",
         country: "IR",
         phone: data.phone.toString(),
@@ -223,7 +231,7 @@ export default function Checkout() {
         address_1: data.address,
         address_2: "",
         city: data.city,
-        state: finalProvince,
+        state: data.province,
         company: data.shopName,
         postcode: "",
         country: "IR",
@@ -352,7 +360,7 @@ export default function Checkout() {
                           helperText={
                             fieldsErrors.firstName ? "نام را وارد کنید" : null
                           }
-                          error={fieldsErrors.firstName}
+                          error={!!fieldsErrors.firstName}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -370,7 +378,7 @@ export default function Checkout() {
                               ? "نام خانوادگی را وارد کنید"
                               : null
                           }
-                          error={fieldsErrors.lastName}
+                          error={!!fieldsErrors.lastName}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -389,7 +397,7 @@ export default function Checkout() {
                               ? "نام فروشگاه را وارد کنید"
                               : null
                           }
-                          error={fieldsErrors.shopName}
+                          error={!!fieldsErrors.shopName}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -397,22 +405,20 @@ export default function Checkout() {
                           variant="outlined"
                           fullWidth
                           required
-                          error={fieldsErrors.province}
+                          error={!!fieldsErrors.province}
                         >
                           <InputLabel id="province">استان</InputLabel>
                           <Controller
-                            render={(props) => (
+                            render={({ onChange, value, name }) => (
                               <Select
                                 labelId="province-label"
                                 label="استان"
                                 onChange={(e) => {
-                                  props.onChange(() => {
-                                    const selectedProvince = selectedProvId(
-                                      e.target.value
-                                    );
-                                    selectedCityId(selectedProvince[0].id);
-                                  });
+                                  onChange(e);
+                                  handleProvinceChange(e);
                                 }}
+                                value={value ? value : ""}
+                                name={name}
                               >
                                 {provinceImport.map((prov) => (
                                   <MenuItem value={prov.name} key={prov.id}>
@@ -438,19 +444,28 @@ export default function Checkout() {
                           variant="outlined"
                           fullWidth
                           required
-                          error={fieldsErrors.city}
+                          error={!!fieldsErrors.city}
                         >
                           <InputLabel id="city">شهر</InputLabel>
                           <Controller
-                            as={
-                              <Select labelId="city-label" label="شهر">
+                            render={({ onChange, value, name }) => (
+                              <Select
+                                labelId="city-label"
+                                label="شهر"
+                                onChange={(e) => {
+                                  onChange(e);
+                                  handleCityChange(e);
+                                }}
+                                value={value ? value : ""}
+                                name={name}
+                              >
                                 {finalCities.map((cities) => (
                                   <MenuItem value={cities.name} key={cities.id}>
                                     {cities.name}
                                   </MenuItem>
                                 ))}
                               </Select>
-                            }
+                            )}
                             name="city"
                             control={control}
                             defaultValue=""
@@ -476,7 +491,7 @@ export default function Checkout() {
                           helperText={
                             fieldsErrors.address ? "آدرس را وارد کنید" : null
                           }
-                          error={fieldsErrors.address}
+                          error={!!fieldsErrors.address}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -499,7 +514,7 @@ export default function Checkout() {
                               ? "شماره همراه را به درستی وارد کنید"
                               : null
                           }
-                          error={fieldsErrors.phone}
+                          error={!!fieldsErrors.phone}
                         />
                       </Grid>
                       <Button
