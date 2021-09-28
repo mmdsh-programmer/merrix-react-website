@@ -21,7 +21,7 @@ import Checkout from "pages/Checkout";
 import SizeGuide from "pages/SizeGuide";
 import Header from "./Header";
 import BackToTop from "./BackToTop";
-import CallButton from "./CallButton";
+import ProductContextProvider from "helpers/ProductContext";
 
 const shabnam = {
   fontFamily: "Shabnam",
@@ -54,22 +54,27 @@ export default function App(props) {
         <CssBaseline />
         <AuthContextProvider>
           <FilterContextProvider>
-            <CartContextProvider>
-              <Router>
-                <Header />
-                <Switch>
-                  <Route exact path="/signin" component={Signin} />
-                  <Route exact path="/signup" component={Signup} />
-                  <Route exact path="/cart" component={Cart} />
-                  <Route exact path="/checkout" component={Checkout} />
-                  <Route exact path="/size-guide" component={SizeGuide} />
-                  <Route exact path="/" component={Main} />
-                  <Route path="/categories/:key/:slug" component={Categories} />
-                  <Route component={() => <NotFound />} />
-                </Switch>
-                <BackToTop />
-              </Router>
-            </CartContextProvider>
+            <ProductContextProvider>
+              <CartContextProvider>
+                <Router>
+                  <Header />
+                  <Switch>
+                    <Route exact path="/signin" component={Signin} />
+                    <Route exact path="/signup" component={Signup} />
+                    <Route exact path="/cart" component={Cart} />
+                    <Route exact path="/checkout" component={Checkout} />
+                    <Route exact path="/size-guide" component={SizeGuide} />
+                    <Route exact path="/" component={Main} />
+                    <Route
+                      path="/categories/:key/:slug"
+                      component={Categories}
+                    />
+                    <Route component={() => <NotFound />} />
+                  </Switch>
+                  <BackToTop />
+                </Router>
+              </CartContextProvider>
+            </ProductContextProvider>
           </FilterContextProvider>
         </AuthContextProvider>
         <ToastContainer bodyClassName="rtl" />
