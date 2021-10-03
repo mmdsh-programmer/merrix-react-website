@@ -163,30 +163,30 @@ export default function ProductCard(props) {
     }
   };
 
-  const getProductSizeGuide = (sku) => {
-    const category = Number(sku.substr(1, 2));
-    const type = Number(sku.substr(3, 2));
-    const size = Number(sku.substr(5, 2));
-    if (category === 1) {
-      if (type <= 2) {
-        return `fantasy-xmemo/${size}.jpg`;
-      } else {
-        return null;
-      }
-    } else if (category === 2) {
-      if (type === 10) {
-        return `glossy-xbag/${size}.jpg`;
-      } else if (type === 11) {
-        return `kraft-xbag/${size}.jpg`;
-      } else {
-        return null;
-      }
-    } else if (category === 3) {
-      return `metal-box/${size}.jpg`;
-    } else {
-      return null;
-    }
-  };
+  // const getProductSizeGuide = (sku) => {
+  //   const category = Number(sku.substr(1, 2));
+  //   const type = Number(sku.substr(3, 2));
+  //   const size = Number(sku.substr(5, 2));
+  //   if (category === 1) {
+  //     if (type <= 2) {
+  //       return `fantasy-xmemo/${size}.jpg`;
+  //     } else {
+  //       return null;
+  //     }
+  //   } else if (category === 2) {
+  //     if (type === 10) {
+  //       return `glossy-xbag/${size}.jpg`;
+  //     } else if (type === 11) {
+  //       return `kraft-xbag/${size}.jpg`;
+  //     } else {
+  //       return null;
+  //     }
+  //   } else if (category === 3) {
+  //     return `metal-box/${size}.jpg`;
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   return (
     <Card className={classes.root}>
@@ -194,28 +194,16 @@ export default function ProductCard(props) {
         {props.loading ? (
           <Skeleton animation="wave" variant="rect" className={classes.media} />
         ) : (
-          <>
-            <CardMedia
-              component="img"
-              alt={props.title}
-              height="358"
-              image={props.image}
-              title={props.title}
-              classes={{
-                img: classes.cardImage,
-              }}
-            />
-            {getProductSizeGuide(props.sku) !== null && (
-              <Avatar
-                alt="second image"
-                src={`${process.env.PUBLIC_URL}/${getProductSizeGuide(
-                  props.sku
-                )}`}
-                className={classes.hoverImage}
-                classes={{ img: classes.avatarImage }}
-              />
-            )}
-          </>
+          <CardMedia
+            component="img"
+            alt={props.title}
+            height="358"
+            image={props.image}
+            title={props.title}
+            classes={{
+              img: classes.cardImage,
+            }}
+          />
         )}
       </CardActionArea>
       <CardActions
