@@ -249,7 +249,7 @@ export default function Header(props) {
   const navBarItems = [
     "X WRAP | کادوپیچ",
     "X BAG | بگ",
-    "X BOX | متال باکس",
+    "X BOX | باکس",
     "X MEMO | دفترچه",
     "TISSUE BOX | باکس دستمال کاغذی",
   ];

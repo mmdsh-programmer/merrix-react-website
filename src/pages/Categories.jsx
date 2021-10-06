@@ -154,7 +154,7 @@ export default function Categories(props) {
     switch (slug) {
       case "X WRAP | کادوپیچ":
         return categoryDescription.xWrap;
-      case "X BOX | متال باکس":
+      case "X BOX | باکس":
         return categoryDescription.xBox;
       case "X BAG | بگ":
         return categoryDescription.xBag;

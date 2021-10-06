@@ -250,7 +250,7 @@ export default function FilterComponent(props) {
       hasMaterial: true,
       hasStyle: false,
       hasUsage: false,
-      material: ["فلزی", "چوبی"],
+      material: ["فلزی", "چوبی" , "کیت باکس"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
     },
@@ -268,7 +268,7 @@ export default function FilterComponent(props) {
       hasMaterial: true,
       hasStyle: false,
       hasUsage: false,
-      material: ["دفترچه دیلی بوکلت (بولت ژورنال)", "دفترچه وولن بوکلت"],
+      material: ["دفترچه دیلی بوکلت (بولت ژورنال)", "دفترچه وولن بوکلت" , "دفترچه اسکچ بوکلت"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
     },
@@ -291,7 +291,7 @@ export default function FilterComponent(props) {
     switch (slug) {
       case "X WRAP | کادوپیچ":
         return filterOptions.xWrap;
-      case "X BOX | متال باکس":
+      case "X BOX | باکس":
         return filterOptions.xBox;
       case "X BAG | بگ":
         return filterOptions.xBag;
