@@ -119,7 +119,7 @@ export default function Main(props) {
           </Grid>
           <Grid item xs={12} md={6} className={classes.dFlex}>
             <Link
-              to="/categories/211/X BOX | متال باکس"
+              to="/categories/211/X BOX | باکس"
               className={classes.link}
               onClick={() => emptyFilter()}
             >
