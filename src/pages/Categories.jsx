@@ -11,6 +11,7 @@ import useDocumentTitle from "hooks/useDocumentTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import handleViewport from "react-in-viewport";
 import { ProductContext } from "helpers/ProductContext";
+import Avatar from "@material-ui/core/Avatar";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -78,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       borderLeft: "none",
       paddingLeft: "0",
+      marginTop: 20,
     },
   },
   viewPort: {
@@ -85,6 +87,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  square: {
+    borderRadius: 0,
+    width: "100%",
+    height: "auto",
   },
 }));
 
@@ -101,6 +108,7 @@ export default function Categories(props) {
   const [loading, setLoading] = React.useState(true);
   const [showMoreLoading, setShowMoreLoading] = React.useState(true);
   const [offset, setOffset] = React.useState(16);
+  const [imagePath, setImagePath] = React.useState(null);
   const { key } = props.match.params;
   const { slug } = props.match.params;
   useDocumentTitle(slug);
@@ -175,6 +183,37 @@ export default function Categories(props) {
       return filteredProducts;
     } else {
       return allProducts;
+    }
+  };
+
+  const getProductSizeGuide = (products) => {
+    if (products.length > 0 && filter.sizes.length > 0) {
+      const { sku } = products[0];
+      console.log("sku", sku);
+      const category = Number(sku.substr(1, 2));
+      const type = Number(sku.substr(3, 2));
+      const size = Number(sku.substr(5, 2));
+      if (category === 1) {
+        if (type <= 2) {
+          setImagePath(`fantasy-xmemo/${size}.jpg`);
+        } else {
+          setImagePath(null);
+        }
+      } else if (category === 2) {
+        if (type === 10) {
+          setImagePath(`glossy-xbag/${size}.jpg`);
+        } else if (type === 11) {
+          setImagePath(`kraft-xbag/${size}.jpg`);
+        } else {
+          setImagePath(null);
+        }
+      } else if (category === 3) {
+        setImagePath(`metal-box/${size}.jpg`);
+      } else {
+        setImagePath(null);
+      }
+    } else {
+      setImagePath(null);
     }
   };
 
@@ -340,6 +379,7 @@ export default function Categories(props) {
       .catch((error) => {
         console.log(error.message);
       });
+    setImagePath(null);
   }, [key]);
 
   React.useEffect(() => {
@@ -353,7 +393,13 @@ export default function Categories(props) {
       filter.usage.length > 0
     )
       filterProducts(allProducts);
+    setImagePath(null);
   }, [filter]);
+
+  React.useEffect(() => {
+    getProductSizeGuide(filteredProducts);
+    console.log("fired", filteredProducts);
+  }, [filteredProducts]);
 
   const CategoriesComponent = () => {
     return (
@@ -365,33 +411,35 @@ export default function Categories(props) {
           spacing={2}
         >
           {checkFilter().length > 0 ? (
-            checkFilter().slice(0, offset).map((pr, index) => {
-              return (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  md={3}
-                  key={index}
-                  className={classes.dFlex}
-                >
-                  <ProductCard
-                    image={
-                      typeof pr.images[0] !== "undefined"
-                        ? pr.images[0].src
-                        : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
-                    }
-                    title={pr.name}
+            checkFilter()
+              .slice(0, offset)
+              .map((pr, index) => {
+                return (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    md={3}
                     key={index}
-                    id={pr.id}
-                    sku={pr.sku}
-                    stock={pr.stock_quantity}
-                    new={isNew(pr.date_created)}
-                    pieces={checkSlug().pieces}
-                  />
-                </Grid>
-              );
-            })
+                    className={classes.dFlex}
+                  >
+                    <ProductCard
+                      image={
+                        typeof pr.images[0] !== "undefined"
+                          ? pr.images[0].src
+                          : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
+                      }
+                      title={pr.name}
+                      key={index}
+                      id={pr.id}
+                      sku={pr.sku}
+                      stock={pr.stock_quantity}
+                      new={isNew(pr.date_created)}
+                      pieces={checkSlug().pieces}
+                    />
+                  </Grid>
+                );
+              })
           ) : (
             <Typography
               variant="body1"
@@ -414,6 +462,11 @@ export default function Categories(props) {
   return (
     <React.Fragment>
       <Container maxWidth="lg" className={classes.descriptionHolder}>
+        {imagePath !== null && (
+          <Typography variant="h5" component="h1" className={classes.title}>
+            {slug}
+          </Typography>
+        )}
         <Grid
           container
           className={classes.container}
@@ -422,9 +475,17 @@ export default function Categories(props) {
           justify="center"
         >
           <Grid item xs={12} sm={checkSlug().description !== null ? 6 : 12}>
-            <Typography variant="h5" component="h1" className={classes.title}>
-              {slug}
-            </Typography>
+            {imagePath !== null ? (
+              <Avatar
+                alt="guide"
+                src={`/${imagePath}`}
+                className={classes.square}
+              />
+            ) : (
+              <Typography variant="h5" component="h1" className={classes.title}>
+                {slug}
+              </Typography>
+            )}
           </Grid>
           {checkSlug().description !== null && (
             <Grid item xs={12} md={6}>
