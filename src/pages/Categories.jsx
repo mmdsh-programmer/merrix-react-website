@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
@@ -98,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Categories(props) {
   const classes = useStyles();
   const { filter } = React.useContext(FilterContext);
+  const history = useHistory();
   const {
     initialProducts,
     filtering,
@@ -170,6 +172,9 @@ export default function Categories(props) {
         return categoryDescription.tissueBox;
       case "X MEMO | دفترچه":
         return categoryDescription.xMemo;
+      default:
+        history.push("/404");
+        return { description: null, pieces: null }
     }
   };
 
