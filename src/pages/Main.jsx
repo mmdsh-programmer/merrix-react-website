@@ -42,7 +42,10 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "center",
     },
     "&:hover $hoverInfo": {
-      opacity: 0.9
+      opacity: 1,
+    },
+    "&:hover $square": {
+      opacity: 0.1,
     },
   },
   title: {
@@ -61,13 +64,15 @@ const useStyles = makeStyles((theme) => ({
   link: {
     width: "100%",
     position: "relative",
-    color: "#999"
+    color: "#999",
   },
   square: {
     width: "100%",
     height: "auto",
     objectFit: "contain",
     borderRadius: 0,
+    opacity: 1,
+    transition: "all .5s",
     [specialBreakpoint.breakpoints.down("xs")]: {
       height: "auto",
     },
@@ -75,18 +80,21 @@ const useStyles = makeStyles((theme) => ({
   hoverInfo: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#fefefe",
+    backgroundColor: "#eee",
     position: "absolute",
     top: 0,
     left: 0,
-    zIndex: 1,
     opacity: 0,
-    transition: "all 0.5s",
+    transition: "all .5s",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-
-  }
+    zIndex: -1,
+  },
+  gutterBottom: {
+    width: "100%",
+    height: theme.spacing(5),
+  },
 }));
 
 export default function Main(props) {
@@ -94,128 +102,104 @@ export default function Main(props) {
   useDocumentTitle("", false, true);
   const { setFilter } = React.useContext(FilterContext);
 
-  const emptyFilter = () => {
-    setFilter({
-      materials: [],
-      sizes: [],
-      style: [],
-      usage: [],
-    });
+  const emptyFilter = (filterValues) => {
+    setFilter(filterValues);
   };
+
+  const firstPageItems = [
+    {
+      href: "/categories/179/X MEMO | دفترچه",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [3], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X MEMO",
+    },
+    {
+      href: "/categories/168/X WRAP | کادوپیچ",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X WRAP",
+    },
+    {
+      href: "/categories/171/X BAG | بگ",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [3], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X BAG",
+    },
+    {
+      href: "/categories/211/X BOX | باکس",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X BOX",
+    },
+    {
+      href: "/categories/179/X MEMO | دفترچه",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X MEMO",
+    },
+    {
+      href: "/categories/168/X WRAP | کادوپیچ",
+      clickListener: [
+        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
+      ],
+      image: "/placeholder.webp",
+      description: "X WRAP",
+    },
+  ];
 
   return (
     <React.Fragment>
       <Container maxWidth="xl" className={classes.mainContainer}>
-        <Grid container className={classes.container} spacing={1}>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/179/X MEMO | دفترچه"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X MEMO
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xmemo.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/168/X WRAP | کادوپیچ"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X WRAP
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xwrap.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/171/X BAG | بگ"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X BAG
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xbag.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/211/X BOX | باکس"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X BOX
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xbox.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/179/X MEMO | دفترچه"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X MEMO
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xmemo.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
-          <Grid item xs={6} sm={6} md={4} className={classes.dFlex}>
-            <Link
-              to="/categories/168/X WRAP | کادوپیچ"
-              className={classes.link}
-              onClick={() => emptyFilter()}
-            >
-              <div className={classes.hoverInfo}>
-                <Typography variant="h5" component="h5" className={classes.title}>
-                  X WRAP
-                </Typography>
-              </div>
-              <Avatar
-                alt="logo"
-                src={process.env.PUBLIC_URL + "/xwrap.jpg"}
-                className={classes.square}
-              />
-            </Link>
-          </Grid>
+        <Grid container className={classes.container} spacing={2}>
+          {firstPageItems.map(
+            ({ href, clickListener, image, description }, index) => (
+              <Grid
+                item
+                xs={6}
+                sm={6}
+                md={4}
+                className={classes.dFlex}
+                key={index}
+              >
+                <Link
+                  to={href}
+                  className={classes.link}
+                  onClick={() => {
+                    clickListener.map((func) => {
+                      func();
+                    });
+                  }}
+                >
+                  <div className={classes.hoverInfo}>
+                    <Typography
+                      variant="h5"
+                      component="h5"
+                      className={classes.title}
+                    >
+                      {description}
+                    </Typography>
+                  </div>
+                  <Avatar
+                    alt="logo"
+                    src={`${process.env.PUBLIC_URL}${image}`}
+                    className={classes.square}
+                  />
+                </Link>
+              </Grid>
+            )
+          )}
         </Grid>
+        <div className={classes.gutterBottom}></div>
       </Container>
     </React.Fragment>
   );

@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
   CardActionArea: {
     "&:hover": {
       "& $hoverImage": {
-        left: 0,
+        opacity: 1,
       },
     },
   },
@@ -114,9 +114,9 @@ const useStyles = makeStyles((theme) => ({
     height: 358,
     position: "absolute",
     top: 0,
-    left: 300,
-    transition: "all 0.6s",
-    backgroundColor: "#f6f6f5",
+    left: 0,
+    transition: "all 0.4s",
+    opacity: 0,
   },
   avatarImage: {
     objectFit: "contain",
@@ -194,16 +194,34 @@ export default function ProductCard(props) {
         {props.loading ? (
           <Skeleton animation="wave" variant="rect" className={classes.media} />
         ) : (
-          <CardMedia
-            component="img"
-            alt={props.title}
-            height="358"
-            image={props.image}
-            title={props.title}
-            classes={{
-              img: classes.cardImage,
-            }}
-          />
+          <>
+            <CardMedia
+              component="img"
+              alt={props.title}
+              height="358"
+              image={
+                props.image.length > 0
+                  ? props.image[0].src
+                  : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
+              }
+              title={props.title}
+              classes={{
+                img: classes.cardImage,
+              }}
+            />
+            {props.image.length > 1 && (
+              <Avatar
+                alt="second image"
+                src={props.image[1].src}
+                className={classes.hoverImage}
+                imgProps={{
+                  style: {
+                    objectFit: "cover",
+                  },
+                }}
+              />
+            )}
+          </>
         )}
       </CardActionArea>
       <CardActions

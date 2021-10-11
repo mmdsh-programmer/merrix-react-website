@@ -174,7 +174,7 @@ export default function Categories(props) {
         return categoryDescription.xMemo;
       default:
         history.push("/404");
-        return { description: null, pieces: null }
+        return { description: null, pieces: null };
     }
   };
 
@@ -429,11 +429,7 @@ export default function Categories(props) {
                     className={classes.dFlex}
                   >
                     <ProductCard
-                      image={
-                        typeof pr.images[0] !== "undefined"
-                          ? pr.images[0].src
-                          : "https://merrix.com/wp-content/uploads/woocommerce-placeholder.png"
-                      }
+                      image={pr.images}
                       title={pr.name}
                       key={index}
                       id={pr.id}
