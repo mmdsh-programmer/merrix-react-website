@@ -500,7 +500,10 @@ export default function Header(props) {
                     >
                       <Avatar
                         alt={value.title}
-                        src={value.image}
+                        src={
+                          typeof value.image !== undefined &&
+                          value?.image[0].src
+                        }
                         className={classes.avatar}
                       />
                     </Badge>

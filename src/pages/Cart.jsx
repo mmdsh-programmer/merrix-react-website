@@ -139,7 +139,11 @@ export default function Cart(props) {
                         >
                           <Avatar
                             alt={row.title}
-                            src={row.image}
+                            src={
+                              typeof row !== "undefined"
+                                ? row?.image[0].src
+                                : null
+                            }
                             className={classes.large}
                           />
                         </Badge>
