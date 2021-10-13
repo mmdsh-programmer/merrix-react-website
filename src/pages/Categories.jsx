@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import product from "services/crud/products";
 import ProductCard from "components/ProductCard";
@@ -96,10 +96,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export default function Categories(props) {
   const classes = useStyles();
-  const { filter } = React.useContext(FilterContext);
+  const { filter, setFilter } = React.useContext(FilterContext);
   const history = useHistory();
+  const location = useLocation();
+  let query = useQuery();
   const {
     initialProducts,
     filtering,
@@ -262,9 +268,7 @@ export default function Categories(props) {
   };
 
   const hasMaterial = (product, materials) => {
-    return materials.some((material) =>
-      product.includes(material === "فلزی" ? "متال باکس" : material)
-    );
+    return materials.some((material) => product.includes(material));
   };
 
   const hasSize = (sku, sizes) => {
@@ -369,6 +373,8 @@ export default function Categories(props) {
   };
 
   React.useEffect(() => {
+    let material = query.get("material");
+    let size = query.get("size");
     setLoading(true);
     setOffset(16);
     handleGoToTop();
@@ -386,6 +392,20 @@ export default function Categories(props) {
       });
     setImagePath(null);
   }, [key]);
+
+  React.useEffect(() => {
+    const material = query.get("material");
+    const size = query.get("size");
+    console.log(material);
+    console.log(size);
+    if (material !== null || size !== null)
+      setFilter({
+        materials: material !== null ? [material] : [],
+        sizes: size !== null ? [Number(size)] : [],
+        style: [],
+        usage: [],
+      });
+  }, [allProducts]);
 
   React.useEffect(() => {
     setOffset(16);

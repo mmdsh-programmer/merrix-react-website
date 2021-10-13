@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import Avatar from "@material-ui/core/Avatar";
-import { FilterContext } from "helpers/FilterContext";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -100,58 +99,41 @@ const useStyles = makeStyles((theme) => ({
 export default function Main(props) {
   const classes = useStyles();
   useDocumentTitle("", false, true);
-  const { setFilter } = React.useContext(FilterContext);
-
-  const emptyFilter = (filterValues) => {
-    setFilter(filterValues);
-  };
 
   const firstPageItems = [
     {
       href: "/categories/179/X MEMO | دفترچه",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [3], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: "دفترچه اسکچ بوکلت" }, { size: null }],
       image: "/placeholder.webp",
-      description: "X MEMO",
+      description: "X MEMO\nدفترچه\nاسکچ بوکلت",
     },
     {
       href: "/categories/168/X WRAP | کادوپیچ",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: null }, { size: null }],
       image: "/placeholder.webp",
       description: "X WRAP",
     },
     {
       href: "/categories/171/X BAG | بگ",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [3], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: null }, { size: null }],
       image: "/placeholder.webp",
       description: "X BAG",
     },
     {
       href: "/categories/211/X BOX | باکس",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: "کیت باکس" }, { size: 1 }],
       image: "/placeholder.webp",
       description: "X BOX",
     },
     {
       href: "/categories/179/X MEMO | دفترچه",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: null }, { size: null }],
       image: "/placeholder.webp",
       description: "X MEMO",
     },
     {
       href: "/categories/168/X WRAP | کادوپیچ",
-      clickListener: [
-        () => emptyFilter({ materials: [], sizes: [], style: [], usage: [] }),
-      ],
+      searchParams: [{ material: null }, { size: null }],
       image: "/placeholder.webp",
       description: "X WRAP",
     },
@@ -162,7 +144,7 @@ export default function Main(props) {
       <Container maxWidth="xl" className={classes.mainContainer}>
         <Grid container className={classes.container} spacing={2}>
           {firstPageItems.map(
-            ({ href, clickListener, image, description }, index) => (
+            ({ href, searchParams, image, description }, index) => (
               <Grid
                 item
                 xs={6}
@@ -172,13 +154,20 @@ export default function Main(props) {
                 key={index}
               >
                 <Link
-                  to={href}
-                  className={classes.link}
-                  onClick={() => {
-                    clickListener.map((func) => {
-                      func();
-                    });
+                  to={{
+                    pathname: href,
+                    search: searchParams
+                      .map((param) => {
+                        console.log(`firstPageItem[${index}]`);
+                        if (Object.values(param).some((val) => val !== null)) {
+                          return `${Object.keys(param)}=${Object.values(
+                            param
+                          )}`;
+                        }
+                      })
+                      .join("&"),
                   }}
+                  className={classes.link}
                 >
                   <div className={classes.hoverInfo}>
                     <Typography

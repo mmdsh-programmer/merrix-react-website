@@ -341,7 +341,7 @@ export default function Header(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Link to="/" className={classes.link}>
+          <Link to="/" className={classes.link} onClick={() => emptyFilter()}>
             <Avatar
               alt="logo"
               src={process.env.PUBLIC_URL + "/logo.png"}
