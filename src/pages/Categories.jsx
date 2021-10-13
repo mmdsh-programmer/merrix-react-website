@@ -205,7 +205,7 @@ export default function Categories(props) {
       const type = Number(sku.substr(3, 2));
       const size = Number(sku.substr(5, 2));
       if (category === 1) {
-        if (type <= 2) {
+        if (type <= 3) {
           setImagePath(`fantasy-xmemo/${size}.jpg`);
         } else {
           setImagePath(null);
