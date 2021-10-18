@@ -499,7 +499,7 @@ export default function Checkout() {
                           required
                           id="phone"
                           name="phone"
-                          label="شماره موبایل"
+                          label="شماره موبایل (اعداد انگلیسی)"
                           fullWidth
                           type="tel"
                           autoComplete="given-phone"

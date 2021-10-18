@@ -102,40 +102,28 @@ export default function Main(props) {
 
   const firstPageItems = [
     {
-      href: "/categories/179/X MEMO | دفترچه",
-      searchParams: [{ material: "دفترچه اسکچ بوکلت" }, { size: null }],
-      image: "/placeholder.webp",
-      description: "X MEMO\nدفترچه\nاسکچ بوکلت",
-    },
-    {
-      href: "/categories/168/X WRAP | کادوپیچ",
-      searchParams: [{ material: null }, { size: null }],
-      image: "/placeholder.webp",
-      description: "X WRAP",
-    },
-    {
-      href: "/categories/171/X BAG | بگ",
-      searchParams: [{ material: null }, { size: null }],
-      image: "/placeholder.webp",
-      description: "X BAG",
-    },
-    {
       href: "/categories/211/X BOX | باکس",
       searchParams: [{ material: "کیت باکس" }, { size: 1 }],
-      image: "/placeholder.webp",
+      image: "/kit-box.webp",
       description: "X BOX",
     },
     {
       href: "/categories/179/X MEMO | دفترچه",
-      searchParams: [{ material: null }, { size: null }],
-      image: "/placeholder.webp",
+      searchParams: [{ material: "دفترچه اسکچ بوکلت" }, { size: 2 }],
+      image: "/sketch-booklet.webp",
       description: "X MEMO",
     },
     {
-      href: "/categories/168/X WRAP | کادوپیچ",
-      searchParams: [{ material: null }, { size: null }],
-      image: "/placeholder.webp",
-      description: "X WRAP",
+      href: "/categories/171/X BAG | بگ",
+      searchParams: [{ material: "کرافت" }, { size: 2 }],
+      image: "/kraft-bag.webp",
+      description: "X BAG",
+    },
+    {
+      href: "/categories/171/X BAG | بگ",
+      searchParams: [{ material: "گلاسه" }, { size: 3 }],
+      image: "/fancy-bag.webp",
+      description: "X BAG",
     },
   ];
 
