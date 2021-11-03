@@ -6671,4 +6671,10 @@ export default [
     slug: "کهگیلویه-و-بویراحمد",
     province_id: 23,
   },
+  {
+    id: 1114,
+    name: "عباس آباد",
+    slug: "عباس-آباد",
+    province_id: 27,
+  },
 ];
