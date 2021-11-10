@@ -13,8 +13,6 @@ import category from "services/crud/categories";
 import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "@material-ui/core/Drawer";
 import Avatar from "@material-ui/core/Avatar";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { CartContext } from "helpers/CartContext";
 import { Badge } from "@material-ui/core";
@@ -25,6 +23,8 @@ import Search from "./Search";
 import Divider from "@material-ui/core/Divider";
 import TelegramIcon from "@material-ui/icons/Telegram";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -226,6 +226,16 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  cartDrawerButtonHolder: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 60,
+    justifyContent: "space-between",
+  },
+  cartDrawerActions: {
+    border: `1px solid rgb(49, 49, 49)`,
+    padding: 0,
+  },
 }));
 
 export default function Header(props) {
@@ -241,7 +251,13 @@ export default function Header(props) {
   const { setFilter } = React.useContext(FilterContext);
 
   const [openSearch, setOpenSearch] = React.useState(false);
-  const { cartItems, itemCount, removeProduct } = React.useContext(CartContext);
+  const {
+    cartItems,
+    itemCount,
+    removeProduct,
+    increase,
+    decrease,
+  } = React.useContext(CartContext);
   const [branch, setBranch] = React.useState([]);
   const [subBranch, setSubBranch] = React.useState([]);
   const navBarItems = [
@@ -300,6 +316,10 @@ export default function Header(props) {
       style: [],
       usage: [],
     });
+  };
+
+  const selectedCartItem = (id) => {
+    return cartItems.filter((e) => e.id === id);
   };
 
   React.useEffect(() => {
@@ -487,50 +507,66 @@ export default function Header(props) {
           <List className={classes.list}>
             {cartItems.length > 0 ? (
               cartItems.map((value, index) => (
-                <ListItem button key={value.id}>
-                  <ListItemAvatar>
-                    <Badge
-                      badgeContent={value.quantity}
-                      max={2000}
-                      color="secondary"
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                      }}
-                    >
-                      <Avatar
-                        alt={value.title}
-                        src={
-                          typeof value.image !== undefined &&
-                          value?.image[0].src
-                        }
-                        className={classes.avatar}
-                      />
-                    </Badge>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        component="p"
-                        variant="body1"
-                        color="textPrimary"
+                <>
+                  <ListItem key={value.id}>
+                    <ListItemAvatar>
+                      <Badge
+                        badgeContent={value.quantity}
+                        max={2000}
+                        color="secondary"
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "left",
+                        }}
                       >
-                        {value.title}
-                      </Typography>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => {
-                        removeProduct(value);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
+                        <Avatar
+                          alt={value.title}
+                          src={
+                            typeof value.image !== undefined &&
+                            value?.image[0].src
+                          }
+                          className={classes.avatar}
+                        />
+                      </Badge>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          component="p"
+                          variant="body1"
+                          color="textPrimary"
+                        >
+                          {value.title}
+                        </Typography>
+                      }
+                    />
+                    <div className={classes.cartDrawerButtonHolder}>
+                      <IconButton
+                        size="small"
+                        aria-label="increase"
+                        className={classes.cartDrawerActions}
+                        onClick={() => {
+                          increase(value);
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        aria-label="decrease"
+                        className={classes.cartDrawerActions}
+                        onClick={() => {
+                          selectedCartItem(value.id)[0].quantity === 1
+                            ? removeProduct(value)
+                            : decrease(value);
+                        }}
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                    </div>
+                  </ListItem>
+                  {index + 1 < cartItems.length && <Divider component="li" />}
+                </>
               ))
             ) : (
               <Typography
