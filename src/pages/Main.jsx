@@ -125,6 +125,12 @@ export default function Main(props) {
       image: "/fancy-bag.webp",
       description: "X BAG",
     },
+    {
+      href: "/categories/270/TISSUE BOX | باکس دستمال کاغذی",
+      searchParams: [],
+      image: "/nex-box.webp",
+      description: "NEX BOX",
+    },
   ];
 
   return (
