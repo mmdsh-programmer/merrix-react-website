@@ -162,7 +162,7 @@ export default function Categories(props) {
     },
     tissueBox: {
       description: null,
-      pieces: 5,
+      pieces: 4,
     },
   };
 
