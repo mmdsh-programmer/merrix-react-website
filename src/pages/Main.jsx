@@ -131,6 +131,12 @@ export default function Main(props) {
       image: "/nex-box.webp",
       description: "NEX BOX",
     },
+    {
+      href: "/categories/211/X BOX | باکس",
+      searchParams: [],
+      image: "/metal-pot.webp",
+      description: "Metal Pot",
+    },
   ];
 
   return (
