@@ -263,6 +263,14 @@ export default function Categories(props) {
     }
   };
 
+  const getSkuRep = (sku) => {
+    return Number(sku.substr(0, 1));
+  };
+
+  const getSkuBranch = (sku) => {
+    return Number(sku.substr(1, 2));
+  };
+
   const getSkuSize = (sku) => {
     return Number(sku.substr(5, 2));
   };
@@ -396,8 +404,6 @@ export default function Categories(props) {
   React.useEffect(() => {
     const material = query.get("material");
     const size = query.get("size");
-    console.log(material);
-    console.log(size);
     if (material !== null || size !== null)
       setFilter({
         materials: material !== null ? [material] : [],
@@ -423,7 +429,6 @@ export default function Categories(props) {
 
   React.useEffect(() => {
     getProductSizeGuide(filteredProducts);
-    console.log("fired", filteredProducts);
   }, [filteredProducts]);
 
   const CategoriesComponent = () => {
@@ -456,7 +461,11 @@ export default function Categories(props) {
                       sku={pr.sku}
                       stock={pr.stock_quantity}
                       new={isNew(pr.date_created)}
-                      pieces={checkSlug().pieces}
+                      pieces={
+                        getSkuRep(pr.sku) === 3 && getSkuBranch(pr.sku) === 2
+                          ? 5
+                          : checkSlug().pieces
+                      }
                     />
                   </Grid>
                 );
