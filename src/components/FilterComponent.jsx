@@ -250,7 +250,7 @@ export default function FilterComponent(props) {
       hasMaterial: true,
       hasStyle: false,
       hasUsage: false,
-      material: ["متال باکس", "کیت باکس"],
+      material: ["متال باکس", "کیت باکس", "متال پات"],
       style: ["عاشقانه", "ایرانی", "تم تولد"],
       usage: ["کتاب", "ماگ"],
     },

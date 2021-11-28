@@ -211,7 +211,7 @@ export default function Categories(props) {
           setImagePath(null);
         }
       } else if (category === 2) {
-        if (type === 10) {
+        if (type === 10 && getSkuRep(sku) !== 3) {
           setImagePath(`glossy-xbag/${size}.jpg`);
         } else if (type === 11) {
           setImagePath(`kraft-xbag/${size}.jpg`);
@@ -381,8 +381,6 @@ export default function Categories(props) {
   };
 
   React.useEffect(() => {
-    let material = query.get("material");
-    let size = query.get("size");
     setLoading(true);
     setOffset(16);
     handleGoToTop();
