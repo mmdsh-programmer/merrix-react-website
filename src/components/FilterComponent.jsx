@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -8,7 +8,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 import TuneIcon from "@material-ui/icons/Tune";
@@ -22,6 +21,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import _without from "lodash/without";
+import productsFilters from "services/filters/productsFilter";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
@@ -194,7 +194,6 @@ const MenuProps = {
 export default function FilterComponent(props) {
   const classes = useStyles();
   const [openMobileFilter, setOpenMobileFilter] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { setFilter, filter } = React.useContext(FilterContext);
   const defaultFilterText = "همه";
   const [material, setMaterial] = React.useState(
@@ -287,22 +286,18 @@ export default function FilterComponent(props) {
     },
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-  let materials = material;
-
   const checkSlug = () => {
     switch (slug) {
       case "X WRAP | کادوپیچ":
-        return filterOptions.xWrap;
+        return productsFilters.xwrap;
       case "X BOX | باکس":
-        return filterOptions.xBox;
+        return productsFilters.xbox;
       case "X BAG | بگ":
-        return filterOptions.xBag;
+        return productsFilters.xbag;
       case "TISSUE BOX | باکس دستمال کاغذی":
-        return filterOptions.tissueBox;
+        return productsFilters.tissue;
       default:
-        return filterOptions.xMemo;
+        return productsFilters.xmemo;
     }
   };
 
@@ -314,8 +309,12 @@ export default function FilterComponent(props) {
 
   const handleSingleSelectChange = (select, event) => {
     const value = event.target.value;
+    const [{ sizes }] = checkSlug().filter(
+      (item) => item.material === value[value.length - 1]
+    ) || [{}];
     switch (select) {
       case "material":
+        console.log(sizes);
         setMaterial(
           value.length > 1
             ? typeof value[value.length - 1] !== "undefined"
@@ -437,10 +436,7 @@ export default function FilterComponent(props) {
 
   return (
     <React.Fragment>
-      {checkSlug().hasMaterial ||
-      checkSlug().hasSize ||
-      checkSlug().hasStyle ||
-      checkSlug().hasUsage ? (
+      {checkSlug().length > 0 ? (
         <Toolbar className={classes.filterBar}>
           <Button
             variant="outlined"
@@ -473,7 +469,7 @@ export default function FilterComponent(props) {
             </AppBar>
 
             <Toolbar className={classes.mobileFilterToolbar}>
-              {checkSlug().hasMaterial && (
+              {checkSlug().length > 0 && (
                 <FormControl className={classes.mobileFormControl} fullWidth>
                   <InputLabel id="demo-mutiple-checkbox-label">نوع</InputLabel>
                   <Select
@@ -518,7 +514,7 @@ export default function FilterComponent(props) {
                     )}
                     MenuProps={MenuProps}
                   >
-                    {checkSlug().material.map((name, index) => (
+                    {checkSlug().map(({ material: name }, index) => (
                       <MenuItem key={index} value={name}>
                         <FormControlLabel
                           control={<Radio />}
@@ -532,7 +528,7 @@ export default function FilterComponent(props) {
                   </Select>
                 </FormControl>
               )}
-              {checkSlug().hasSize && (
+              {checkSlug().length > 0 && (
                 <FormControl className={classes.mobileFormControl} fullWidth>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
                   <Select
@@ -593,116 +589,6 @@ export default function FilterComponent(props) {
                   </Select>
                 </FormControl>
               )}
-              {checkSlug().hasStyle && (
-                <FormControl className={classes.mobileFormControl} fullWidth>
-                  <InputLabel id="style-mutiple-checkbox-label">طرح</InputLabel>
-                  <Select
-                    labelId="style-mutiple-checkbox-label"
-                    id="style-mutiple-checkbox"
-                    multiple
-                    value={styleFilter}
-                    onChange={handleStyleChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                                clickable
-                                deleteIcon={
-                                  value !== defaultFilterText ? (
-                                    <CancelIcon
-                                      onMouseDown={(event) =>
-                                        event.stopPropagation()
-                                      }
-                                    />
-                                  ) : (
-                                    <CheckCircleIcon
-                                      onMouseDown={(event) => {
-                                        event.stopPropagation();
-                                        handleSubmit();
-                                      }}
-                                    />
-                                  )
-                                }
-                                onDelete={(e) =>
-                                  handleChipDelete(e, value, "style")
-                                }
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().style.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={styleFilter.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-              {checkSlug().hasUsage && (
-                <FormControl className={classes.mobileFormControl} fullWidth>
-                  <InputLabel id="usage-mutiple-checkbox-label">
-                    کاربرد
-                  </InputLabel>
-                  <Select
-                    labelId="usage-mutiple-checkbox-label"
-                    id="usage-mutiple-checkbox"
-                    multiple
-                    value={usage}
-                    onChange={handleUsageChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                                clickable
-                                deleteIcon={
-                                  value !== defaultFilterText ? (
-                                    <CancelIcon
-                                      onMouseDown={(event) =>
-                                        event.stopPropagation()
-                                      }
-                                    />
-                                  ) : (
-                                    <CheckCircleIcon
-                                      onMouseDown={(event) => {
-                                        event.stopPropagation();
-                                        handleSubmit();
-                                      }}
-                                    />
-                                  )
-                                }
-                                onDelete={(e) =>
-                                  handleChipDelete(e, value, "usage")
-                                }
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().usage.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={usage.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
             </Toolbar>
 
             <div className={classes.fixedSubmitContainer}>
@@ -723,7 +609,7 @@ export default function FilterComponent(props) {
             </div>
           </Dialog>
           <Grid container spacing={2} className={classes.filterGridContainer}>
-            {checkSlug().hasMaterial && (
+            {checkSlug().length > 0 && (
               <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-mutiple-checkbox-label">نوع</InputLabel>
@@ -772,7 +658,7 @@ export default function FilterComponent(props) {
                     )}
                     MenuProps={MenuProps}
                   >
-                    {checkSlug().material.map((name, index) => (
+                    {checkSlug().map(({ material: name }, index) => (
                       <MenuItem key={index} value={name}>
                         <FormControlLabel
                           control={<Radio />}
@@ -797,7 +683,7 @@ export default function FilterComponent(props) {
                 </FormControl>
               </Grid>
             )}
-            {checkSlug().hasSize && (
+            {checkSlug().length > 0 && (
               <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
@@ -854,140 +740,6 @@ export default function FilterComponent(props) {
                           checked={size.indexOf(name + 1) > -1}
                         />
                         <ListItemText primary={`سایز ${name + 1}`} />
-                      </MenuItem>
-                    ))}
-                    <div className={classes.buttonContainer}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={handleSubmit}
-                      >
-                        اعمال
-                      </Button>
-                    </div>
-                  </Select>
-                </FormControl>
-              </Grid>
-            )}
-            {checkSlug().hasStyle && (
-              <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="style-mutiple-checkbox-label">طرح</InputLabel>
-                  <Select
-                    labelId="style-mutiple-checkbox-label"
-                    id="style-mutiple-checkbox"
-                    multiple
-                    value={styleFilter}
-                    onChange={handleStyleChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                                clickable
-                                deleteIcon={
-                                  value !== defaultFilterText ? (
-                                    <CancelIcon
-                                      onMouseDown={(event) =>
-                                        event.stopPropagation()
-                                      }
-                                    />
-                                  ) : (
-                                    <CheckCircleIcon
-                                      onMouseDown={(event) => {
-                                        event.stopPropagation();
-                                        handleSubmit();
-                                      }}
-                                    />
-                                  )
-                                }
-                                onDelete={(e) =>
-                                  handleChipDelete(e, value, "style")
-                                }
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().style.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={styleFilter.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                    <div className={classes.buttonContainer}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={handleSubmit}
-                      >
-                        اعمال
-                      </Button>
-                    </div>
-                  </Select>
-                </FormControl>
-              </Grid>
-            )}
-            {checkSlug().hasUsage && (
-              <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="usage-mutiple-checkbox-label">
-                    کاربرد
-                  </InputLabel>
-                  <Select
-                    labelId="usage-mutiple-checkbox-label"
-                    id="usage-mutiple-checkbox"
-                    multiple
-                    value={usage}
-                    onChange={handleUsageChange}
-                    renderValue={(selected) => (
-                      <div className={classes.chips}>
-                        {selected.map(
-                          (value, index) =>
-                            typeof value !== "undefined" && (
-                              <Chip
-                                key={index}
-                                label={value}
-                                className={classes.chip}
-                                clickable
-                                deleteIcon={
-                                  value !== defaultFilterText ? (
-                                    <CancelIcon
-                                      onMouseDown={(event) =>
-                                        event.stopPropagation()
-                                      }
-                                    />
-                                  ) : (
-                                    <CheckCircleIcon
-                                      onMouseDown={(event) => {
-                                        event.stopPropagation();
-                                        handleSubmit();
-                                      }}
-                                    />
-                                  )
-                                }
-                                onDelete={(e) =>
-                                  handleChipDelete(e, value, "usage")
-                                }
-                              />
-                            )
-                        )}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {checkSlug().usage.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <Checkbox checked={usage.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
                       </MenuItem>
                     ))}
                     <div className={classes.buttonContainer}>
