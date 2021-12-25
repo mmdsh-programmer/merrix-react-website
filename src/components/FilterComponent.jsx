@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -232,8 +232,10 @@ function FilterComponent(props) {
         return xbag;
       case "TISSUE BOX | باکس دستمال کاغذی":
         return tissue;
-      default:
+      case "X MEMO | دفترچه":
         return xmemo;
+      default:
+        return null;
     }
   };
 
@@ -254,6 +256,7 @@ function FilterComponent(props) {
       case "material": {
         setSelectedSizes(handleSelectedItem(selectedItem));
         setMaterial([selectedItem || defaultFilterText]);
+        setSize([defaultFilterText]);
         break;
       }
 
@@ -304,6 +307,12 @@ function FilterComponent(props) {
         break;
     }
   };
+
+  useEffect(() => {
+    const [initialSelectedSizes] =
+      checkSlug().filter((item) => item.material === filter.materials[0]) || [];
+    setSelectedSizes(initialSelectedSizes?.sizes || []);
+  }, []);
 
   return (
     <React.Fragment>
@@ -557,7 +566,7 @@ function FilterComponent(props) {
                 </FormControl>
               </Grid>
             )}
-            {checkSlug().length > 0 && (
+            {checkSlug().length > 0 && selectedSizes.length > 0 && (
               <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
