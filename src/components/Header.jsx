@@ -507,8 +507,8 @@ export default function Header(props) {
           <List className={classes.list}>
             {cartItems.length > 0 ? (
               cartItems.map((value, index) => (
-                <>
-                  <ListItem key={value.id}>
+                <React.Fragment key={value.id}>
+                  <ListItem>
                     <ListItemAvatar>
                       <Badge
                         badgeContent={value.quantity}
@@ -566,7 +566,7 @@ export default function Header(props) {
                     </div>
                   </ListItem>
                   {index + 1 < cartItems.length && <Divider component="li" />}
-                </>
+                </React.Fragment>
               ))
             ) : (
               <Typography
