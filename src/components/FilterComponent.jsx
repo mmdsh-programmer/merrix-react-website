@@ -21,10 +21,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import _without from "lodash/without";
-import {
-  productsFilters,
-  productsFilterTemp,
-} from "services/filters/productsFilter";
+import { productsFilterTemp } from "services/filters/productsFilter";
 
 const specialBreakpoint = createMuiTheme({
   breakpoints: {
