@@ -239,6 +239,19 @@ function FilterComponent(props) {
     }
   };
 
+  const hasSize = () => {
+    switch (slug) {
+      case "X BOX | باکس":
+      case "X BAG | بگ":
+      case "TISSUE BOX | باکس دستمال کاغذی":
+      case "X MEMO | دفترچه":
+        return true;
+      case "X WRAP | کادوپیچ":
+      default:
+        return false;
+    }
+  };
+
   const [selectedSizes, setSelectedSizes] = React.useState(
     filter?.materials?.length
       ? [...handleSelectedItem(filter.materials)]
@@ -311,7 +324,11 @@ function FilterComponent(props) {
   useEffect(() => {
     const [initialSelectedSizes] =
       checkSlug().filter((item) => item.material === filter.materials[0]) || [];
-    setSelectedSizes(initialSelectedSizes?.sizes || []);
+    setSelectedSizes(
+      initialSelectedSizes?.sizes || [
+        ...Array.from({ length: 18 }, (_, i) => i + 1),
+      ]
+    );
   }, []);
 
   return (
@@ -409,7 +426,7 @@ function FilterComponent(props) {
                   </Select>
                 </FormControl>
               )}
-              {checkSlug().length > 0 && (
+              {hasSize() && (
                 <FormControl className={classes.mobileFormControl} fullWidth>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
                   <Select
@@ -458,15 +475,16 @@ function FilterComponent(props) {
                     )}
                     MenuProps={MenuProps}
                   >
-                    {[...Array(18).keys()].map((name, index) => (
-                      <MenuItem key={index} value={name + 1}>
-                        <FormControlLabel
-                          control={<Radio />}
-                          checked={size.indexOf(name + 1) > -1}
-                        />
-                        <ListItemText primary={`سایز ${name + 1}`} />
-                      </MenuItem>
-                    ))}
+                    {!selectedSizes.includes(defaultFilterText) &&
+                      selectedSizes.map((name, index) => (
+                        <MenuItem key={index} value={name}>
+                          <FormControlLabel
+                            control={<Radio />}
+                            checked={size.indexOf(name) > -1}
+                          />
+                          <ListItemText primary={`سایز ${name}`} />
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               )}
@@ -566,7 +584,7 @@ function FilterComponent(props) {
                 </FormControl>
               </Grid>
             )}
-            {checkSlug().length > 0 && selectedSizes.length > 0 && (
+            {hasSize() && (
               <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
@@ -616,15 +634,16 @@ function FilterComponent(props) {
                     )}
                     MenuProps={MenuProps}
                   >
-                    {selectedSizes.map((name, index) => (
-                      <MenuItem key={index} value={name}>
-                        <FormControlLabel
-                          control={<Radio />}
-                          checked={size.indexOf(name) > -1}
-                        />
-                        <ListItemText primary={`سایز ${name}`} />
-                      </MenuItem>
-                    ))}
+                    {!selectedSizes.includes(defaultFilterText) &&
+                      selectedSizes.map((name, index) => (
+                        <MenuItem key={index} value={name}>
+                          <FormControlLabel
+                            control={<Radio />}
+                            checked={size.indexOf(name) > -1}
+                          />
+                          <ListItemText primary={`سایز ${name}`} />
+                        </MenuItem>
+                      ))}
                     <div className={classes.buttonContainer}>
                       <Button
                         variant="contained"
