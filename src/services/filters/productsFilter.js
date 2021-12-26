@@ -129,6 +129,10 @@ const productsFilterTemp = [
         material: "متال پات",
         sizes: [],
       },
+      {
+        material: "گیفت باکس",
+        sizes: [3, 4, 6, 10],
+      },
     ],
   },
   {
