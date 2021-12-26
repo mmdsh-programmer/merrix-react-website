@@ -423,7 +423,7 @@ function FilterComponent(props) {
                   </Select>
                 </FormControl>
               )}
-              {hasSize() && (
+              {hasSize() && selectedSizes.length > 0 && (
                 <FormControl className={classes.mobileFormControl} fullWidth>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
                   <Select
@@ -581,7 +581,7 @@ function FilterComponent(props) {
                 </FormControl>
               </Grid>
             )}
-            {hasSize() && (
+            {hasSize() && selectedSizes.length > 0 && (
               <Grid item xs={12} sm={4} md={3} className={classes.dFlex}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="size-mutiple-checkbox-label">سایز</InputLabel>
