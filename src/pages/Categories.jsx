@@ -502,8 +502,8 @@ export default function Categories(props) {
           alignItems="center"
           justify="center"
         >
-          <Grid item xs={12} sm={checkSlug().description !== null ? 6 : 12}>
-            {imagePath !== null ? (
+          <Grid item xs={12} sm={checkSlug().description ? 6 : 12}>
+            {imagePath ? (
               <Avatar
                 alt="guide"
                 src={`/${imagePath}`}

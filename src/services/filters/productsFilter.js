@@ -39,7 +39,7 @@ const productsFilters = [
     xbox: [
       {
         material: "متال باکس",
-        sizes: Array.from({ length: 15 }, (_, i) => i + 1),
+        sizes: Array.from({ length: 18 }, (_, i) => i + 1),
       },
       {
         material: "کیت باکس",
