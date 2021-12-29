@@ -219,7 +219,13 @@ export default function Categories(props) {
           setImagePath(null);
         }
       } else if (category === 3) {
-        setImagePath(`metal-box/${size}.jpg`);
+        if (type === 10) {
+          setImagePath(`metal-box/${size}.jpg`);
+        } else if (type === 11) {
+          setImagePath(`kit-box/${size}.jpg`);
+        } else {
+          setImagePath(null);
+        }
       } else {
         setImagePath(null);
       }
