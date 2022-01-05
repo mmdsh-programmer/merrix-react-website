@@ -180,7 +180,7 @@ export default function Checkout() {
     console.log(formData);
     let products = [];
     product
-      .read(`/wc/v3/products?per_page=2000`)
+      .read(`/wc/v3/products?per_page=1200`)
       .then(({ data }) => {
         let notAvailableProducts = [];
         cartItems.map((item) => {
