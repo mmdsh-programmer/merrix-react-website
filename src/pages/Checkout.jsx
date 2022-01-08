@@ -173,40 +173,45 @@ export default function Checkout() {
     setMessageOpen(false);
   };
 
-  const onSubmit = (formData, e) => {
+  const onSubmit = async (formData, e) => {
     e.preventDefault();
     setLoading(true);
     setOutOfStockProducts([]);
     console.log(formData);
     let products = [];
-    product
-      .read(`/wc/v3/products?per_page=1200`)
-      .then(({ data }) => {
-        let notAvailableProducts = [];
-        cartItems.map((item) => {
-          let found = data.find((searchItem) => searchItem.sku === item.sku);
-          if (found.stock_quantity < item.quantity)
-            notAvailableProducts.push({
-              ...item,
-              outOfStock: item.quantity - found.stock_quantity,
-            });
-        });
-        setOutOfStockProducts(notAvailableProducts);
-        if (notAvailableProducts.length === 0) {
-          cartItems.map((item) => {
-            products.push({ product_id: item.id, quantity: item.quantity });
-          });
-          sendData(formData, products);
-        } else {
-          setLoading(false);
-          toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
-        }
-        console.log("outofstock", notAvailableProducts);
-      })
-      .catch((error) => console.log(error));
+    try {
+      const { data: allProducts } = await product.read(
+        `/wc/v3/products?per_page=2000&stock_status=instock&status=publish`
+      );
+
+      console.log("cartItems", cartItems);
+      console.log("serverProducts", allProducts);
+      const notInStock = cartItems.filter(
+        ({ sku, quantity }) =>
+          !allProducts.find((product) => product.sku === sku) ||
+          quantity >
+            allProducts.find((product) => product.sku === sku).stock_quantity
+      );
+      console.log("notInStock", notInStock);
+
+      if (notInStock.length <= 0) {
+        products = cartItems.map(({ id, quantity: qty }) => ({
+          product_id: id,
+          quantity: qty,
+        }));
+        console.log("products", products);
+        sendData(formData, products);
+      } else {
+        setLoading(false);
+        toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
+        setOutOfStockProducts([...notInStock]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const sendData = (data, products) => {
+  const sendData = async (data, products) => {
     const finalData = {
       payment_method: "درگاه بانکی",
       payment_method_title: "انتقال مستقیم بانکی",
@@ -239,19 +244,19 @@ export default function Checkout() {
       line_items: products,
     };
     console.log(outOfStockProducts.length);
-    order
-      .create(finalData, "/wc/v3/orders?status=processing")
-      .then((res) => {
-        handleMessageOpen();
-        handleCheckout();
-        reset();
-      })
-      .catch((error) => {
-        toast.error(`مشکلی در ثبت سفارش رخ داد. (${error})`);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const result = await order.create(
+        finalData,
+        "/wc/v3/orders?status=processing"
+      );
+      handleMessageOpen();
+      handleCheckout();
+      reset();
+    } catch (error) {
+      toast.error(`مشکلی در ثبت سفارش رخ داد. (${error})`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const Transition = React.forwardRef(function Transition(props, ref) {
@@ -320,10 +325,14 @@ export default function Checkout() {
               ))}
             </Stepper>
             {outOfStockProducts.length > 0
-              ? outOfStockProducts.map((item) => (
-                  <Alert severity="error" className={classes.alert}>
-                    موجودی انبار محصول {item.title} به تعداد {item.outOfStock}{" "}
-                    بسته کمتر از تعداد انتخاب شده میباشد
+              ? outOfStockProducts.map(({ title: productTitle, ...rest }) => (
+                  <Alert
+                    severity="error"
+                    className={classes.alert}
+                    key={rest.id}
+                  >
+                    موجودی محصول {productTitle} در انبار کمتر از مقدار انتخاب
+                    شده میباشد.
                   </Alert>
                 ))
               : null}
