@@ -13,10 +13,10 @@ const productsFilters = [
         material: "لینن",
         sizes: [],
       },
-      {
-        material: "رنگی",
-        sizes: [],
-      },
+      // {
+      //   material: "رنگی",
+      //   sizes: [],
+      // },
       {
         material: "یووی",
         sizes: [],
@@ -29,10 +29,10 @@ const productsFilters = [
         material: "مخمل",
         sizes: [],
       },
-      {
-        material: "اوپال",
-        sizes: [],
-      },
+      // {
+      //   material: "اوپال",
+      //   sizes: [],
+      // },
     ],
   },
   {
@@ -45,10 +45,10 @@ const productsFilters = [
         material: "کیت باکس",
         sizes: Array.from({ length: 2 }, (_, i) => i + 1),
       },
-      {
-        material: "متال پات",
-        sizes: [],
-      },
+      // {
+      //   material: "متال پات",
+      //   sizes: [],
+      // },
       {
         material: "ریباکس",
         sizes: [3, 4, 6, 10],
@@ -63,7 +63,7 @@ const productsFilters = [
     xbag: [
       {
         material: "گلاسه",
-        sizes: Array.from({ length: 18 }, (_, i) => i + 1),
+        sizes: Array.from({ length: 15 }, (_, i) => i + 1),
       },
       {
         material: "کرافت",
@@ -77,10 +77,10 @@ const productsFilters = [
   },
   {
     xmemo: [
-      {
-        material: "دفترچه دیلی بوکلت (بولت ژورنال)",
-        sizes: [3],
-      },
+      // {
+      //   material: "دفترچه دیلی بوکلت (بولت ژورنال)",
+      //   sizes: [3],
+      // },
       {
         material: "دفترچه وولن بوکلت",
         sizes: Array.from({ length: 6 }, (_, i) => i + 1),
