@@ -63,7 +63,9 @@ const productsFilters = [
     xbag: [
       {
         material: "گلاسه",
-        sizes: Array.from({ length: 15 }, (_, i) => i + 1),
+        sizes: Array.from({ length: 15 }, (_, i) => i + 1).filter(
+          (number) => number !== 9 && number !== 10
+        ),
       },
       {
         material: "کرافت",
