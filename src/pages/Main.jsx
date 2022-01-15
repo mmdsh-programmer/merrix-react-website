@@ -103,7 +103,7 @@ export default function Main(props) {
   const firstPageItems = [
     {
       href: "/categories/211/X BOX | باکس",
-      searchParams: [{ material: "کیت باکس" }, { size: 1 }],
+      searchParams: [{ material: "کیت باکس" }, { size: 2 }],
       image: "/kit-box.webp",
       description: "X BOX",
     },
