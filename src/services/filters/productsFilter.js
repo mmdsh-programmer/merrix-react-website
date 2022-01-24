@@ -45,10 +45,10 @@ const productsFilters = [
         material: "کیت باکس",
         sizes: Array.from({ length: 2 }, (_, i) => i + 1),
       },
-      // {
-      //   material: "متال پات",
-      //   sizes: [],
-      // },
+      {
+        material: "متال پات",
+        sizes: [],
+      },
       {
         material: "ریباکس",
         sizes: [3, 4, 6, 10],
@@ -73,6 +73,10 @@ const productsFilters = [
       },
       {
         material: "ویلو",
+        sizes: [3],
+      },
+      {
+        material: "فولدی",
         sizes: [3],
       },
     ],
