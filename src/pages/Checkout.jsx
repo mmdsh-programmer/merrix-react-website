@@ -173,6 +173,10 @@ export default function Checkout() {
     setMessageOpen(false);
   };
 
+  const selectedCartItem = (id) => {
+    return cartItems.filter((e) => e.id === id);
+  };
+
   const onSubmit = async (formData, e) => {
     e.preventDefault();
     setLoading(true);
@@ -181,7 +185,7 @@ export default function Checkout() {
     let products = [];
     try {
       const { data: allProducts } = await product.read(
-        `/wc/v3/products?per_page=2000&stock_status=instock&status=publish`
+        `/wc/v3/products?per_page=1000&stock_status=instock&status=publish`
       );
 
       console.log("cartItems", cartItems);
@@ -200,11 +204,19 @@ export default function Checkout() {
           quantity: qty,
         }));
         console.log("products", products);
-        sendData(formData, products);
+        // sendData(formData, products);
       } else {
         setLoading(false);
         toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
-        setOutOfStockProducts([...notInStock]);
+        setOutOfStockProducts([
+          ...notInStock.map((item) => {
+            return {
+              title: item.title,
+              not_in_stock: item.quantity - item.stock,
+            };
+          }),
+        ]);
+        console.log("setOutOfStockProducts : ", outOfStockProducts);
       }
     } catch (error) {
       console.log(error);
@@ -325,16 +337,20 @@ export default function Checkout() {
               ))}
             </Stepper>
             {outOfStockProducts.length > 0
-              ? outOfStockProducts.map(({ title: productTitle, ...rest }) => (
-                  <Alert
-                    severity="error"
-                    className={classes.alert}
-                    key={rest.id}
-                  >
-                    موجودی محصول {productTitle} در انبار کمتر از مقدار انتخاب
-                    شده میباشد.
-                  </Alert>
-                ))
+              ? outOfStockProducts.map(
+                  ({ title: productTitle, not_in_stock }, index) => (
+                    <Alert
+                      severity="error"
+                      className={classes.alert}
+                      key={index}
+                    >
+                      {not_in_stock <= 0
+                        ? `محصول ${productTitle} در انبار موجود نمیباشد.`
+                        : `موجودی انبار محصول ${productTitle} به مقدار ${not_in_stock} 
+                      آیتم کمتر از مقدار انتخاب شده میباشد.`}
+                    </Alert>
+                  )
+                )
               : null}
             <React.Fragment>
               {activeStep === steps.length ? (
