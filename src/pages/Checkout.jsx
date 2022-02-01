@@ -204,7 +204,7 @@ export default function Checkout() {
           quantity: qty,
         }));
         console.log("products", products);
-        // sendData(formData, products);
+        sendData(formData, products);
       } else {
         setLoading(false);
         toast.error("لطفا ابتدا سبد سفارشات خود رااصلاح کنید.");
