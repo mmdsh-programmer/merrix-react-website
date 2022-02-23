@@ -92,6 +92,8 @@ const useStyles = makeStyles((theme) => ({
   },
   chip: {
     margin: 2,
+    overflow : "hidden",
+    textOverflow : "ellipsis"
   },
   formControl: {
     minWidth: "100%",
@@ -177,7 +179,7 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 7.5 + ITEM_PADDING_TOP,
-      width: 250,
+      width: "300px",
     },
   },
   anchorOrigin: {

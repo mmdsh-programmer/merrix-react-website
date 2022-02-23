@@ -83,10 +83,10 @@ const productsFilters = [
   },
   {
     xmemo: [
-      // {
-      //   material: "دفترچه دیلی بوکلت (بولت ژورنال)",
-      //   sizes: [3],
-      // },
+      {
+        material: "دفترچه دیلی بوکلت (بولت ژورنال)",
+        sizes: [3],
+      },
       {
         material: "دفترچه وولن بوکلت",
         sizes: Array.from({ length: 6 }, (_, i) => i + 1),
